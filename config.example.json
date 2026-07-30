@@ -1,0 +1,74 @@
+{
+  "_doc": "Chep file nay thanh config.json roi sua. config.json bi gitignore.",
+  "paths": {
+    "data_root": "D:/IT/CapCut/data",
+    "vendor_root": "D:/IT/CapCut/vendor",
+    "drafts_dir": "%LOCALAPPDATA%/CapCut/User Data/Projects/com.lveditor.draft",
+    "cache_dir": "%LOCALAPPDATA%/CapCut/User Data/Cache/effect",
+    "scaffold": "D:/IT/CapCut/data/scaffold/testV3_CLEAN",
+    "ffmpeg": "ffmpeg",
+    "ffprobe": "ffprobe",
+    "capcut_cli": "capcut"
+  },
+  "canvas": {
+    "width": 1920,
+    "height": 1080,
+    "fps": 30
+  },
+  "source_image": {
+    "width": 1376,
+    "height": 768,
+    "normalize_to_canvas": false
+  },
+  "kenburns": {
+    "seed": 20260730,
+    "scale_min": 0.72,
+    "scale_max": 0.92,
+    "amplitude_factor": 0.55,
+    "margin_safety": 0.98
+  },
+  "canvas_blur": {
+    "enabled": true,
+    "level": 3
+  },
+  "transitions": {
+    "enabled": true,
+    "default_duration_us": 466666,
+    "require_is_overlap_false": true,
+    "whitelist": [
+      "dissolve",
+      "black-fade",
+      "blur",
+      "gradient-wipe",
+      "dissolve-ii",
+      "page-turning",
+      "glitch",
+      "whirlpool",
+      "split",
+      "flip-ii",
+      "shutter"
+    ],
+    "blacklist": [
+      "cube"
+    ]
+  },
+  "scene_effect": {
+    "enabled": true,
+    "slug": "retro-film",
+    "intensity": 0.6
+  },
+  "filters": {
+    "enabled": false,
+    "items": [
+      {
+        "name": "Film",
+        "resource_id": "6706773528319906308",
+        "value": 0.7
+      }
+    ]
+  },
+  "runtime": {
+    "strategy": "hybrid",
+    "_note": "cli | hybrid | stamp - chot sau khi do hieu nang"
+  }
+}

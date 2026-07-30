@@ -1,0 +1,39 @@
+# --- cau hinh rieng tung may ---
+config.json
+
+# --- Python ---
+__pycache__/
+*.pyc
+
+# --- backup do script sinh ra canh file draft (thuong nam NGOAI repo) ---
+*.prepost
+*.prepost2
+*.prefilt
+*.pathbak
+*.kfbak
+*.labbak
+*.v8bak
+# ...nhung GIU lai ban sao lich su trong _deprecated:
+# hai file .v8bak la ban ghi DUY NHAT cua filter_apply.py va fx_audit.py
+# truoc lan va md5 -> resource_id. Git khong co lich su do.
+!_deprecated/backups/*.v8bak
+
+# --- log, IDE ---
+*.log
+.vscode/
+.idea/
+
+# --- video: khong bao gio commit ---
+*.mp4
+*.mov
+
+# --- CHAN PHONG NGUA ---
+# Neu CAPCUT_LAB bi tro nham vao trong repo thi hai thu muc nay se
+# xuat hien ngay day va keo theo hang tram MB.
+/data/
+/vendor/
+
+# --- CO Y KHONG chan *.tmp va *.bak ---
+# template-2.tmp, draft_content.json.bak, project.json.bak la thanh phan
+# HOP LE cua project CapCut. Chan hai duoi nay thi fixture trong tests\
+# se thieu file mot cach im lang.

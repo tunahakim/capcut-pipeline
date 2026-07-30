@@ -1,0 +1,17 @@
+# Mac dinh: git tu nhan dien text, chuan hoa ve LF trong index.
+* text=auto eol=lf
+
+# HAI LOAI FILE BAT BUOC GIU CRLF TREN WINDOWS
+#   .bat  cmd.exe co the doc sai batch chi co LF (nhan, goto)
+#   .ps1  an toan hon cho PowerShell 5.1
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+
+# Nhi phan: khong chuan hoa, khong diff
+*.png binary
+*.jpg binary
+*.mp4 binary
+*.mov binary
+*.tgz binary
+*.exe binary
