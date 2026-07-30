@@ -14,7 +14,22 @@ Sau đó đọc `docs/reference.md` rồi `docs/failures.md`. Ba file đó đủ
 
 **Mã nguồn in trong `docs/legacy/v0.8-full.md` không đáng tin.** Nguồn sự thật là file trong `scripts_v1/` và `tools/`.
 
-Đường dẫn để fetch file thô: `https://raw.githubusercontent.com/<user>/capcut-pipeline/main/<đường-dẫn-file>`
+Đường dẫn để fetch file thô:
+
+`https://raw.githubusercontent.com/tunahakim/capcut-pipeline/main/<đường-dẫn-file>`
+
+AI có thể đọc bất kỳ file nào trong repository bằng cách thay `<đường-dẫn-file>` bằng đường dẫn tương đối của file trong repo.
+
+Ví dụ:
+
+- `docs/START-HERE.md`
+  → `https://raw.githubusercontent.com/tunahakim/capcut-pipeline/main/docs/START-HERE.md`
+
+- `docs/reference.md`
+  → `https://raw.githubusercontent.com/tunahakim/capcut-pipeline/main/docs/reference.md`
+
+- `scripts_v1/fx_audit.py`
+  → `https://raw.githubusercontent.com/tunahakim/capcut-pipeline/main/scripts_v1/fx_audit.py`
 
 ## Dự án làm gì
 
