@@ -1,0 +1,1574 @@
+{
+ "source": "C:\\Users\\anhlt\\AppData\\Local\\CapCut\\User Data\\Projects\\com.lveditor.draft\\paritytest\\Timelines\\98120a02-6e11-4e0c-96c6-a1e4563de842\\draft_content.json",
+ "duration": 168733333,
+ "tracks": [
+  {
+   "type": "video",
+   "id": "1884e67e-87d0-474c-8556-cf17711a1fdd",
+   "segments": [
+    {
+     "n": 1,
+     "id8": "f6b3bb1f",
+     "label": "Shot_001_IE3_Launch.png",
+     "start": 0,
+     "dur": 19766666,
+     "src_start": 0,
+     "src_dur": 19766666,
+     "scale": {
+      "x": 0.86,
+      "y": 0.86
+     },
+     "transform": {
+      "x": 0.0,
+      "y": 0.0
+     },
+     "rotation": 0.0,
+     "alpha": 1.0,
+     "uniform_scale": {
+      "on": true,
+      "value": 1.0
+     },
+     "check_flag": 4103,
+     "render_index": 0,
+     "visible": true,
+     "refs": [
+      "speeds",
+      "placeholder_infos",
+      "transitions",
+      "canvases",
+      "sound_channel_mappings",
+      "material_colors",
+      "loudnesses",
+      "vocal_separations"
+     ],
+     "keyframes": [
+      {
+       "property_type": "KFTypeScaleX",
+       "points": [
+        {
+         "t": 0.0,
+         "v": [
+          0.72
+         ],
+         "curve": "Line",
+         "lc": {
+          "x": 0.0,
+          "y": 0.0
+         },
+         "rc": {
+          "x": 0.0,
+          "y": 0.0
+         }
+        },
+        {
+         "t": 19.74,
+         "v": [
+          0.86
+         ],
+         "curve": "Line",
+         "lc": {
+          "x": 0.0,
+          "y": 0.0
+         },
+         "rc": {
+          "x": 0.0,
+          "y": 0.0
+         }
+        }
+       ]
+      },
+      {
+       "property_type": "KFTypePositionX",
+       "points": [
+        {
+         "t": 0.0,
+         "v": [
+          0.0
+         ],
+         "curve": "Line",
+         "lc": {
+          "x": 0.0,
+          "y": 0.0
+         },
+         "rc": {
+          "x": 0.0,
+          "y": 0.0
+         }
+        },
+        {
+         "t": 19.74,
+         "v": [
+          0.0
+         ],
+         "curve": "Line",
+         "lc": {
+          "x": 0.0,
+          "y": 0.0
+         },
+         "rc": {
+          "x": 0.0,
+          "y": 0.0
+         }
+        }
+       ]
+      },
+      {
+       "property_type": "KFTypePositionY",
+       "points": [
+        {
+         "t": 0.0,
+         "v": [
+          0.0
+         ],
+         "curve": "Line",
+         "lc": {
+          "x": 0.0,
+          "y": 0.0
+         },
+         "rc": {
+          "x": 0.0,
+          "y": 0.0
+         }
+        },
+        {
+         "t": 19.74,
+         "v": [
+          0.0
+         ],
+         "curve": "Line",
+         "lc": {
+          "x": 0.0,
+          "y": 0.0
+         },
+         "rc": {
+          "x": 0.0,
+          "y": 0.0
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "n": 2,
+     "id8": "b18ae589",
+     "label": "Shot_002_CSS_Revolution.png",
+     "start": 19766666,
+     "dur": 14933334,
+     "src_start": 0,
+     "src_dur": 14966666,
+     "scale": {
+      "x": 0.82,
+      "y": 0.82
+     },
+     "transform": {
+      "x": 0.15,
+      "y": 0.0
+     },
+     "rotation": 0.0,
+     "alpha": 1.0,
+     "uniform_scale": {
+      "on": true,
+      "value": 1.0
+     },
+     "check_flag": 4103,
+     "render_index": 0,
+     "visible": true,
+     "refs": [
+      "speeds",
+      "placeholder_infos",
+      "transitions",
+      "canvases",
+      "material_animations",
+      "sound_channel_mappings",
+      "material_colors",
+      "loudnesses",
+      "vocal_separations"
+     ],
+     "keyframes": [
+      {
+       "property_type": "KFTypeScaleX",
+       "points": [
+        {
+         "t": 0.0,
+         "v": [
+          0.82
+         ],
+         "curve": "Line",
+         "lc": {
+          "x": 0.0,
+          "y": 0.0
+         },
+         "rc": {
+          "x": 0.0,
+          "y": 0.0
+         }
+        },
+        {
+         "t": 14.94,
+         "v": [
+          0.82
+         ],
+         "curve": "Line",
+         "lc": {
+          "x": 0.0,
+          "y": 0.0
+         },
+         "rc": {
+          "x": 0.0,
+          "y": 0.0
+         }
+        }
+       ]
+      },
+      {
+       "property_type": "KFTypePositionX",
+       "points": [
+        {
+         "t": 0.0,
+         "v": [
+          -0.15
+         ],
+         "curve": "Line",
+         "lc": {
+          "x": 0.0,
+          "y": 0.0
+         },
+         "rc": {
+          "x": 0.0,
+          "y": 0.0
+         }
+        },
+        {
+         "t": 14.94,
+         "v": [
+          0.15
+         ],
+         "curve": "Line",
+         "lc": {
+          "x": 0.0,
+          "y": 0.0
+         },
+         "rc": {
+          "x": 0.0,
+          "y": 0.0
+         }
+        }
+       ]
+      },
+      {
+       "property_type": "KFTypePositionY",
+       "points": [
+        {
+         "t": 0.0,
+         "v": [
+          0.0
+         ],
+         "curve": "Line",
+         "lc": {
+          "x": 0.0,
+          "y": 0.0
+         },
+         "rc": {
+          "x": 0.0,
+          "y": 0.0
+         }
+        },
+        {
+         "t": 14.94,
+         "v": [
+          0.0
+         ],
+         "curve": "Line",
+         "lc": {
+          "x": 0.0,
+          "y": 0.0
+         },
+         "rc": {
+          "x": 0.0,
+          "y": 0.0
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "n": 3,
+     "id8": "a46216f9",
+     "label": "Shot_003_IE_Acclaimed.png",
+     "start": 34700000,
+     "dur": 14200000,
+     "src_start": 0,
+     "src_dur": 14200000,
+     "scale": {
+      "x": 0.86,
+      "y": 0.86
+     },
+     "transform": {
+      "x": 0.084,
+      "y": 0.088
+     },
+     "rotation": 0.0,
+     "alpha": 1.0,
+     "uniform_scale": {
+      "on": true,
+      "value": 1.0
+     },
+     "check_flag": 4103,
+     "render_index": 0,
+     "visible": true,
+     "refs": [
+      "speeds",
+      "placeholder_infos",
+      "transitions",
+      "canvases",
+      "sound_channel_mappings",
+      "material_colors",
+      "loudnesses",
+      "vocal_separations"
+     ],
+     "keyframes": [
+      {
+       "property_type": "KFTypeScaleX",
+       "points": [
+        {
+         "t": 0.0,
+         "v": [
+          0.78
+         ],
+         "curve": "Line",
+         "lc": {
+          "x": 0.0,
+          "y": 0.0
+         },
+         "rc": {
+          "x": 0.0,
+          "y": 0.0
+         }
+        },
+        {
+         "t": 14.2,
+         "v": [
+          0.86
+         ],
+         "curve": "Line",
+         "lc": {
+          "x": 0.0,
+          "y": 0.0
+         },
+         "rc": {
+          "x": 0.0,
+          "y": 0.0
+         }
+        }
+       ]
+      },
+      {
+       "property_type": "KFTypePositionX",
+       "points": [
+        {
+         "t": 0.0,
+         "v": [
+          -0.084
+         ],
+         "curve": "Line",
+         "lc": {
+          "x": 0.0,
+          "y": 0.0
+         },
+         "rc": {
+          "x": 0.0,
+          "y": 0.0
+         }
+        },
+        {
+         "t": 14.2,
+         "v": [
+          0.084
+         ],
+         "curve": "Line",
+         "lc": {
+          "x": 0.0,
+          "y": 0.0
+         },
+         "rc": {
+          "x": 0.0,
+          "y": 0.0
+         }
+        }
+       ]
+      },
+      {
+       "property_type": "KFTypePositionY",
+       "points": [
+        {
+         "t": 0.0,
+         "v": [
+          -0.088
+         ],
+         "curve": "Line",
+         "lc": {
+          "x": 0.0,
+          "y": 0.0
+         },
+         "rc": {
+          "x": 0.0,
+          "y": 0.0
+         }
+        },
+        {
+         "t": 14.2,
+         "v": [
+          0.088
+         ],
+         "curve": "Line",
+         "lc": {
+          "x": 0.0,
+          "y": 0.0
+         },
+         "rc": {
+          "x": 0.0,
+          "y": 0.0
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "n": 4,
+     "id8": "dc753faa",
+     "label": "Shot_004_Browser_War_Shifts.png",
+     "start": 48900000,
+     "dur": 23833333,
+     "src_start": 0,
+     "src_dur": 23866666,
+     "scale": {
+      "x": 0.76,
+      "y": 0.76
+     },
+     "transform": {
+      "x": -0.05,
+      "y": 0.03
+     },
+     "rotation": 0.0,
+     "alpha": 1.0,
+     "uniform_scale": {
+      "on": true,
+      "value": 1.0
+     },
+     "check_flag": 4103,
+     "render_index": 0,
+     "visible": true,
+     "refs": [
+      "speeds",
+      "placeholder_infos",
+      "transitions",
+      "canvases",
+      "sound_channel_mappings",
+      "material_colors",
+      "loudnesses",
+      "vocal_separations"
+     ],
+     "keyframes": [
+      {
+       "property_type": "KFTypeScaleX",
+       "points": [
+        {
+         "t": 0.0,
+         "v": [
+          0.92
+         ],
+         "curve": "Line",
+         "lc": {
+          "x": 0.0,
+          "y": 0.0
+         },
+         "rc": {
+          "x": 0.0,
+          "y": 0.0
+         }
+        },
+        {
+         "t": 23.84,
+         "v": [
+          0.76
+         ],
+         "curve": "Line",
+         "lc": {
+          "x": 0.0,
+          "y": 0.0
+         },
+         "rc": {
+          "x": 0.0,
+          "y": 0.0
+         }
+        }
+       ]
+      },
+      {
+       "property_type": "KFTypePositionX",
+       "points": [
+        {
+         "t": 0.0,
+         "v": [
+          0.05
+         ],
+         "curve": "Line",
+         "lc": {
+          "x": 0.0,
+          "y": 0.0
+         },
+         "rc": {
+          "x": 0.0,
+          "y": 0.0
+         }
+        },
+        {
+         "t": 23.84,
+         "v": [
+          -0.05
+         ],
+         "curve": "Line",
+         "lc": {
+          "x": 0.0,
+          "y": 0.0
+         },
+         "rc": {
+          "x": 0.0,
+          "y": 0.0
+         }
+        }
+       ]
+      },
+      {
+       "property_type": "KFTypePositionY",
+       "points": [
+        {
+         "t": 0.0,
+         "v": [
+          -0.03
+         ],
+         "curve": "Line",
+         "lc": {
+          "x": 0.0,
+          "y": 0.0
+         },
+         "rc": {
+          "x": 0.0,
+          "y": 0.0
+         }
+        },
+        {
+         "t": 23.84,
+         "v": [
+          0.03
+         ],
+         "curve": "Line",
+         "lc": {
+          "x": 0.0,
+          "y": 0.0
+         },
+         "rc": {
+          "x": 0.0,
+          "y": 0.0
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "n": 5,
+     "id8": "5cd23092",
+     "label": "Shot_005_IE3_Engineering_Team.png",
+     "start": 72733333,
+     "dur": 19233333,
+     "src_start": 0,
+     "src_dur": 19266666,
+     "scale": {
+      "x": 0.88,
+      "y": 0.88
+     },
+     "transform": {
+      "x": -0.05,
+      "y": -0.055
+     },
+     "rotation": 0.0,
+     "alpha": 1.0,
+     "uniform_scale": {
+      "on": true,
+      "value": 1.0
+     },
+     "check_flag": 4103,
+     "render_index": 0,
+     "visible": true,
+     "refs": [
+      "speeds",
+      "placeholder_infos",
+      "transitions",
+      "canvases",
+      "sound_channel_mappings",
+      "material_colors",
+      "loudnesses",
+      "vocal_separations"
+     ],
+     "keyframes": [
+      {
+       "property_type": "KFTypeScaleX",
+       "points": [
+        {
+         "t": 0.0,
+         "v": [
+          0.8
+         ],
+         "curve": "Line",
+         "lc": {
+          "x": 0.0,
+          "y": 0.0
+         },
+         "rc": {
+          "x": 0.0,
+          "y": 0.0
+         }
+        },
+        {
+         "t": 19.24,
+         "v": [
+          0.88
+         ],
+         "curve": "Line",
+         "lc": {
+          "x": 0.0,
+          "y": 0.0
+         },
+         "rc": {
+          "x": 0.0,
+          "y": 0.0
+         }
+        }
+       ]
+      },
+      {
+       "property_type": "KFTypePositionX",
+       "points": [
+        {
+         "t": 0.0,
+         "v": [
+          0.05
+         ],
+         "curve": "Line",
+         "lc": {
+          "x": 0.0,
+          "y": 0.0
+         },
+         "rc": {
+          "x": 0.0,
+          "y": 0.0
+         }
+        },
+        {
+         "t": 19.24,
+         "v": [
+          -0.05
+         ],
+         "curve": "Line",
+         "lc": {
+          "x": 0.0,
+          "y": 0.0
+         },
+         "rc": {
+          "x": 0.0,
+          "y": 0.0
+         }
+        }
+       ]
+      },
+      {
+       "property_type": "KFTypePositionY",
+       "points": [
+        {
+         "t": 0.0,
+         "v": [
+          0.055
+         ],
+         "curve": "Line",
+         "lc": {
+          "x": 0.0,
+          "y": 0.0
+         },
+         "rc": {
+          "x": 0.0,
+          "y": 0.0
+         }
+        },
+        {
+         "t": 19.24,
+         "v": [
+          -0.055
+         ],
+         "curve": "Line",
+         "lc": {
+          "x": 0.0,
+          "y": 0.0
+         },
+         "rc": {
+          "x": 0.0,
+          "y": 0.0
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "n": 6,
+     "id8": "1eb74564",
+     "label": "Shot_006_Cost_Of_Success.png",
+     "start": 91966666,
+     "dur": 14733334,
+     "src_start": 0,
+     "src_dur": 14766666,
+     "scale": {
+      "x": 0.84,
+      "y": 0.84
+     },
+     "transform": {
+      "x": 0.0,
+      "y": 0.12
+     },
+     "rotation": 0.0,
+     "alpha": 1.0,
+     "uniform_scale": {
+      "on": true,
+      "value": 1.0
+     },
+     "check_flag": 4103,
+     "render_index": 0,
+     "visible": true,
+     "refs": [
+      "speeds",
+      "placeholder_infos",
+      "transitions",
+      "canvases",
+      "sound_channel_mappings",
+      "material_colors",
+      "loudnesses",
+      "vocal_separations"
+     ],
+     "keyframes": [
+      {
+       "property_type": "KFTypeScaleX",
+       "points": [
+        {
+         "t": 0.0,
+         "v": [
+          0.84
+         ],
+         "curve": "Line",
+         "lc": {
+          "x": 0.0,
+          "y": 0.0
+         },
+         "rc": {
+          "x": 0.0,
+          "y": 0.0
+         }
+        },
+        {
+         "t": 14.74,
+         "v": [
+          0.84
+         ],
+         "curve": "Line",
+         "lc": {
+          "x": 0.0,
+          "y": 0.0
+         },
+         "rc": {
+          "x": 0.0,
+          "y": 0.0
+         }
+        }
+       ]
+      },
+      {
+       "property_type": "KFTypePositionX",
+       "points": [
+        {
+         "t": 0.0,
+         "v": [
+          0.0
+         ],
+         "curve": "Line",
+         "lc": {
+          "x": 0.0,
+          "y": 0.0
+         },
+         "rc": {
+          "x": 0.0,
+          "y": 0.0
+         }
+        },
+        {
+         "t": 14.74,
+         "v": [
+          0.0
+         ],
+         "curve": "Line",
+         "lc": {
+          "x": 0.0,
+          "y": 0.0
+         },
+         "rc": {
+          "x": 0.0,
+          "y": 0.0
+         }
+        }
+       ]
+      },
+      {
+       "property_type": "KFTypePositionY",
+       "points": [
+        {
+         "t": 0.0,
+         "v": [
+          -0.12
+         ],
+         "curve": "Line",
+         "lc": {
+          "x": 0.0,
+          "y": 0.0
+         },
+         "rc": {
+          "x": 0.0,
+          "y": 0.0
+         }
+        },
+        {
+         "t": 14.74,
+         "v": [
+          0.12
+         ],
+         "curve": "Line",
+         "lc": {
+          "x": 0.0,
+          "y": 0.0
+         },
+         "rc": {
+          "x": 0.0,
+          "y": 0.0
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "n": 7,
+     "id8": "2b3d4a60",
+     "label": "Shot_007_Netscape_Communicator.png",
+     "start": 106700000,
+     "dur": 26033333,
+     "src_start": 0,
+     "src_dur": 26033333,
+     "scale": {
+      "x": 0.88,
+      "y": 0.88
+     },
+     "transform": {
+      "x": -0.06,
+      "y": 0.06
+     },
+     "rotation": 0.0,
+     "alpha": 1.0,
+     "uniform_scale": {
+      "on": true,
+      "value": 1.0
+     },
+     "check_flag": 4103,
+     "render_index": 0,
+     "visible": true,
+     "refs": [
+      "speeds",
+      "placeholder_infos",
+      "transitions",
+      "canvases",
+      "material_animations",
+      "sound_channel_mappings",
+      "material_colors",
+      "loudnesses",
+      "vocal_separations"
+     ],
+     "keyframes": [
+      {
+       "property_type": "KFTypeScaleX",
+       "points": [
+        {
+         "t": 0.0,
+         "v": [
+          0.78
+         ],
+         "curve": "Line",
+         "lc": {
+          "x": 0.0,
+          "y": 0.0
+         },
+         "rc": {
+          "x": 0.0,
+          "y": 0.0
+         }
+        },
+        {
+         "t": 26.02,
+         "v": [
+          0.88
+         ],
+         "curve": "Line",
+         "lc": {
+          "x": 0.0,
+          "y": 0.0
+         },
+         "rc": {
+          "x": 0.0,
+          "y": 0.0
+         }
+        }
+       ]
+      },
+      {
+       "property_type": "KFTypePositionX",
+       "points": [
+        {
+         "t": 0.0,
+         "v": [
+          0.06
+         ],
+         "curve": "Line",
+         "lc": {
+          "x": 0.0,
+          "y": 0.0
+         },
+         "rc": {
+          "x": 0.0,
+          "y": 0.0
+         }
+        },
+        {
+         "t": 26.02,
+         "v": [
+          -0.06
+         ],
+         "curve": "Line",
+         "lc": {
+          "x": 0.0,
+          "y": 0.0
+         },
+         "rc": {
+          "x": 0.0,
+          "y": 0.0
+         }
+        }
+       ]
+      },
+      {
+       "property_type": "KFTypePositionY",
+       "points": [
+        {
+         "t": 0.0,
+         "v": [
+          -0.06
+         ],
+         "curve": "Line",
+         "lc": {
+          "x": 0.0,
+          "y": 0.0
+         },
+         "rc": {
+          "x": 0.0,
+          "y": 0.0
+         }
+        },
+        {
+         "t": 26.02,
+         "v": [
+          0.06
+         ],
+         "curve": "Line",
+         "lc": {
+          "x": 0.0,
+          "y": 0.0
+         },
+         "rc": {
+          "x": 0.0,
+          "y": 0.0
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "n": 8,
+     "id8": "070db1d1",
+     "label": "Shot_008_Netscape_Collapse.png",
+     "start": 132733333,
+     "dur": 36000000,
+     "src_start": 0,
+     "src_dur": 36033333,
+     "scale": {
+      "x": 0.9,
+      "y": 0.9
+     },
+     "transform": {
+      "x": 0.02,
+      "y": 0.04
+     },
+     "rotation": 0.0,
+     "alpha": 1.0,
+     "uniform_scale": {
+      "on": true,
+      "value": 1.0
+     },
+     "check_flag": 4103,
+     "render_index": 0,
+     "visible": true,
+     "refs": [
+      "speeds",
+      "placeholder_infos",
+      "canvases",
+      "sound_channel_mappings",
+      "material_colors",
+      "loudnesses",
+      "vocal_separations"
+     ],
+     "keyframes": [
+      {
+       "property_type": "KFTypeScaleX",
+       "points": [
+        {
+         "t": 0.0,
+         "v": [
+          0.8
+         ],
+         "curve": "Line",
+         "lc": {
+          "x": 0.0,
+          "y": 0.0
+         },
+         "rc": {
+          "x": 0.0,
+          "y": 0.0
+         }
+        },
+        {
+         "t": 36.005,
+         "v": [
+          0.9
+         ],
+         "curve": "Line",
+         "lc": {
+          "x": 0.0,
+          "y": 0.0
+         },
+         "rc": {
+          "x": 0.0,
+          "y": 0.0
+         }
+        }
+       ]
+      },
+      {
+       "property_type": "KFTypePositionX",
+       "points": [
+        {
+         "t": 0.0,
+         "v": [
+          -0.04
+         ],
+         "curve": "Line",
+         "lc": {
+          "x": 0.0,
+          "y": 0.0
+         },
+         "rc": {
+          "x": 0.0,
+          "y": 0.0
+         }
+        },
+        {
+         "t": 36.005,
+         "v": [
+          0.02
+         ],
+         "curve": "Line",
+         "lc": {
+          "x": 0.0,
+          "y": 0.0
+         },
+         "rc": {
+          "x": 0.0,
+          "y": 0.0
+         }
+        }
+       ]
+      },
+      {
+       "property_type": "KFTypePositionY",
+       "points": [
+        {
+         "t": 0.0,
+         "v": [
+          -0.03
+         ],
+         "curve": "Line",
+         "lc": {
+          "x": 0.0,
+          "y": 0.0
+         },
+         "rc": {
+          "x": 0.0,
+          "y": 0.0
+         }
+        },
+        {
+         "t": 36.005,
+         "v": [
+          0.04
+         ],
+         "curve": "Line",
+         "lc": {
+          "x": 0.0,
+          "y": 0.0
+         },
+         "rc": {
+          "x": 0.0,
+          "y": 0.0
+         }
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "type": "audio",
+   "id": "9457a5bc-11cb-485b-8f92-a86c29122379",
+   "segments": [
+    {
+     "n": 1,
+     "id8": "c2c2b186",
+     "label": "audio.mp3",
+     "start": 0,
+     "dur": 168733333,
+     "src_start": 0,
+     "src_dur": 168733333,
+     "scale": null,
+     "transform": null,
+     "rotation": null,
+     "alpha": null,
+     "uniform_scale": null,
+     "check_flag": 1,
+     "render_index": 0,
+     "visible": true,
+     "refs": [
+      "speeds",
+      "placeholder_infos",
+      "sound_channel_mappings",
+      "vocal_separations"
+     ],
+     "keyframes": []
+    }
+   ]
+  },
+  {
+   "type": "effect",
+   "id": "459fbe89-d35a-4f7a-b644-87f4b6ad5000",
+   "segments": [
+    {
+     "n": 1,
+     "id8": "4f9567e2",
+     "label": "Retro Film",
+     "start": 0,
+     "dur": 168733333,
+     "src_start": null,
+     "src_dur": null,
+     "scale": null,
+     "transform": null,
+     "rotation": null,
+     "alpha": null,
+     "uniform_scale": null,
+     "check_flag": null,
+     "render_index": 11000,
+     "visible": true,
+     "refs": [],
+     "keyframes": []
+    }
+   ]
+  }
+ ],
+ "transitions": [
+  {
+   "id": "580f435b-78bd-4fa2-aa71-d03b49645a60",
+   "type": "transition",
+   "name": "Dissolve",
+   "effect_id": "392FD26E-A514-4d0f-8950-EA4A20CB407C",
+   "resource_id": "6724846004274729480",
+   "third_resource_id": "",
+   "source_platform": 0,
+   "path": "C:/Users/anhlt/AppData/Local/CapCut/User Data/Cache/effect/670866/b5f962a334dcc141bbc3dae0f5777564",
+   "duration": 466666,
+   "is_overlap": false,
+   "platform": "all",
+   "category_id": "",
+   "category_name": "",
+   "request_id": "",
+   "is_ai_transition": false,
+   "video_path": "",
+   "task_id": ""
+  },
+  {
+   "id": "14c068d5-1a0d-4f11-8f17-e7c5d79f618d",
+   "type": "transition",
+   "name": "Black Fade",
+   "effect_id": "7CBE3442-7B48-4a73-9391-C74FB7580D30",
+   "resource_id": "6724239388189921806",
+   "third_resource_id": "",
+   "source_platform": 0,
+   "path": "C:/Users/anhlt/AppData/Local/CapCut/User Data/Cache/effect/4381461/3bca53e9f3dfa2c184fbee96438ea097",
+   "duration": 466666,
+   "is_overlap": false,
+   "platform": "all",
+   "category_id": "",
+   "category_name": "",
+   "request_id": "",
+   "is_ai_transition": false,
+   "video_path": "",
+   "task_id": ""
+  },
+  {
+   "id": "475d115a-47ce-4c0c-83d7-c3003018ef9a",
+   "type": "transition",
+   "name": "Blur",
+   "effect_id": "C5F81057-B249-4f1c-9F80-050CE6C2B25C",
+   "resource_id": "6916426617455645186",
+   "third_resource_id": "",
+   "source_platform": 0,
+   "path": "C:/Users/anhlt/AppData/Local/CapCut/User Data/Cache/effect/4385682/fc1352435f88c6f284b6c6dce8552ffe",
+   "duration": 466666,
+   "is_overlap": false,
+   "platform": "all",
+   "category_id": "",
+   "category_name": "",
+   "request_id": "",
+   "is_ai_transition": false,
+   "video_path": "",
+   "task_id": ""
+  },
+  {
+   "id": "04b55924-9044-49a2-811c-ddbc8c443a00",
+   "type": "transition",
+   "name": "Gradient Wipe",
+   "effect_id": "DDA0714D-730D-499d-AED1-05BA6455ED35",
+   "resource_id": "6923134021744464386",
+   "third_resource_id": "",
+   "source_platform": 0,
+   "path": "C:/Users/anhlt/AppData/Local/CapCut/User Data/Cache/effect/4381468/2fff9b60c929559bce574ab8ef2c14a7",
+   "duration": 466666,
+   "is_overlap": false,
+   "platform": "all",
+   "category_id": "",
+   "category_name": "",
+   "request_id": "",
+   "is_ai_transition": false,
+   "video_path": "",
+   "task_id": ""
+  },
+  {
+   "id": "ab82965b-5bae-4fb3-9347-b3aa8d925679",
+   "type": "transition",
+   "name": "Dissolve II",
+   "effect_id": "85592C7A-A74A-49fe-9ECD-8BD4707346D2",
+   "resource_id": "6724866927933526542",
+   "third_resource_id": "",
+   "source_platform": 0,
+   "path": "C:/Users/anhlt/AppData/Local/CapCut/User Data/Cache/effect/4381465/8179e342f9b24dd1817c56f7ef1f8f9b",
+   "duration": 466666,
+   "is_overlap": false,
+   "platform": "all",
+   "category_id": "",
+   "category_name": "",
+   "request_id": "",
+   "is_ai_transition": false,
+   "video_path": "",
+   "task_id": ""
+  },
+  {
+   "id": "65c14c66-df8b-4cdb-803c-984ee46b9fd0",
+   "type": "transition",
+   "name": "Dissolve",
+   "effect_id": "392FD26E-A514-4d0f-8950-EA4A20CB407C",
+   "resource_id": "6724846004274729480",
+   "third_resource_id": "",
+   "source_platform": 0,
+   "path": "C:/Users/anhlt/AppData/Local/CapCut/User Data/Cache/effect/670866/b5f962a334dcc141bbc3dae0f5777564",
+   "duration": 466666,
+   "is_overlap": false,
+   "platform": "all",
+   "category_id": "",
+   "category_name": "",
+   "request_id": "",
+   "is_ai_transition": false,
+   "video_path": "",
+   "task_id": ""
+  },
+  {
+   "id": "b6ddd133-2fea-4d42-8530-4d9c77a8d078",
+   "type": "transition",
+   "name": "Black Fade",
+   "effect_id": "7CBE3442-7B48-4a73-9391-C74FB7580D30",
+   "resource_id": "6724239388189921806",
+   "third_resource_id": "",
+   "source_platform": 0,
+   "path": "C:/Users/anhlt/AppData/Local/CapCut/User Data/Cache/effect/4381461/3bca53e9f3dfa2c184fbee96438ea097",
+   "duration": 466666,
+   "is_overlap": false,
+   "platform": "all",
+   "category_id": "",
+   "category_name": "",
+   "request_id": "",
+   "is_ai_transition": false,
+   "video_path": "",
+   "task_id": ""
+  }
+ ],
+ "material_animations": [
+  {
+   "id": "d6611c19-a6c9-478b-a9bc-a9b5cc8088dd",
+   "type": "sticker_animation",
+   "animations": [
+    {
+     "id": "6798320778182922760",
+     "type": "in",
+     "start": 0,
+     "duration": 500000,
+     "path": "C:/Users/anhlt/AppData/Local/CapCut/User Data/Cache/effect/6798320778182922760/883ad04bd79b502aaa55b5d9b87175ea",
+     "platform": "all",
+     "resource_id": "6798320778182922760",
+     "third_resource_id": "6798320778182922760",
+     "source_platform": 1,
+     "name": "Fade In",
+     "category_id": "2037708296",
+     "category_name": "2037708296",
+     "panel": "video",
+     "material_type": "video",
+     "anim_adjust_params": null,
+     "request_id": ""
+    },
+    {
+     "id": "6798320902548230669",
+     "type": "out",
+     "start": 14440000,
+     "duration": 500000,
+     "path": "C:/Users/anhlt/AppData/Local/CapCut/User Data/Cache/effect/6798320902548230669/c6f05ce62355b537be762550040bfc08",
+     "platform": "all",
+     "resource_id": "6798320902548230669",
+     "third_resource_id": "0",
+     "source_platform": 1,
+     "name": "Fade Out",
+     "category_id": "2037708296",
+     "category_name": "2037708296",
+     "panel": "video",
+     "material_type": "video",
+     "anim_adjust_params": null,
+     "request_id": ""
+    }
+   ],
+   "multi_language_current": "none"
+  },
+  {
+   "id": "4de9723a-0da7-4496-9524-f007646a1abc",
+   "type": "sticker_animation",
+   "animations": [
+    {
+     "id": "6798320778182922760",
+     "type": "in",
+     "start": 0,
+     "duration": 500000,
+     "path": "C:/Users/anhlt/AppData/Local/CapCut/User Data/Cache/effect/6798320778182922760/883ad04bd79b502aaa55b5d9b87175ea",
+     "platform": "all",
+     "resource_id": "6798320778182922760",
+     "third_resource_id": "6798320778182922760",
+     "source_platform": 1,
+     "name": "Fade In",
+     "category_id": "2037708296",
+     "category_name": "2037708296",
+     "panel": "video",
+     "material_type": "video",
+     "anim_adjust_params": null,
+     "request_id": ""
+    },
+    {
+     "id": "6798320902548230669",
+     "type": "out",
+     "start": 25520000,
+     "duration": 500000,
+     "path": "C:/Users/anhlt/AppData/Local/CapCut/User Data/Cache/effect/6798320902548230669/c6f05ce62355b537be762550040bfc08",
+     "platform": "all",
+     "resource_id": "6798320902548230669",
+     "third_resource_id": "0",
+     "source_platform": 1,
+     "name": "Fade Out",
+     "category_id": "2037708296",
+     "category_name": "2037708296",
+     "panel": "video",
+     "material_type": "video",
+     "anim_adjust_params": null,
+     "request_id": ""
+    }
+   ],
+   "multi_language_current": "none"
+  }
+ ],
+ "canvases": [
+  {
+   "id": "65ef0726-0d61-4d1a-9725-a8588a3dc1c3",
+   "type": "canvas_blur",
+   "color": "",
+   "blur": 0.75,
+   "image": "",
+   "album_image": "",
+   "image_id": "",
+   "image_name": "",
+   "source_platform": 0,
+   "team_id": ""
+  },
+  {
+   "id": "a9431fe1-109e-459c-a292-2e38ee2563a7",
+   "type": "canvas_blur",
+   "color": "",
+   "blur": 0.75,
+   "image": "",
+   "album_image": "",
+   "image_id": "",
+   "image_name": "",
+   "source_platform": 0,
+   "team_id": ""
+  },
+  {
+   "id": "c4d981fa-824b-4164-b4bc-e0da9a1691fa",
+   "type": "canvas_blur",
+   "color": "",
+   "blur": 0.75,
+   "image": "",
+   "album_image": "",
+   "image_id": "",
+   "image_name": "",
+   "source_platform": 0,
+   "team_id": ""
+  },
+  {
+   "id": "86fcd261-a014-4d2e-b7f9-9292790df650",
+   "type": "canvas_blur",
+   "color": "",
+   "blur": 0.75,
+   "image": "",
+   "album_image": "",
+   "image_id": "",
+   "image_name": "",
+   "source_platform": 0,
+   "team_id": ""
+  },
+  {
+   "id": "d5faea55-722f-4b8b-bfcb-fffb5b51a80d",
+   "type": "canvas_blur",
+   "color": "",
+   "blur": 0.75,
+   "image": "",
+   "album_image": "",
+   "image_id": "",
+   "image_name": "",
+   "source_platform": 0,
+   "team_id": ""
+  },
+  {
+   "id": "bd8e031b-1e13-4b05-a8f5-852a240e2a39",
+   "type": "canvas_blur",
+   "color": "",
+   "blur": 0.75,
+   "image": "",
+   "album_image": "",
+   "image_id": "",
+   "image_name": "",
+   "source_platform": 0,
+   "team_id": ""
+  },
+  {
+   "id": "7018a5c9-41c8-4622-95b3-06d70405f05d",
+   "type": "canvas_blur",
+   "color": "",
+   "blur": 0.75,
+   "image": "",
+   "album_image": "",
+   "image_id": "",
+   "image_name": "",
+   "source_platform": 0,
+   "team_id": ""
+  },
+  {
+   "id": "a30aeb47-dfbe-4a58-8176-214e9f4c827b",
+   "type": "canvas_blur",
+   "color": "",
+   "blur": 0.75,
+   "image": "",
+   "album_image": "",
+   "image_id": "",
+   "image_name": "",
+   "source_platform": 0,
+   "team_id": ""
+  }
+ ],
+ "video_effects": [
+  {
+   "id": "106821c4-ef96-4841-87a2-d5c5710d8de6",
+   "effect_id": "15206723",
+   "resource_id": "7034407144908657154",
+   "name": "Retro Film",
+   "type": "video_effect",
+   "sub_type": 0,
+   "bind_segment_id": "",
+   "transparent_params": "",
+   "path": "C:/Users/anhlt/AppData/Local/CapCut/User Data/Cache/effect/11327669/294e09ba63ed72dd245881d516f7a3c6",
+   "value": 0.6,
+   "category_id": "",
+   "category_name": "",
+   "platform": "all",
+   "apply_target_type": 2,
+   "source_platform": 0,
+   "version": "",
+   "item_effect_type": 0,
+   "adjust_params": [],
+   "time_range": null,
+   "formula_id": "",
+   "apply_time_range": null,
+   "render_index": 11000,
+   "track_render_index": 0,
+   "common_keyframes": [],
+   "request_id": "",
+   "algorithm_artifact_path": "",
+   "disable_effect_faces": [],
+   "covering_relation_change": 0,
+   "enable_mask": true,
+   "effect_mask": [],
+   "enable_video_mask_stroke": true,
+   "enable_video_mask_shadow": true,
+   "aigc_current_artifact_path": "",
+   "aigc_current_artifact_cnt": 0,
+   "aigc_current_artifact_freeze_time": -1,
+   "aigc_current_artifact_freeze_progress": 0.0,
+   "sdk_extra": ""
+  }
+ ]
+}

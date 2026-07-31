@@ -96,6 +96,8 @@ Gộp **tất cả** câu hỏi chưa biết vào **một** phiên GUI, mỗi sh
 
 ## 6. CHECKLIST MÁY RENDER — phiên 30/07/2026
 
+**Trạng thái: đã chạy xong ngày 31/07/2026, cả ba giai đoạn đều đạt.** Parity 0,0 ms tuyệt đối, bài tải 300 shot đạt. Giữ checklist này làm quy trình cho máy tiếp theo. Hai số còn thiếu: thời gian CapCut vẽ xong timeline 300 shot và RAM đỉnh. Và **updater trên máy render vẫn chưa bị chặn** — phải làm trước phép đo nghiêm túc lần sau.
+
 Hai mục tiêu: xác nhận code chạy trên máy đó đúng như máy hiện tại với project 2 phút 48; xác nhận CapCut mở nổi project 60 phút vài trăm ảnh (chưa render).
 
 ### Giai đoạn 1 — cài đặt, khoảng 40 phút
@@ -116,7 +118,7 @@ Mở CapCut, đăng nhập, tắt auto-update trong Settings. Bấm New Project 
 
 ### Giai đoạn 2 — probe parity, khoảng 15 phút
 
-Chép `fixtures/test-8shot/*` vào `data\Test_tool_v3\`, và `fixtures/parity-gold/*` vào `data\snapshots\`.
+Chép media test vào `data\Test_tool_v3\` — tám ảnh PNG, `audio.mp3`, `video1.srt`. Bộ này **không có trong repo**, lấy từ `vendor\Test_tool_v3\` hoặc chép tay từ máy phát triển. Rồi chép `fixtures/parity-gold/*` từ repo vào `data\snapshots\`.
 
 Chạy đúng chín bước ở mục 2 phía trên. Đây là **cửa ải**: nếu bảng timing không khớp mốc vàng thì dừng lại, mọi số đo sau đó vô nghĩa.
 

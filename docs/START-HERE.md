@@ -1,4 +1,4 @@
-**Cập nhật: 30/07/2026. File này được đọc TRƯỚC MỌI FILE KHÁC.**
+**Cập nhật: 31/07/2026. File này được đọc TRƯỚC MỌI FILE KHÁC.**
 
 Nếu bạn là một AI vừa được đưa vào dự án này: đọc hết file này trước, rồi mới quyết định đọc file nào tiếp. Đừng đọc `docs/legacy/v0.8-full.md` trừ khi thật sự cần — nó nặng 299 KB và sẽ ăn phần lớn ngữ cảnh của bạn.
 
@@ -33,7 +33,7 @@ Vì `data\` và `vendor\` là **thư mục ngang hàng** với repo chứ không
 
 | Thư mục | Nội dung | Dùng để làm gì |
 |---|---|---|
-| `Test_tool_v3\` | 8 ảnh PNG 1376×768, `audio.mp3` dài 168,724813 giây, `video1.srt` | Bộ test chuẩn của mọi phép thử. Đã được chép vào repo tại `fixtures/test-8shot/` nên máy khác không cần bản này |
+| `Test_tool_v3\` | 8 ảnh PNG 1376×768, `audio.mp3` dài 168,724813 giây, `video1.srt` | Bộ test chuẩn của mọi phép thử. **Không** nằm trong repo — máy khác lấy từ `vendor\Test_tool_v3\` hoặc chép tay từ đây |
 | `snapshots\` | 15 file JSON ghi timing từng phép đo, gồm bộ `parity_gold_before/after/snap` | Mốc so sánh. Bộ `parity_gold_*` đã chép vào `fixtures/parity-gold/` |
 | `frames\` | 19 khung hình trích từ bản export đã kiểm chứng, kèm md5 và màu trung bình RGB | Mốc hồi quy ở đầu ra. So bản dựng mới với bộ này để biết có gì thay đổi |
 | `perf\` | Báo cáo do các script đo sinh ra | Nơi ghi kết quả Việc A |
@@ -43,7 +43,7 @@ Vì `data\` và `vendor\` là **thư mục ngang hàng** với repo chứ không
 
 **Vì sao không commit:** `export_v4.mp4` một mình đã 245 MB; `exports\` và `archive\` là dữ liệu sinh ra được chứ không phải nguồn; và tám ảnh cùng file narration là nội dung của người dùng.
 
-**Cách một máy mới có được nhánh này:** không cần. Phần thật sự cần thiết đã nằm trong repo ở `fixtures/`. Scaffold thì **phải tạo mới trên chính máy đó** chứ không chép sang được.
+**Cách một máy mới có được nhánh này:** chỉ mốc vàng JSON nằm trong repo, ở `fixtures/parity-gold/`. Media test — tám ảnh, `audio.mp3`, `video1.srt` — cố ý **không** commit, lấy từ `vendor\Test_tool_v3\` hoặc chép tay. Scaffold thì **phải tạo mới trên chính máy đó** chứ không chép sang được.
 
 **CẢNH BÁO về scaffold:** file scaffold chứa đường dẫn tuyệt đối trỏ về profile của user cũ, dạng `C:\Users\anhlt\AppData\Local\CapCut\...`. `clone_project.py` chỉ thay GUID và tên project, **không** thay phần user profile. Chép scaffold sang máy có tên user khác sẽ khiến CapCut báo mất media dù thư mục project không hề bị đổi tên. Trên máy mới luôn tạo scaffold mới bằng GUI: New Project, mở lại lần nữa rồi đóng, xác nhận tên thư mục trùng `draft_name`, rồi copy nguyên thư mục ra thành `scaffold_CLEAN`. Mất hai phút.
 
@@ -60,7 +60,7 @@ Vì `data\` và `vendor\` là **thư mục ngang hàng** với repo chứ không
 | `MANIFEST.txt` | | SHA256 từng file, kiểm kê, và danh sách hai file updater cần vô hiệu hoá |
 | `README_PARITY.txt` | | Quy trình probe parity kèm tiêu chí pass bằng con số |
 | `setup_1_runtimes.ps1`, `setup_2_capcut.ps1` | | Bootstrap máy mới, tách hai file vì sau khi cài Python và Node thì shell đang mở chưa thấy PATH mới |
-| `frames\`, `snapshots\`, `scripts\`, `testV3_CLEAN\`, `Test_tool_v3\` | | Bản sao chụp tại thời điểm đóng gói. Đã trùng với `fixtures/` trong repo, giữ để đối chiếu |
+| `frames\`, `snapshots\`, `scripts\`, `testV3_CLEAN\`, `Test_tool_v3\` | | Bản sao chụp tại thời điểm đóng gói. Chỉ `snapshots\` là trùng với `fixtures/parity-gold/` trong repo; bốn mục còn lại **chỉ có ở đây**, repo không chứa |
 
 **Vì sao không commit:** bộ cài 516 MB là tài sản của ByteDance, phát tán lại là chuyện khác hẳn với lưu bản sao cho mình dùng; `Cache_effect\` 14653 file nhị phân làm mọi lần clone thành cực hình và nó thay đổi liên tục — đã đếm 272 rồi 277 rồi 278 rồi 279 mục qua các phiên — nên sẽ làm phình lịch sử git vô ích.
 
@@ -81,13 +81,13 @@ capcut-pipeline/
     research-log.md    <- nhat ky theo ngay
     scripts.md         <- moi script lam gi
     legacy/v0.8-full.md  <- 299 KB, ban luu tru. CHI doc khi ba file tren khong tra loi duoc
-  pipeline/            <- lop loi MOI, HIEN CON RONG. core/ thuan tinh toan, capcut/ biet dinh dang file
+  pipeline/            <- lop loi MOI, moi co khung goi __init__.py. core/ thuan tinh toan, capcut/ biet dinh dang file
   scripts_v1/          <- 13 script DANG CHAY THAT. Day la code song, khong phai di san
-  tools/               <- 7 script nghien cuu va tra cuu, khong thuoc runtime
+  tools/               <- 10 script nghien cuu va tra cuu, khong thuoc runtime
   tests/               <- CON RONG
   molds/capcut-9.1.0/  <- khuon JSON chup tu CapCut, phan theo phien ban CapCut
   reference/           <- enums_backup.json 775 KB catalogue hieu ung, describe.json cu phap 76 lenh CLI
-  fixtures/            <- tai nguyen test va snapshot moc vang, de may khac clone la chay duoc
+  fixtures/            <- moc vang JSON de so parity. KHONG chua media test
   _deprecated/         <- 28 script da chet, CO commit kem README giai thich vi sao
   config.example.json  run.bat  README.md
 ```
@@ -110,31 +110,43 @@ Một, bộ năm file tài liệu đã viết đầy đủ, không còn stub.
 
 Hai, repo đã tạo và đẩy lên GitHub tại `github.com/tunahakim/capcut-pipeline`.
 
-Ba, phép thử trên máy render đã chạy ngày 31/07/2026, parity đạt tuyệt đối và bài tải 300 shot đạt, chi tiết ở `docs/research-log.md`.
+Ba, phép thử trên máy render đã chạy ngày 31/07/2026: parity đạt **0,0 ms tuyệt đối** trên cả `before` lẫn `after`, và bài tải 300 shot đạt. Chi tiết ở `docs/research-log.md`.
 
-Bốn, **Việc A đã đóng** — lớp ghi tuyến tính, giữ kiến trúc một tiến trình CLI cho mỗi thao tác, được phép bắt đầu viết code trong `pipeline/`.
+Bốn, **Việc A đã đóng.** Lớp ghi là **tuyến tính**, chi phí tách được thành phần cố định khoảng 0,304 giây mỗi lệnh cộng khoảng 0,27 mili giây cho mỗi segment đã tồn tại. Ở mốc 300 segment phần cố định chiếm chừng 88%. Quyết định: giữ kiến trúc một tiến trình CLI cho mỗi thao tác, không gộp lệnh, không viết lại lớp ghi. Được phép bắt đầu viết code trong `pipeline/`.
+
+Năm, **quy tắc thiết kế quan trọng nhất hiện nay, rút ra từ Việc A:** bắt mọi mốc shot về bội số của 1/30 giây ngay ở khâu sinh `shots.csv`. Khi ranh giới đã nằm đúng lưới frame thì CapCut không dịch một mili giây nào, và ràng buộc timing khoá cứng ở mục 2 được bảo toàn tuyệt đối thay vì chỉ "dưới một frame". Đã kiểm chứng trên bài 300 shot bước 12,000 giây.
 
 ### Đang dở, thứ tự ưu tiên
 
-Một, vá `tools/v4_mold.py`: đường dẫn ghi ra phải là `molds/capcut-9.1.0/filter.json` và thêm khối `_meta`. Lưu ý file đích **đã tồn tại** 3218 byte, phải diff trước khi đè.
+Một, vá `tools/v4_mold.py`. Đường dẫn ghi ra phải là `molds/capcut-9.1.0/filter.json`, thêm khối `_meta`, sửa fallback `CAPCUT_LAB` đang trỏ vào `D:\Test_tool` đã chết, và mặc định **chỉ diff chứ không ghi đè**. File đích **đã tồn tại** 3218 byte. Khi diff phải phân loại trường: `path` và `target_timerange.duration` phụ thuộc máy và phụ thuộc project nên **được phép** khác; các trường còn lại **bắt buộc** khớp. Không phân loại thì diff chỉ là nhiễu và sớm muộn khuôn tốt bị đè mất. **Chặn hiện tại:** đo ngày 31/07/2026 trên cả mười một project trong thư mục draft, **không project nào còn material `type=filter`**, kể cả bản do GUI tạo — `strip_filters.py` đã gỡ sạch ở phiên v6. Nghĩa là script vá xong chưa có đối chứng dương để chạy thử. Phải thả tay lại một filter "Film" trong GUI trước, nếu không thì lại rơi vào đúng cái bẫy "mã chưa từng chạy" ở mục 5.
 
-Hai, viết ba test đầu tiên vào `tests/`.
+Hai, viết `tools/shots_dump.py` và chốt lược đồ `shots.csv`. Việc này **đứng trước** việc viết test, vì `shots.csv` là hợp đồng đầu vào của `pipeline/` và là nơi quy tắc bội số 1/30 giây phải sống. Viết test trước sẽ phải bịa lược đồ hai lần rồi hai bản lệch nhau.
 
-Ba, viết `run.bat` thật. Bốn, bắt đầu `pipeline/`.
+Ba, viết ba test đầu tiên vào `tests/`.
+
+Bốn, viết `run.bat` thật.
+
+Năm, bắt đầu `pipeline/`.
 
 ### Nợ kỹ thuật đã biết
 
-`fixtures/` được README, mục 3.1 và mục 4 của file này, và `procedures.md` mục 6 nhắc tới nhưng **không tồn tại trong repo** — hoặc tạo nó, hoặc sửa cả bốn chỗ mô tả.
+`fixtures/` nay đã tồn tại thật, nhưng **chỉ chứa mốc vàng JSON** ở `fixtures/parity-gold/`. Media test cố ý không commit; xem `fixtures/README.md`. Ý tưởng sinh media test tổng hợp bằng script để bỏ hẳn phụ thuộc này là **chưa kiểm chứng**: `audio.mp3` phải dài đúng 168,724813 giây mà MP3 lượng tử độ dài theo frame, nên chưa chắc dựng lại chính xác được.
 
-`tools/` có 9 script chứ không phải 7.
+`tools/` có **10** script, không phải 7 cũng không phải 9. `docs/scripts.md` thiếu hàng `tools/bulk_build.py`.
+
+`pipeline/` **không** rỗng: đã có `__init__.py` ở `pipeline/`, `pipeline/core/` và `pipeline/capcut/`, mỗi file 25 byte. Chưa có code thật nào.
 
 `preflight.py` lỗi thời ba chỗ, xem `failures.md` mục 6.
 
-`docs/scripts.md` còn trống cột mô tả.
+`docs/scripts.md` còn trống toàn bộ cột mô tả, 47 hàng.
 
-`README.md` hiện 5013 byte, không còn là stub 1570 byte.
+`data\Test_tool_v3\shots.csv` rỗng 0 byte. Kiểm ngày 31/07/2026: **không script sống nào đọc hoặc ghi file này**, nó chỉ xuất hiện một lần trong `_deprecated/migrate.py` như một mục ánh xạ sang `archive`. Đây là file giữ chỗ chứ không phải đầu ra hỏng. Lược đồ thật sẽ do `tools/shots_dump.py` định nghĩa.
 
-`run.bat` hiện 71 byte.
+`run.bat` hiện 71 byte, chưa phải bản thật.
+
+**Chưa đo:** thời gian CapCut vẽ xong timeline 300 shot, và RAM đỉnh khi mở project đó. Hai số này không cản trở gì, lấy trong hai phút nếu có dịp ngồi trước máy render.
+
+**Updater trên máy render chưa bị chặn.** Trước phép đo nghiêm túc lần sau phải chặn theo `reference.md` mục 14 — chỉ `CapCut-DiffUpgrade.exe` và `hpatchz.exe`, tuyệt đối không chạm `VEHelper.exe`, `VECrashHandler.exe`, `CapCutService.exe`, và không chặn toàn bộ mạng của CapCut. Nếu không, CapCut có thể tự nhảy phiên bản và mọi mốc so sánh mất giá trị.
 
 ## 7. Môi trường máy phát triển
 
@@ -179,7 +191,7 @@ Mọi đoạn Python phải ghi ra file `.py` bằng PowerShell heredoc `@'...'@
 
 Đưa lệnh chép-dán được ngay, đừng mô tả chung chung. Chỗ nào phải làm tay thì hướng dẫn chi tiết kể cả bấm chuột ở đâu.
 
-Khi hướng dẫn sửa tài liệu: nói rõ sửa mục nào, tìm đoạn nào, thay bằng gì, và viết sẵn nguyên văn để chỉ việc chép dán. Viết như markdown bình thường, **đừng bọc vào `>` hoặc vào khối** ```markdown — bọc như thế chép vào tài liệu rất mất công.
+Khi hướng dẫn sửa tài liệu: nói rõ **file nào, mục nào**, và chỉ ra **ranh giới đoạn bị thay** — câu mở đầu và câu kết thúc — để người dùng biết chính xác xoá từ đâu tới đâu. Nếu một mục phải vá quá nhiều chỗ lặt nhặt thì viết lại nguyên cả mục cho chép dán một lần, kể cả khi bên trong mục có khối rào mã; thay cả khối là được, không sao. Ba điều **tuyệt đối không làm** khi viết nội dung thay thế. Một, không bọc nội dung thay thế vào khối rào mã kèm nhãn `markdown` — người dùng phải gỡ tay từng cái. Hai, không thêm dấu lớn hơn ">" ở đầu dòng kiểu trích dẫn — không thể replace-all để xoá vì sẽ xoá nhầm cả dấu đó nằm bên trong code. Ba, không tự ngắt dòng giữa câu cho cân lề — mỗi đoạn văn phải là **một dòng liền**, dài bao nhiêu cũng được, vì mọi dòng cụt đều phải nối tay lại khi chép vào file. Nội dung thay thế viết ra đúng như nó sẽ nằm trong file, không hơn không kém.
 
 Kết luận chưa có bằng chứng thực nghiệm phải ghi rõ là **chưa kiểm chứng**. Mỗi phép thử nên có một mục biết chắc pass làm đối chứng dương và một mục nghi ngờ; nếu cả hai fail thì lỗi ở phương pháp, nếu chỉ mục nghi ngờ fail thì lỗi đúng chỗ đang nghi.
 

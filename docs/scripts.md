@@ -18,6 +18,7 @@ Sinh tu dong boi `migrate.py`. Cot cuoi dien tay: script lam gi, hop dong dau va
 | `scripts_v1/strip_filters.py` | 1.9 KB | |
 | `scripts_v1/tr_profile3.py` | 2.3 KB | |
 | `tools/audit_kit.py` | 7.4 KB | |
+| `tools/bulk_build.py` | 2.4 KB | Dựng N shot lặp vòng từ ảnh có sẵn để đo tải. Không thêm audio. Đã chạy ở n=10 và n=300 trên máy render 31/07/2026 |
 | `tools/cache_probe.py` | 5.7 KB | |
 | `tools/enum_list.py` | 1.1 KB | |
 | `tools/filt_enum.py` | 1.9 KB | |

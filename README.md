@@ -47,13 +47,13 @@ Không cần thư viện Python nào ngoài thư viện chuẩn. Toàn bộ scri
 
 ```
 docs/         tai lieu. Bat dau tu START-HERE.md
-pipeline/     lop loi moi (dang viet)
+pipeline/     lop loi moi (dang viet, hien moi co khung goi __init__.py)
 scripts_v1/   13 script dang chay that
-tools/        7 script nghien cuu va tra cuu
+tools/        10 script nghien cuu va tra cuu
 tests/        (con rong)
 molds/        khuon JSON chup tu CapCut, phan theo phien ban CapCut
 reference/    catalogue hieu ung va cu phap CLI
-fixtures/     tai nguyen test va snapshot moc vang
+fixtures/     moc vang JSON de so parity. KHONG chua media test
 _deprecated/  script da chet, giu lai kem ly do
 ```
 
