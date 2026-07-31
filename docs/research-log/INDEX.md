@@ -1,0 +1,20 @@
+# Nhật ký nghiên cứu — mục lục
+
+Mỗi phiên làm việc một file, tên theo quy ước `<ngày>-<số thứ tự phiên trong ngày>-<nhãn ngắn>.md`, mới nhất lên đầu. File `research-log.md` gộp chung đã được tách vào thư mục này ngày 01/08/2026 và không còn tồn tại; nội dung không mất chữ nào, chỉ đổi chỗ.
+
+| Phiên | File | Nội dung chính |
+|---|---|---|
+| 31/07 đêm | `2026-07-31-5-prod60.md` | Bài sản xuất thật 60 phút có narration. 902 lệnh CLI trong 5,5 phút, lệch 0,0 ms trên 300 shot, export 4,07 GB trong 6 phút. Đính chính con số 20 phút. Phát hiện `shots_crosscheck.py` đối chiếu nhầm project. Hạn chế KY dùng chung cho mọi ảnh |
+| 31/07 tối muộn | `2026-07-31-4-reh10-audio.md` | Tổng duyệt 10 shot có narration. Shot video lệch 0,0 ms, segment audio bị nới +8,5 ms ở mốc cuối, đuôi cố ý hấp thụ trọn |
+| 31/07 tối | `2026-07-31-3-bgblur-timing.md` | Đóng ca lỗi im lặng thứ bảy: `bg-blur` không hỏng, quan sát ban đầu sai. Chốt luật bắt lưới 0,1 giây theo ranh giới tuyệt đối, mốc cuối dùng ceil, cộng đuôi cố ý |
+| 31/07 chiều | `2026-07-31-2-benchmark-render.md` | Benchmark máy render: dựng 300 shot đủ hiệu ứng, lệch 0,0 ms, export 60 phút thành công |
+| 31/07 sáng | `2026-07-31-1-parity-300shot.md` | Parity hai máy đạt 0,0 ms tuyệt đối, bài tải 300 shot, đóng Việc A về kiến trúc lớp ghi |
+| 30/07 | `2026-07-30-1-refactor.md` | Di trú sang cây ba nhánh, tạo bộ tài liệu, đưa tài liệu nháp cũ ra khỏi repo |
+| 29/07 (v7) | `2026-07-29-3-v7.md` | Chuẩn hoá `CAPCUT_LAB`, đóng vendor kit, chặn updater, dựng mốc vàng parity |
+| 29/07 (v6) | `2026-07-29-2-v6.md` | Export MP4 thật lần đầu, chặn bởi khoá Pro, đo từng khung, `cube` ra cắt cứng |
+| 29/07 (v5) | `2026-07-29-1-v5.md` | Lớp filter bằng Python, quy tắc cache-first, bỏ hẳn `add-filter` |
+| 28/07 | `2026-07-28-1-mo-dau.md` | Quyết định giữ CapCut, hệ toạ độ NDC, công thức lề, ba lỗi im lặng đầu tiên |
+
+Bốn file của ngày 28 và 29/07 vốn là phụ lục E1 tới E4 chép sang từ `../legacy/v0.8-full.md`, chưa được viết lại, nên văn phong khác các phiên sau.
+
+Số liệu trong nhật ký là số **tại thời điểm phiên đó**. Khi một con số bị đính chính ở phiên sau, phiên cũ được thêm một đoạn "Đính chính" trỏ tới phiên đã sửa, chứ không sửa lặng lẽ. Nguồn số hiện hành luôn là `../reference.md` và `../STATE.md`.
