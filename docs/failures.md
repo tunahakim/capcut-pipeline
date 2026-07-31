@@ -15,7 +15,9 @@
 
 Mức 4b: đối chứng phải **cùng một khung hình**. So màu giữa giây 30 và giây 120 là vô nghĩa vì hai bức ảnh vốn khác nhau. Phải rê con trỏ qua đúng ranh giới nằm **bên trong một shot**. Và nếu ranh giới là "A → B" thì đổi màu chỉ chứng minh A khác B, chưa chứng minh B tồn tại.
 
-## 2. Tám lỗi im lặng đã gặp
+Điều kiện thứ hai của mức 4b, thêm ngày 31/07/2026 sau ca 2.8: **phải biết trước ground truth của từng shot trước khi nhìn**. Khi một tính năng chỉ được bật trên một phần số shot và người quan sát không biết shot nào thuộc nhóm nào, mắt sẽ tự dựng ra kết luận sai với độ tự tin rất cao. Trước mọi phép kiểm thị giác, hãy in ra danh sách shot nào có tính năng, ở cường độ nào, tại mốc thời gian nào, rồi mới mở preview.
+
+## 2. Tám mục lỗi im lặng — bảy lỗi thật và một ca lỗi quan sát
 
 ### 2.1. `keyframe uniform_scale`
 
@@ -89,15 +91,19 @@ Ví dụ đủ ba mặt: filter "Film" **không có** trong `enums.json` ở b�
 
 **Kèm theo, cùng một phép đo:** `draft_meta_info.json` chứa `draft_root_path` là đường dẫn tuyệt đối của máy. Đây là bằng chứng thực nghiệm cho cảnh báo "scaffold chỉ dùng được trên chính máy đã tạo ra nó" ở `START-HERE.md` mục 3.1 — trước đó cảnh báo này chỉ là khẳng định suông.
 
-### 2.8. `bg-blur` mất tác dụng ở quy mô lớn
+Bổ sung 31/07/2026, cùng cơ chế nhưng khác đường vào: **scaffold clone sang máy khác cũng mang theo `draft_fold_path` của máy cũ.** Đo trên máy render: `scaffold\testV3_CLEAN` chứa `draft_fold_path = C:/Users/anhlt/AppData/Local/CapCut/User Data/Projects/com.lveditor.draft/testV3`, và `clone_project.py` không sửa trường này vì nó chỉ thay GUID cùng tên project. Sau khi vá bằng `tools/fix_fold_path.py`, project `reh10` mở và lưu bình thường, timing lệch 0,0 ms. Đây là lời giải thích cho cảnh báo "scaffold chỉ dùng được trên chính máy đã tạo ra nó": không phải scaffold hỏng, mà là một trường đường dẫn tuyệt đối chưa được thay. Cách phát hiện: sau mỗi lần clone, in `draft_fold_path` ra và so với thư mục thật.
 
-**Triệu chứng:** trên project `bench300` gồm 300 shot, 153 lệnh `capcut bg-blur` đều trả về thành công, `capcut lint` sạch, `materials.canvases` có đúng 453 mục trong đó 153 mục `type=canvas_blur`, và `kb_apply.py` bật bit 4096 cho đúng 153 material video. Nhưng **không có một pixel blur nào** — không thấy trong preview CapCut, không thấy trong bản export MP4. Cùng cấu hình đó ở quy mô 8 shot thì blur hoạt động bình thường.
+### 2.8. `bg-blur` "mất tác dụng ở quy mô lớn" — ĐÃ ĐÓNG, là lỗi quan sát
 
-**Nguyên nhân: chưa xác định.** Ba giả thuyết cần loại trừ theo thứ tự rẻ trước. Một, mỗi segment có blur đang tham chiếu **hai** canvas — một canvas mặc định do `add-video` tạo và một `canvas_blur` do `bg-blur` tạo — và CapCut chỉ đọc cái đầu tiên; con số 453 bằng đúng 300 cộng 153 nên giả thuyết này khớp về số học. Hai, thứ tự lệnh: ở `bench300` thì `bg-blur` chạy trước `transition` và `image-anim`, giống `parity_build.py`, nên thứ tự **không** phải nguyên nhân — trừ khi số lượng lệnh về sau làm hỏng tham chiếu. Ba, mức blur ngẫu nhiên 1 đến 4 trong đó mức 1 là 0,0625 gần như vô hình, nhưng điều này không giải thích được các shot mức 3 và 4.
+**Triệu chứng ban đầu, ghi ngày 31/07/2026:** sau khi dựng `bench300` gồm 300 shot, quan sát bằng mắt trên preview và trên bản export cho thấy rất nhiều khung hình có ảnh nhỏ hơn khung nhưng nền là màu đen chứ không phải nền mờ, ô Canvas trong panel không được tick. Kết luận ban đầu là `bg-blur` mất tác dụng ở quy mô 300 shot dù mọi kiểm tra tự động đều sạch.
 
-**Cách phát hiện:** chỉ bằng mắt. Mọi kiểm tra tự động đều báo bình thường, kể cả `fx_audit.py`.
+**Kết luận thật:** không có lỗi nào cả. `bench_shots.py` rải blur ngẫu nhiên cho khoảng một nửa số shot, nên 147 trong 300 shot mang `canvas_color` **theo đúng thiết kế**, và canvas màu ở scale nhỏ hơn 1 thì cho nền đen. Các shot đen và shot mờ nằm đan xen nhau chính vì phép rải là ngẫu nhiên.
 
-**Chưa xử lý.** Bước chẩn đoán tiếp theo: bóc một segment có blur trong `bench300` ra, đếm số phần tử `extra_material_refs` trỏ tới bucket `canvases`, và so với một segment tương ứng trong project 8 shot đã biết chắc hoạt động. Đây là phép thử oracle có đối chứng dương sẵn có.
+**Chuỗi bằng chứng khép lại, 31/07/2026.** `tools/bgblur_diag.py` đọc `draft_content.json`: đúng 300 canvas cho 300 segment, không canvas mồ côi, mỗi segment đúng **một** ref canvas, phân bố `canvas_blur` 153 và `canvas_color` 147, `check_flag` 4103 đúng 153 lần và 7 đúng 147 lần, vị trí ref luôn là idx 3, file gốc và file trong `Timelines\` **trùng nhau từng byte** ở 2.499.852 byte. Scale chạy 0,72 đến 0,92 nên viền lộ nền rộng 180 đến 269 pixel mỗi bên, thừa sức nhìn thấy. `tools/bgblur_frames.py` trích khung từ bản export 4,07 GB tại giữa các shot đã biết trước nhóm; các shot `canvas_blur` có nền mờ, các shot `canvas_color` có nền đen. `tools/shots_crosscheck.py` đối chiếu 300 dòng `shots.csv` với JSON: 0 lệch trên `start`, `dur`, `blur`, `image` và cặp scale Ken Burns; 153 blur khớp hai phía; 299 transition khớp hai phía; hai dãy mẫu đan xen trùng nhau từng ký tự trên cả 300 shot.
+
+**Trạng thái tính năng:** canvas blur **đã kiểm chứng ở mức 5** trên 300 shot, gồm cả mức yếu nhất 0,0625 và mức mạnh nhất 1,0. Không còn hạn chế nào cho sản xuất.
+
+**Hai bài học giữ lại.** Một, bổ sung điều kiện ground truth cho mức 4b của thang bằng chứng, xem mục 1. Hai, luật sinh cột `blur` trong sản xuất thật **không được ngẫu nhiên**: nền đen xen kẽ nền mờ giữa các shot liền nhau trông như lỗi. Luật đúng là hình học — bật blur khi ảnh không phủ kín khung ở bất kỳ thời điểm nào, tức khi `KX * s < 1` hoặc `KY * s < 1` với `s` nhỏ nhất của shot. Luật này bao trùm cả trường hợp ảnh lệch tỉ lệ so với khung, vốn lộ nền ngay cả ở scale bằng 1.
 
 ## 3. Ba loại lỗi cấu trúc
 
@@ -167,7 +173,7 @@ Ghi lại để không ai đi lại đường cũ.
 
 **"`capcut <lệnh-con> --help` xem được cú pháp."** Sai. CLI diễn giải tham số đầu tiên của mọi lệnh con là đường dẫn project, nên `capcut add-video --help` trả về `{"error":"No draft found at: --help"}`. Muốn biết cú pháp thì đọc script trong `scripts_v1/` hoặc chạy `capcut --help` không kèm lệnh con.
 
-## 7. Ba quy tắc phương pháp
+## 7. Bốn quy tắc phương pháp
 
 **Mỗi phép thử phải có một mục biết chắc pass và một mục nghi ngờ.** Nếu cả hai fail thì lỗi ở phương pháp; nếu chỉ mục nghi ngờ fail thì lỗi đúng chỗ đang nghi. Ví dụ: filter "Film" đã có cache làm đối chứng dương cho filter "1980" chưa có cache — nhờ vậy tách bạch được "khuôn sai" với "tài nguyên thiếu", hai nguyên nhân cho cùng một triệu chứng.
 
@@ -180,5 +186,7 @@ Ghi lại để không ai đi lại đường cũ.
 **Kiểm ràng buộc phải chạy trên đúng giá trị sẽ được ghi ra file, không phải giá trị trong bộ nhớ.** `bench_shots.py` kiểm công thức lề trên số thực rồi mới làm tròn `"%.6f"` lúc ghi CSV; phép làm tròn đẩy shot 1 vượt mép 5 phần mười triệu và `kb_apply.py` từ chối ghi. Phát hiện được là nhờ shot 1 vốn là **probe biên cố ý** — thêm một lần nữa xác nhận quy tắc luôn cài một probe biên.
 
 **Bắt `SystemExit` mà bỏ `e.code` sẽ nuốt sạch thông báo lỗi.** `sys.exit("chuỗi")` không in ra stdout; chuỗi nằm trong `e.code`. Script bao ngoài phải in nó ra, nếu không ta chỉ thấy mã thoát 1 mà không biết vì sao.
+
+**Quy tắc bốn: in ground truth ra trước, nhìn sau.** Trước mọi phép kiểm thị giác, sinh ra danh sách shot nào có tính năng đang xét, ở cường độ nào, tại mốc thời gian nào, rồi mới mở preview hoặc trích khung. Không có danh sách đó thì "tôi không thấy tính năng" không phải là bằng chứng, vì người quan sát không phân biệt được giữa tính năng hỏng và tính năng cố ý không bật. Ca 2.8 tốn trọn một vòng chẩn đoán chỉ vì thiếu bước này.
 
 ---

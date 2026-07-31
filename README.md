@@ -31,6 +31,14 @@ Ví dụ:
 - `scripts_v1/fx_audit.py`
   → `https://raw.githubusercontent.com/tunahakim/capcut-pipeline/main/scripts_v1/fx_audit.py`
 
+## Ngân sách kích thước tài liệu và cách đọc
+
+Mỗi file trong `docs/` không vượt quá 26 KB. Lý do là lịch sử chứ không phải kỹ thuật. Giai đoạn đầu dự án được vận hành bằng cách đưa một AI đọc tài liệu qua `raw.githubusercontent.com`; công cụ fetch của các AI đó cắt nội dung ở khoảng mười nghìn token, và với văn bản tiếng Việt có dấu, vốn nhiều byte mỗi ký tự trong UTF-8, ngưỡng cắt thực đo được rơi vào khoảng 26 KB. File vượt ngưỡng sẽ bị đọc thiếu phần giữa mà AI không hề báo — đây là một lỗi im lặng ở tầng tài liệu.
+
+Ràng buộc này **không áp dụng** cho AI agent chạy trực tiếp trên máy và đọc file từ ổ đĩa, ví dụ Claude Code. Agent loại đó đọc bao nhiêu cũng được và được phép tạo file mới thoải mái. Vẫn nên giữ trần 26 KB để kênh đọc từ GitHub không hỏng. Đồng thời **đừng tách quá nhỏ**: nhiều file vụn khó kiểm soát hơn vài file vừa. Nhắm 10 đến 20 KB mỗi file, chỉ tách khi vượt 26 KB.
+
+Bắt buộc với AI đọc qua GitHub: nếu công cụ fetch báo nội dung bị cắt, hoặc bạn nghi ngờ mình chưa đọc hết một file, **phải nói ra ngay với người dùng** thay vì đoán hoặc dùng bản tóm tắt. Tóm tắt tự động sẽ làm rơi đúng những con số mà dự án này dựa vào. Khi đó hai bên cân nhắc để người dùng dán thẳng nội dung file vào hội thoại, hoặc chuyển sang một agent chạy cục bộ đọc từ ổ đĩa.
+
 ## Dự án làm gì
 
 Đầu vào là một bảng metadata shot — tên file ảnh, timestamp bắt đầu và kết thúc — cộng một file audio narration và một file SRT. Đầu ra là một project CapCut đã dựng sẵn: mỗi ảnh thành một shot có hiệu ứng Ken Burns riêng, nền mờ phủ khung, transition giữa các shot, phụ đề có styling, nhạc nền, hiệu ứng phim cũ phủ toàn timeline. Người dùng mở CapCut xem lại, chỉnh tay chỗ nào cần nhấn, rồi bấm Export.

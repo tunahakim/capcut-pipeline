@@ -203,7 +203,9 @@ Nếu người dùng đề xuất hướng có vấn đề, nói thẳng. Nếu 
 
 Không dùng emoji.
 
-## 10. Sáu loại lỗi im lặng — đọc trước khi kết luận bất cứ điều gì
+## 10. Tám mục lỗi im lặng — đọc trước khi kết luận bất cứ điều gì
+
+Phần thân của mục 10 vẫn liệt kê theo bản cũ; việc đồng bộ nó với `failures.md` đưa vào TODO vì `START-HERE.md` sẽ được viết lại khi tách file.
 
 Đây là kiến thức vận hành quan trọng nhất của dự án. Chi tiết ở `failures.md`, nhưng danh sách phải nằm ngay đây vì nó chi phối cách đánh giá mọi phép thử.
 

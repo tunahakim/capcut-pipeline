@@ -1,0 +1,9 @@
+# Nhật ký làm việc
+
+**Bài tổng duyệt 10 shot có audio: ĐẠT, và luật ceil ở mốc cuối đã được kiểm chứng.** Project `reh10` dựng từ `tools/prod_shots.py`, audio `Test_tool_v3\audio.mp3` dài 168,724813 s, đuôi cố ý 2000 ms, tổng trên lưới 170800 ms. 32 lệnh CLI trong 0,2 phút, trung bình 0,297 giây mỗi lệnh, `lint` sạch, 10 canvas blur, 10 segment đủ `kf=3`, ba track gồm video 10 segment, audio 1 segment, effect 1 segment.
+
+Đo trước và sau khi CapCut mở lần đầu: **10 trên 10 shot video lệch 0,0 ms**, duration giữ nguyên 170,800000 s. Track audio lệch duration **+8,5 ms** trong khi start giữ nguyên 0,0 — đúng bằng dự đoán lý thuyết, vì 168,724813 s nhân 30 bằng 5061,744 frame, ceil lên 5062 frame bằng 168,733333 s. Đuôi cố ý 2075 ms hấp thụ trọn phần nới này. Kết luận: **quy trình khoá timing theo file audio thật hoạt động đúng như thiết kế**; ranh giới cuối của segment audio bị CapCut ceil lên biên frame nhưng không đẩy bất cứ thứ gì vì sau nó không còn segment nào.
+
+Hệ quả cho sản xuất: đuôi cố ý là **bắt buộc**, không phải tuỳ chọn, và giá trị tối thiểu an toàn là một frame tức 33,3 ms; giá trị 2000 ms đang dùng vừa an toàn vừa hợp thẩm mỹ.
+
+Phát hiện phụ: `draft_fold_path` trong scaffold trỏ tới máy lab, xem `failures.md` mục 2.7.

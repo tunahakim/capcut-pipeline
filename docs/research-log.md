@@ -2,6 +2,8 @@
 
 Lưu ý: Tài liệu này chưa refactor xong, toàn bộ các phụ lục E1-E4 là copy từ `legacy/v0.8-full.md` sang, file này cần refactor lại.
 
+Các phiên từ 31/07/2026 trở đi ghi trong thư mục `docs/research-log/`, mới nhất lên đầu.
+
 ---
 
 ## PHỤ LỤC E1 — NHẬT KÝ PHIÊN 28/07/2026
