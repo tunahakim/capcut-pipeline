@@ -1,0 +1,84 @@
+{
+ "source": "C:\\Users\\admin\\AppData\\Local\\CapCut\\User Data\\Projects\\com.lveditor.draft\\reh10\\Timelines\\1b1fc458-e902-4775-adcf-4f59b5bf59ab\\draft_content.json",
+ "duration": 170800000,
+ "tracks": {
+  "video": [
+   {
+    "i": 1,
+    "id": "afc01c3d-77b4-4555-ad34-147ba7aa0d83",
+    "start": 0,
+    "dur": 19200000
+   },
+   {
+    "i": 2,
+    "id": "a19f0fd2-da37-4d01-8d10-afaaf67bbb9e",
+    "start": 19200000,
+    "dur": 11900000
+   },
+   {
+    "i": 3,
+    "id": "86693e00-5a5c-4492-93e3-bebeff4930b2",
+    "start": 31100000,
+    "dur": 15400000
+   },
+   {
+    "i": 4,
+    "id": "a2bb13b3-abdc-4409-9aa2-4f360aa86dbd",
+    "start": 46500000,
+    "dur": 18200000
+   },
+   {
+    "i": 5,
+    "id": "03b39b80-5eff-416c-9907-c36aa54ed395",
+    "start": 64700000,
+    "dur": 18600000
+   },
+   {
+    "i": 6,
+    "id": "a4d0145b-ecd5-48c9-8ecf-4ec646a536b8",
+    "start": 83300000,
+    "dur": 17600000
+   },
+   {
+    "i": 7,
+    "id": "33c3c4b1-9e7e-486b-b75a-effbff895d32",
+    "start": 100900000,
+    "dur": 18100000
+   },
+   {
+    "i": 8,
+    "id": "b095d2d0-fb93-4a0c-ae0a-0d6fd633e85c",
+    "start": 119000000,
+    "dur": 12300000
+   },
+   {
+    "i": 9,
+    "id": "2e5584d9-f2a0-4009-bde8-29b9a0355f60",
+    "start": 131300000,
+    "dur": 23000000
+   },
+   {
+    "i": 10,
+    "id": "ce523b7b-6ca4-4b8a-82e8-6ebd5ecdc25e",
+    "start": 154300000,
+    "dur": 16500000
+   }
+  ],
+  "audio": [
+   {
+    "i": 1,
+    "id": "dadbd574-a467-4441-8521-18fbc216fff2",
+    "start": 0,
+    "dur": 168733333
+   }
+  ],
+  "effect": [
+   {
+    "i": 1,
+    "id": "e8bec537-8ed4-4771-95cf-6e4ab1f6e33f",
+    "start": 0,
+    "dur": 170800000
+   }
+  ]
+ }
+}

@@ -1,0 +1,11 @@
+idx,image,start_s,dur_s,transition,blur,intro,outro,kb_s0,kb_s1,kb_x0,kb_x1,kb_y0,kb_y1
+1,mua-thu-la-phong-ben-cay-cau-go-la-phong-canh-thien-nhien-ra_Fua76_085326259.jpg,0.000,19.200,gradient-wipe,3,fade-in,,0.788656,0.918712,0.000000,0.000000,0.000000,0.000000
+2,top-khach-san-tot-nhat-sapa.jpg,19.200,11.900,blur,3,,,0.828050,0.828050,-0.119114,0.119114,0.000000,0.000000
+3,hinh-nen-truy-kich-CrossFire-10.jpg,31.100,15.400,glitch,3,,,0.769034,0.868031,-0.106199,0.106199,-0.106199,0.106199
+4,hinh-anh-xin-zhao-18.jpg,46.500,18.200,whirlpool,3,,,0.870712,0.808175,0.095954,-0.095954,-0.095954,0.095954
+5,hinh-nen-anime-ngau_092518954.jpg,64.700,18.600,page-turning,3,,,0.781057,0.847919,0.115009,-0.115009,0.115009,-0.115009
+6,hinh-anh-xin-zhao-5.jpg,83.300,17.600,page-turning,3,,,0.756635,0.756635,0.000000,0.000000,-0.117751,0.117751
+7,hinh-nen-dien-thoai-thanh-pho-ve-dem-4.jpg,100.900,18.100,black-fade,3,,,0.799185,0.888550,-0.060182,0.060182,0.060182,-0.060182
+8,hinh-anh-xin-zhao-1.jpg,119.000,12.300,page-turning,3,,,0.887096,0.776630,0.000000,0.000000,0.000000,0.000000
+9,hinh-nen-pubg-dep-33.jpg,131.300,23.000,dissolve-ii,3,,,0.734650,0.851138,0.000000,0.000000,0.000000,0.000000
+10,hinh-anh-miss-fortune-46.jpg,154.300,16.500,,3,,fade-out,0.760545,0.760545,-0.181616,0.181616,0.000000,0.000000
