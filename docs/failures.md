@@ -15,7 +15,7 @@
 
 Mức 4b: đối chứng phải **cùng một khung hình**. So màu giữa giây 30 và giây 120 là vô nghĩa vì hai bức ảnh vốn khác nhau. Phải rê con trỏ qua đúng ranh giới nằm **bên trong một shot**. Và nếu ranh giới là "A → B" thì đổi màu chỉ chứng minh A khác B, chưa chứng minh B tồn tại.
 
-## 2. Sáu lỗi im lặng đã gặp
+## 2. Tám lỗi im lặng đã gặp
 
 ### 2.1. `keyframe uniform_scale`
 
@@ -89,15 +89,15 @@ Ví dụ đủ ba mặt: filter "Film" **không có** trong `enums.json` ở b�
 
 **Kèm theo, cùng một phép đo:** `draft_meta_info.json` chứa `draft_root_path` là đường dẫn tuyệt đối của máy. Đây là bằng chứng thực nghiệm cho cảnh báo "scaffold chỉ dùng được trên chính máy đã tạo ra nó" ở `START-HERE.md` mục 3.1 — trước đó cảnh báo này chỉ là khẳng định suông.
 
-Thêm vào mục 6, phần các điều tài liệu cũ nói sai:
+### 2.8. `bg-blur` mất tác dụng ở quy mô lớn
 
-**"`preflight.py` kiểm được môi trường."** Đúng một nửa. Ngày 31/07/2026 phát hiện ba chỗ hỏng. Nó gọi `capcut version`, mà CLI coi `version` là đường dẫn project nên luôn báo `capcut-cli KHONG TIM THAY` dù CLI hoạt động tốt — lệnh đúng là `capcut --version`. `LAB` mặc định còn trỏ `D:\Test_tool`. Mục 9 còn kiểm thư mục đích `D:\IT\CapCut`, cái tên không còn tồn tại sau refactor. Mục 1 tới 7 vẫn dùng được, mục 8 và 9 bỏ.
+**Triệu chứng:** trên project `bench300` gồm 300 shot, 153 lệnh `capcut bg-blur` đều trả về thành công, `capcut lint` sạch, `materials.canvases` có đúng 453 mục trong đó 153 mục `type=canvas_blur`, và `kb_apply.py` bật bit 4096 cho đúng 153 material video. Nhưng **không có một pixel blur nào** — không thấy trong preview CapCut, không thấy trong bản export MP4. Cùng cấu hình đó ở quy mô 8 shot thì blur hoạt động bình thường.
 
-**"`capcut <lệnh-con> --help` xem được cú pháp."** Sai. CLI diễn giải tham số đầu tiên của mọi lệnh con là đường dẫn project, nên `capcut add-video --help` trả về `{"error":"No draft found at: --help"}`. Muốn biết cú pháp thì đọc script trong `scripts_v1/` hoặc chạy `capcut --help` không kèm lệnh con.
+**Nguyên nhân: chưa xác định.** Ba giả thuyết cần loại trừ theo thứ tự rẻ trước. Một, mỗi segment có blur đang tham chiếu **hai** canvas — một canvas mặc định do `add-video` tạo và một `canvas_blur` do `bg-blur` tạo — và CapCut chỉ đọc cái đầu tiên; con số 453 bằng đúng 300 cộng 153 nên giả thuyết này khớp về số học. Hai, thứ tự lệnh: ở `bench300` thì `bg-blur` chạy trước `transition` và `image-anim`, giống `parity_build.py`, nên thứ tự **không** phải nguyên nhân — trừ khi số lượng lệnh về sau làm hỏng tham chiếu. Ba, mức blur ngẫu nhiên 1 đến 4 trong đó mức 1 là 0,0625 gần như vô hình, nhưng điều này không giải thích được các shot mức 3 và 4.
 
-Thêm vào cuối mục 7, phần quy tắc phương pháp:
+**Cách phát hiện:** chỉ bằng mắt. Mọi kiểm tra tự động đều báo bình thường, kể cả `fx_audit.py`.
 
-**Thiếu vắng một tính năng không phải lỗi nếu ta chưa gọi nó.** Phiên 31/07/2026 dựng project 300 shot rồi thấy không có blur nền và không có hiệu ứng nào, thoáng tưởng là hỏng. Thực ra `bulk_build.py` cố ý chỉ gọi `add-video`. Trước khi kết luận một tính năng hỏng, kiểm lại xem lệnh tạo ra nó có thật sự được chạy hay không. Ngược lại mới đáng sợ: thấy một tính năng **xuất hiện** mà ta không hề gọi.
+**Chưa xử lý.** Bước chẩn đoán tiếp theo: bóc một segment có blur trong `bench300` ra, đếm số phần tử `extra_material_refs` trỏ tới bucket `canvases`, và so với một segment tương ứng trong project 8 shot đã biết chắc hoạt động. Đây là phép thử oracle có đối chứng dương sẵn có.
 
 ## 3. Ba loại lỗi cấu trúc
 
@@ -163,6 +163,10 @@ Ghi lại để không ai đi lại đường cũ.
 
 **"md5 là tên FILE trong cache."** Sai. Là tên **thư mục**: 278 thư mục gốc, 279 thư mục md5, **0 file** md5. Đề xuất ở v0.5 "quét tìm file tên `<md5>`" sẽ không bao giờ thấy gì.
 
+**"`preflight.py` kiểm được môi trường."** Đúng một nửa. Ngày 31/07/2026 phát hiện ba chỗ hỏng. Nó gọi `capcut version`, mà CLI coi `version` là đường dẫn project nên luôn báo `capcut-cli KHONG TIM THAY` dù CLI hoạt động tốt — lệnh đúng là `capcut --version`. `LAB` mặc định còn trỏ `D:\Test_tool`. Mục 9 còn kiểm thư mục đích `D:\IT\CapCut`, cái tên không còn tồn tại sau refactor. Mục 1 tới 7 vẫn dùng được, mục 8 và 9 bỏ.
+
+**"`capcut <lệnh-con> --help` xem được cú pháp."** Sai. CLI diễn giải tham số đầu tiên của mọi lệnh con là đường dẫn project, nên `capcut add-video --help` trả về `{"error":"No draft found at: --help"}`. Muốn biết cú pháp thì đọc script trong `scripts_v1/` hoặc chạy `capcut --help` không kèm lệnh con.
+
 ## 7. Ba quy tắc phương pháp
 
 **Mỗi phép thử phải có một mục biết chắc pass và một mục nghi ngờ.** Nếu cả hai fail thì lỗi ở phương pháp; nếu chỉ mục nghi ngờ fail thì lỗi đúng chỗ đang nghi. Ví dụ: filter "Film" đã có cache làm đối chứng dương cho filter "1980" chưa có cache — nhờ vậy tách bạch được "khuôn sai" với "tài nguyên thiếu", hai nguyên nhân cho cùng một triệu chứng.
@@ -170,5 +174,11 @@ Ghi lại để không ai đi lại đường cũ.
 **Luôn cài một probe biên.** Một mục được đặt đúng giới hạn lý thuyết, để nếu công thức sai thì lộ ra ngay.
 
 **Không suy diễn hành vi của bucket này từ bucket khác.** Transition tự vá được **không** hàm ý filter cũng vậy. Mỗi loại material phải đo riêng.
+
+**Thiếu vắng một tính năng không phải lỗi nếu ta chưa gọi nó.** Phiên 31/07/2026 dựng project 300 shot rồi thấy không có blur nền và không có hiệu ứng nào, thoáng tưởng là hỏng. Thực ra `bulk_build.py` cố ý chỉ gọi `add-video`. Trước khi kết luận một tính năng hỏng, kiểm lại xem lệnh tạo ra nó có thật sự được chạy hay không. Ngược lại mới đáng sợ: thấy một tính năng **xuất hiện** mà ta không hề gọi.
+
+**Kiểm ràng buộc phải chạy trên đúng giá trị sẽ được ghi ra file, không phải giá trị trong bộ nhớ.** `bench_shots.py` kiểm công thức lề trên số thực rồi mới làm tròn `"%.6f"` lúc ghi CSV; phép làm tròn đẩy shot 1 vượt mép 5 phần mười triệu và `kb_apply.py` từ chối ghi. Phát hiện được là nhờ shot 1 vốn là **probe biên cố ý** — thêm một lần nữa xác nhận quy tắc luôn cài một probe biên.
+
+**Bắt `SystemExit` mà bỏ `e.code` sẽ nuốt sạch thông báo lỗi.** `sys.exit("chuỗi")` không in ra stdout; chuỗi nằm trong `e.code`. Script bao ngoài phải in nó ra, nếu không ta chỉ thấy mã thoát 1 mà không biết vì sao.
 
 ---

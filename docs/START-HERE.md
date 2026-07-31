@@ -144,9 +144,13 @@ Năm, bắt đầu `pipeline/`.
 
 `run.bat` hiện 71 byte, chưa phải bản thật.
 
-**Chưa đo:** thời gian CapCut vẽ xong timeline 300 shot, và RAM đỉnh khi mở project đó. Hai số này không cản trở gì, lấy trong hai phút nếu có dịp ngồi trước máy render.
+`bg-blur` mất tác dụng ở quy mô 300 shot — lỗi im lặng thứ bảy, xem `failures.md` mục 2.7. Chưa rõ nguyên nhân, chưa xử lý, **chặn việc dùng nền mờ trong sản xuất thật.**
 
-**Updater trên máy render chưa bị chặn.** Trước phép đo nghiêm túc lần sau phải chặn theo `reference.md` mục 14 — chỉ `CapCut-DiffUpgrade.exe` và `hpatchz.exe`, tuyệt đối không chạm `VEHelper.exe`, `VECrashHandler.exe`, `CapCutService.exe`, và không chặn toàn bộ mạng của CapCut. Nếu không, CapCut có thể tự nhảy phiên bản và mọi mốc so sánh mất giá trị.
+`tools/bench_shots.py` còn lỗi gốc: kiểm biên trước khi làm tròn. Phải đảo thứ tự thành làm tròn rồi mới kiểm và kẹp, giống `tools/bench_fixkb.py` đang làm.
+
+**Đã đo ngày 31/07/2026 trên `bench300`:** mở project 300 shot gần như tức thời, RAM tiến trình CapCut chỉ tăng 1 đến 2 phần trăm, kéo con trỏ mượt, preview chạy được, transition hiển thị đúng. Export 60 phút ở 1920×1080 30 fps H.264 mất khoảng **20 phút**, tức nhanh hơn thời gian thực chừng ba lần, ra file 4,06 GB bitrate 9696 kbps. Cấu hình đo: i5-10400F, 16 GB RAM, GTX 1080. Kết luận: **máy này đủ sức làm máy render chính thức.** Ổ C còn 87,3 GB trên 237,9, ổ D còn 88,6 trên 232,9.
+
+**Updater trên máy render đã chặn ngày 31/07/2026** bằng `icacls <file> /deny "<DOMAIN>\<user>:(RX,W,D)"` trên đúng hai file `%LOCALAPPDATA%\CapCut\Apps\9.1.0.3879\CapCut-DiffUpgrade.exe` và `hpatchz.exe`. Chọn deny ACL thay vì đổi tên vì deny quyền ghi chặn luôn khả năng CapCut tải bản mới đè lên đúng tên cũ. Xác minh ba lớp: ACL hiện `(DENY)`, chạy thử báo `Access is denied`, CapCut vẫn mở bình thường và vẫn tải được animation mới từ mạng. Gỡ bằng `icacls <file> /remove:d "<DOMAIN>\<user>"`. Máy render không có `winget` nên không ghim được bằng `winget pin`.
 
 ## 7. Môi trường máy phát triển
 

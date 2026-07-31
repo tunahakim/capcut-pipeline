@@ -98,6 +98,8 @@ Trong bảng ở mục 13, sửa và thêm các dòng sau:
 | Project 60 phút trong CapCut | **Đã kiểm chứng**, kéo timeline mượt, 66,3 MB, chưa đo RAM và thời gian load |
 | `kb_apply.py` trên project 300 segment | **Đã kiểm chứng**, chạy được, áp cho 8 shot đầu theo PLAN cứng |
 
+**Siết thêm: lưới an toàn thực tế là 0,1 giây, không phải 1/30 giây.** Ở 30 fps một frame là 33333,333... micro giây, không tròn micro giây, và `capcut-cli` chỉ nhận tham số giây với ba chữ số thập phân. Vì vậy phần lớn bội số của 1/30 giây không biểu diễn được qua CLI và sẽ chịu **hai** lần lượng tử: làm tròn về mili giây rồi mới bị CapCut ceil lên frame. Bội số của **0,1 giây** thì bằng đúng 3 frame, bằng đúng 100000 micro giây, và viết trọn vẹn trong ba chữ số thập phân. **Đã kiểm chứng ngày 31/07/2026 ở quy mô thật:** project `bench300` gồm 300 shot với 300 độ dài khác nhau trong khoảng 6,0 đến 19,4 giây, mọi mốc là bội số 0,1 giây, đo `diff_timing.py` trước và sau khi CapCut mở lần đầu cho **0,0 ms trên toàn bộ 300 shot**, duration giữ nguyên 3600,0000 giây. Đây là bằng chứng mạnh hơn hẳn phép thử 12,000 giây đều nhau trước đó, vì nó phủ nhiều giá trị khác nhau chứ không phải một bước lặp lại.
+
 ## 4. Bốn file phải propagate
 
 CapCut 9.1.0 lưu timeline thật trong thư mục lồng. Mọi thay đổi bằng Python phải ghi vào **bốn** file, và đây là bước **cuối cùng** sau tất cả lệnh CLI:
