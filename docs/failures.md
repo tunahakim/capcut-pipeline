@@ -77,6 +77,28 @@ Ví dụ đủ ba mặt: filter "Film" **không có** trong `enums.json` ở b�
 
 **Xử lý:** danh sách đen. Thay slug khác rồi làm lại.
 
+### 2.7. Đổi tên project trong GUI không cập nhật `draft_fold_path`
+
+**Triệu chứng:** đổi tên project bằng giao diện CapCut. Thư mục trên đĩa đổi tên, `draft_name` trong `draft_meta_info.json` đổi theo, mọi thứ nhìn bình thường. Nhưng `draft_fold_path` vẫn trỏ tới **tên cũ**.
+
+**Đo được ngày 31/07/2026:** project tạo tên `0730`, đổi thành `nativescaffold`. Kết quả `draft_name = nativescaffold` nhưng `draft_fold_path = C:/Users/admin/AppData/Local/CapCut/User Data/Projects/com.lveditor.draft/0730`.
+
+**Vì sao nguy hiểm:** `clone_project.py` thay chuỗi `OLD = SRC.name`, tức tên thư mục nguồn. Nếu scaffold từng bị đổi tên thì chữ tên cũ nằm trong `draft_fold_path` sẽ **không** được thay, và cái lệch đó nhân bản vào mọi project clone sau này.
+
+**Xử lý:** không bao giờ đổi tên một project định dùng làm scaffold. Nếu lỡ đổi rồi thì vá `draft_fold_path` bằng Python trước khi clone, rồi quét toàn bộ file text trong project tìm chuỗi tên cũ ở dạng đường dẫn để chắc không còn sót.
+
+**Kèm theo, cùng một phép đo:** `draft_meta_info.json` chứa `draft_root_path` là đường dẫn tuyệt đối của máy. Đây là bằng chứng thực nghiệm cho cảnh báo "scaffold chỉ dùng được trên chính máy đã tạo ra nó" ở `START-HERE.md` mục 3.1 — trước đó cảnh báo này chỉ là khẳng định suông.
+
+Thêm vào mục 6, phần các điều tài liệu cũ nói sai:
+
+**"`preflight.py` kiểm được môi trường."** Đúng một nửa. Ngày 31/07/2026 phát hiện ba chỗ hỏng. Nó gọi `capcut version`, mà CLI coi `version` là đường dẫn project nên luôn báo `capcut-cli KHONG TIM THAY` dù CLI hoạt động tốt — lệnh đúng là `capcut --version`. `LAB` mặc định còn trỏ `D:\Test_tool`. Mục 9 còn kiểm thư mục đích `D:\IT\CapCut`, cái tên không còn tồn tại sau refactor. Mục 1 tới 7 vẫn dùng được, mục 8 và 9 bỏ.
+
+**"`capcut <lệnh-con> --help` xem được cú pháp."** Sai. CLI diễn giải tham số đầu tiên của mọi lệnh con là đường dẫn project, nên `capcut add-video --help` trả về `{"error":"No draft found at: --help"}`. Muốn biết cú pháp thì đọc script trong `scripts_v1/` hoặc chạy `capcut --help` không kèm lệnh con.
+
+Thêm vào cuối mục 7, phần quy tắc phương pháp:
+
+**Thiếu vắng một tính năng không phải lỗi nếu ta chưa gọi nó.** Phiên 31/07/2026 dựng project 300 shot rồi thấy không có blur nền và không có hiệu ứng nào, thoáng tưởng là hỏng. Thực ra `bulk_build.py` cố ý chỉ gọi `add-video`. Trước khi kết luận một tính năng hỏng, kiểm lại xem lệnh tạo ra nó có thật sự được chạy hay không. Ngược lại mới đáng sợ: thấy một tính năng **xuất hiện** mà ta không hề gọi.
+
 ## 3. Ba loại lỗi cấu trúc
 
 ### 3.1. CapCut đổi tên thư mục project

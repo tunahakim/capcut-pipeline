@@ -102,47 +102,39 @@ Tài liệu v0.8 dán mã nguồn của nhiều script. Phần lớn đã lỗi 
 
 Đây là bài học đã lặp lại ba lần: mã nằm trong tài liệu mà không có file trên đĩa thì phải coi là **chưa kiểm chứng**, không phải "đã có sẵn".
 
-## 6. Trạng thái bàn giao tại 30/07/2026
+## 6. Trạng thái bàn giao tại 31/07/2026
 
 ### Đã xong
 
-Toàn bộ chuỗi dựng video kiểm chứng ở mức bằng chứng cao nhất: xuất MP4 thật, trích 19 khung hình đo md5 và màu trung bình RGB, đo profile biến động quanh từng ranh giới transition. Keyframe zoom vào, zoom ra, pan, canvas blur, scene effect, combo animation đều render đúng trong file đầu ra.
+Một, bộ năm file tài liệu đã viết đầy đủ, không còn stub.
 
-Tạo project tự động bằng cách clone scaffold (`scripts_v1/clone_project.py`), né được bẫy CapCut đổi tên thư mục.
+Hai, repo đã tạo và đẩy lên GitHub tại `github.com/tunahakim/capcut-pipeline`.
 
-Lớp filter dựng hoàn toàn bằng Python (`scripts_v1/filter_apply.py`), thay hẳn `capcut add-filter` vốn hỏng từ dữ liệu nguồn.
+Ba, phép thử trên máy render đã chạy ngày 31/07/2026, parity đạt tuyệt đối và bài tải 300 shot đạt, chi tiết ở `docs/research-log.md`.
 
-Ghim phiên bản CapCut: bộ cài đầy đủ đã tải và verify hash, updater đã bị chặn hai tầng mà không phá cơ chế tải tài nguyên.
-
-Vendor kit đóng gói xong. Mốc vàng parity đã chụp, đo bốn lần ở bốn cấu hình khác nhau và luôn cùng một bộ số.
-
-**Di trú thư mục xong (30/07):** từ `D:\Test_tool` lộn xộn sang cây ba nhánh, 64 mục 1312 MB, không mất file. `D:\Test_tool` còn nguyên làm đường lùi, dự kiến giữ thêm một tuần.
+Bốn, **Việc A đã đóng** — lớp ghi tuyến tính, giữ kiến trúc một tiến trình CLI cho mỗi thao tác, được phép bắt đầu viết code trong `pipeline/`.
 
 ### Đang dở, thứ tự ưu tiên
 
-**1. Viết xong bộ tài liệu năm file.** Hiện chỉ có `START-HERE.md` này. Bốn file `reference.md`, `failures.md`, `model.md`, `procedures.md` còn là stub một dòng. Đây là ưu tiên số một tuyệt đối, vì không có chúng thì mỗi phiên AI mới phải nạp 299 KB tài liệu cũ và hết ngữ cảnh sau vài lượt.
+Một, vá `tools/v4_mold.py`: đường dẫn ghi ra phải là `molds/capcut-9.1.0/filter.json` và thêm khối `_meta`. Lưu ý file đích **đã tồn tại** 3218 byte, phải diff trước khi đè.
 
-Cách di trú: viết `reference.md` và `failures.md` trước, vì giá trị cao nhất và nội dung ổn định nhất. Nguồn để trích là `legacy/v0.8-full.md`, tra theo mục.
+Hai, viết ba test đầu tiên vào `tests/`.
 
-**2. Đẩy repo lên GitHub, public.** Chưa tạo repo. Cần public để AI fetch được qua `raw.githubusercontent.com`.
-
-**3. Phép thử trên máy render.** Máy render dùng tạm được 1–2 tiếng, sẽ có hẳn sau vài ngày. Hai mục tiêu: xác nhận code chạy trên máy đó đúng như trên máy hiện tại với project 2 phút 48, và xác nhận CapCut mở nổi một project 60 phút vài trăm ảnh (chưa cần render).
-
-**4. Đo hiệu năng lớp ghi (Việc A).** Ngã ba quyết định kiến trúc `pipeline/`, phải xong trước khi viết dòng code lõi nào. Chi tiết ở mục 8.
-
-**5. Viết lõi `pipeline/`.** Sau khi có số đo.
-
-**6. Nợ nghiên cứu.** Phụ đề qua `import-srt`. Nhạc nền và `audio-fade`. Đóng ô ma trận "Python dập material với tài nguyên thật sự chưa cache". Công thức lề cho ảnh cao hơn canvas.
+Ba, viết `run.bat` thật. Bốn, bắt đầu `pipeline/`.
 
 ### Nợ kỹ thuật đã biết
 
-`tools/v4_mold.py` còn ghi ra `LAB/mold_filter.json`, đích đúng phải là `molds/capcut-9.1.0/filter.json`, và khuôn cần thêm khối `_meta` ghi xuất xứ. Đã có bản vá viết sẵn nhưng chưa chạy.
+`fixtures/` được README, mục 3.1 và mục 4 của file này, và `procedures.md` mục 6 nhắc tới nhưng **không tồn tại trong repo** — hoặc tạo nó, hoặc sửa cả bốn chỗ mô tả.
 
-`tests/` rỗng. Ba phép kiểm cần có: không đường dẫn tuyệt đối nào trong mã, công thức lề đúng với ba phép đo oracle, mọi khuôn có `_meta`.
+`tools/` có 9 script chứ không phải 7.
 
-`run.bat` mới 74 byte và `README.md` 1570 byte, cả hai là stub do script di trú sinh ra.
+`preflight.py` lỗi thời ba chỗ, xem `failures.md` mục 6.
 
-Chưa xác nhận Python 3.14 sinh ra cùng kết quả như 3.13 mà mốc vàng parity được tạo trên đó. Phép kiểm là chạy lại `clone_project` cộng `parity_build` cộng `kb_apply` trên project mới rồi so bảng *trước khi CapCut mở*, tiêu chí 0,0 ms tuyệt đối.
+`docs/scripts.md` còn trống cột mô tả.
+
+`README.md` hiện 5013 byte, không còn là stub 1570 byte.
+
+`run.bat` hiện 71 byte.
 
 ## 7. Môi trường máy phát triển
 

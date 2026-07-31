@@ -66,6 +66,38 @@ Vì cả `scale` lẫn `transform` nội suy **tuyến tính** giữa hai keyfra
 
 Công thức cho ảnh **cao hơn** canvas: `[CHUA XAC MINH]`. Lời giải rẻ hơn là chuẩn hoá mọi ảnh về đúng 1920×1080 ở khâu gen ảnh, khi đó `KY = 1` và công thức rút về `|x| ≤ 1−s`, `|y| ≤ 1−s`.
 
+### 3.1. Lượng tử hoá frame: quy tắc ceil
+
+CapCut làm tròn mỗi **ranh giới cắt** lên frame gần nhất, phép ceil, không phải làm tròn về gần nhất. Duration từng shot là hiệu hai ranh giới đã lượng tử hoá, nên một shot có thể **ngắn đi** dù không shot nào bị dịch.
+
+Kiểm chứng ba ca phân định trên bộ tám shot chuẩn: 592,2 → 593; 1040,4 → 1041; 1466,4 → 1467. Phép làm tròn về gần nhất sẽ cho 592, 1040, 1466 và sai bảng mốc vàng.
+
+Dự báo đã kiểm chứng ngày 31/07/2026: ranh giới nằm đúng lưới frame thì không dịch. Project 300 shot bước 12,000 s tức 360 frame chẵn cho lệch **0,0 ms trên cả 300 shot**, duration giữ nguyên 3600,0000 s.
+
+Quy tắc thiết kế: **bắt mọi mốc shot về bội số của 1/30 giây ở khâu sinh `shots.csv`.** Khi đó CapCut không dịch gì và ràng buộc timing được bảo toàn tuyệt đối.
+
+Trong mục 11, thêm vào cuối:
+
+Xác nhận hai máy ngày 31/07/2026. Máy render (i5-10400F, Windows 10 build 19042, Python 3.14.6) so với mốc vàng: `parity_gold_before → before` lệch 0,0 ms toàn bộ tám shot; `parity_gold_after → after` lệch 0,0 ms toàn bộ tám shot. Cả ba tiêu chí đạt. **Món nợ "chưa xác nhận Python 3.14" đã đóng** — mốc vàng tạo trên 3.13, máy render chạy 3.14.6, kết quả trùng từng chữ số.
+
+Trong mục 12, thay đoạn nói về byte mỗi segment bằng:
+
+Kích thước JSON theo số segment. Segment **trần** do `capcut add-video` sinh ra, không keyframe, không canvas blur, không transition: đo ngày 31/07/2026 trên project 300 shot được **khoảng 2,9 KB mỗi segment**, `draft_content.json` tăng tuyến tính từ 0,01 MB ở 1 shot lên 0,83 MB ở 300 shot. Con số 9390 và 9498 byte ghi ở các bản tài liệu trước là của segment **đầy đủ** có keyframe, canvas blur và transition; phương pháp đo của chúng chưa được ghi lại, dùng để tham khảo chứ đừng dùng để tính toán.
+
+Hiệu năng lớp ghi, đo ngày 31/07/2026, 300 lệnh `add-video` liên tiếp: chi phí mỗi lệnh tách được thành phần cố định khoảng **0,304 s** cộng phần biên khoảng **0,27 ms cho mỗi segment đã tồn tại**. Lệnh đầu 0,32 s, lệnh cuối 0,40 s, tỉ lệ 1,25 lần. Tổng 300 lệnh mất 1,7 phút. Lớp ghi **tuyến tính**; nút thắt là chi phí khởi động tiến trình Node, chiếm chừng 88% thời gian ở mốc 300 segment.
+
+Trong mục 8, thêm ngay dưới dãy số đếm cache:
+
+**Chú ý đơn vị đếm.** Ba công cụ đếm cùng một thư mục cho ba con số khác nhau: lệnh PowerShell đếm thư mục con, `preflight.py` đếm "mục gốc", `fx_audit.py` dùng cách đếm riêng. Ngày 31/07/2026 trên máy render, cùng một thời điểm, ba cách cho 151, 199 và 216. Khi ghi số đếm cache **luôn ghi kèm công cụ nào đếm**, nếu không thì dãy số vô nghĩa.
+
+Đo delta ngày 31/07/2026: mở project 8 shot có 7 transition và 1 effect làm cache tăng **17 mục**. Mở project 300 shot không transition không effect làm cache tăng **0 mục**. Cache chỉ lớn khi có tài nguyên cần resolve.
+
+Trong bảng ở mục 13, sửa và thêm các dòng sau:
+
+| Dựng 300 shot bằng CLI | **Đã kiểm chứng** 31/07/2026, 1,7 phút, lint sạch, CapCut mở mượt |
+| Project 60 phút trong CapCut | **Đã kiểm chứng**, kéo timeline mượt, 66,3 MB, chưa đo RAM và thời gian load |
+| `kb_apply.py` trên project 300 segment | **Đã kiểm chứng**, chạy được, áp cho 8 shot đầu theo PLAN cứng |
+
 ## 4. Bốn file phải propagate
 
 CapCut 9.1.0 lưu timeline thật trong thư mục lồng. Mọi thay đổi bằng Python phải ghi vào **bốn** file, và đây là bước **cuối cùng** sau tất cả lệnh CLI:
