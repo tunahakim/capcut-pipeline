@@ -2,7 +2,7 @@
 Tạo project CapCut mới bằng cách nhân bản scaffold: sinh GUID mới cho mọi GUID tìm thấy và giữ nguyên kiểu hoa thường, đổi tên thư mục Timelines theo GUID mới, thay tên project cũ bằng tên mới trong mọi file .json .tmp .bak .txt, xoá .capcut-cli-history cùng các file .prepost .prepost2 .kfbak, đặt lại dấu thời gian và draft_name.
 Vào: thư mục scaffold sạch. Ra: thư mục project mới trong drafts, kèm báo cáo main_timeline_id, đối chiếu draft_name với tên thư mục, số file còn sót tên cũ.
 Từ chối chạy nếu thư mục đích đã tồn tại; mọi nội dung JSON đều được kiểm hợp lệ trước khi ghi đè.
-Chưa đặt draft_fold_path, hiện phải chạy thêm tools/fix_fold_path.py sau khi clone.
+Đặt luôn draft_fold_path bằng đường dẫn tuyệt đối của thư mục project mới, gộp từ tools/fix_fold_path.py ngày 01/08/2026, nên sau khi clone không còn bước tay nào; báo cáo cuối in giá trị đã ghi kèm cờ KHOP.
 """
 
 import json, pathlib, re, shutil, sys, time, uuid
@@ -85,9 +85,10 @@ def touch(fp, keys, extra=None):
     fp.write_text(json.dumps(d, ensure_ascii=False), encoding="utf-8")
 
 touch(DST / "Timelines" / "project.json", ("create_time", "update_time"))
+FOLD = str(DST.resolve())
 touch(DST / "draft_meta_info.json",
       ("tm_draft_create", "tm_draft_modified", "tm_duration"),
-      {"draft_name": NEW})
+      {"draft_name": NEW, "draft_fold_path": FOLD})
 
 # --- 6. bao cao ---
 print("\n=== KET QUA ===")
@@ -97,6 +98,9 @@ print("  thu muc timeline ton tai =", (DST / "Timelines" / pj["main_timeline_id"
 mi = json.loads((DST / "draft_meta_info.json").read_text(encoding="utf-8"))
 print("  draft_name =", mi.get("draft_name"), " | folder =", NEW,
       "->", "KHOP" if mi.get("draft_name") == NEW else "*** LECH ***")
+got_fold = mi.get("draft_fold_path")
+print("  draft_fold_path =", got_fold,
+      "->", "KHOP" if got_fold == FOLD else "*** LECH ***")
 leftover = 0
 for f in DST.rglob("*"):
     if f.is_file() and f.suffix.lower() in EXT:

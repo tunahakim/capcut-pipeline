@@ -1,7 +1,7 @@
 """fix_fold_path.py <project-dir>
 Ghi lại draft_fold_path trong draft_meta_info.json cho khớp vị trí thật của thư mục project, việc bắt buộc sau khi clone hoặc di chuyển project.
 Vào: thư mục project. Ra: file draft_meta_info.json đã sửa, in giá trị trước và sau cùng cờ đã sửa hay chưa.
-Ghi thẳng, không sao lưu, không có chế độ chạy thử. Dự kiến gộp vào scripts_v1/clone_project.py để bớt một bước tay dễ quên.
+Ghi thẳng, không sao lưu, không có chế độ chạy thử. Từ 01/08/2026 scripts_v1/clone_project.py đã tự đặt draft_fold_path lúc clone nên script này không còn là bước bắt buộc; giữ lại để sửa project bị di chuyển bằng tay và để kiểm chứng, chạy ngay sau khi clone thì phải in da sua False.
 """
 
 import json, pathlib, sys
