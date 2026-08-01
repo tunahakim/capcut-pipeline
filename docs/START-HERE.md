@@ -57,6 +57,7 @@ Vì `data\` và `vendor\` là thư mục **ngang hàng** với repo chứ không
 | Project dựng thử | thư mục draft của CapCut | Không |
 | Bằng chứng của một phiên, cần đọc lại về sau | `artifacts\` trong repo | Có, kèm một dòng trong `artifacts\README.md` |
 | Mốc vàng dùng cho phép so tự động của `tests\` | `fixtures\` trong repo | Có |
+| Bản kê `data\` và `vendor\` của một máy | `manifests\` trong repo | Có, mỗi máy một file |
 | Khuôn JSON chụp từ CapCut | `molds\capcut-9.1.0\` | Có |
 | Bất cứ thứ gì | không bao giờ ghi vào `vendor\` | — |
 

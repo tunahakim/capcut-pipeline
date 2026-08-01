@@ -39,6 +39,7 @@ tests/        test tu dong, chua viet
 molds/        khuon JSON chup tu CapCut, phan theo phien ban CapCut
 reference/    danh muc dinh danh hieu ung va cu phap CLI
 fixtures/     moc vang JSON de so parity. KHONG chua media test
+manifests/    ban ke data va vendor cua tung may, moi may mot file
 artifacts/    bang chung cua tung phien, de nguoi va AI tra lai so
 _deprecated/  script da chet, giu lai kem ly do
 ```

@@ -4,17 +4,11 @@
 
 Luật ba file, đọc kèm `STATE.md`: file này chứa **thì tương lai**, tức mọi việc chưa làm kể cả nợ kỹ thuật, vì mỗi món nợ là một việc. `STATE.md` chứa **thì hiện tại đã đo được** và không được liệt kê việc phải làm. `research-log/` chứa **thì quá khứ**. Mỗi mục dưới đây phải có tiêu chí hoàn thành. **Xong thì xoá khỏi file này**, không đánh dấu hoàn thành rồi giữ lại — danh sách đã hoàn thành chính là research-log.
 
-## Ưu tiên 1 — nợ chặn sản xuất
-
-**Viết `tools/data_manifest.py`** kiểm kê `data\` và `vendor\` ra bản kê có kích thước và hash, commit bản kê vào repo.
-
-Thiết kế đã chốt ngày 01/08/2026, chưa viết code; số đo và lý lẽ đầy đủ ở `research-log/2026-08-01-4-readme-cua-vao.md`. Bản kê nằm ở thư mục mới `manifests/` trong repo, mỗi máy một file, `manifests/lab.json` và `manifests/render.json`; không đặt trong `artifacts/` vì thư mục đó dành cho bằng chứng bất biến của một phiên, còn bản kê là file sống. Giao diện theo luật của `tools/shots_crosscheck.py`: tham số bắt buộc và tường minh, không tự dò, mã thoát 0 sạch, 1 không chạy được, 2 có khác biệt; chế độ quét và chế độ so tách riêng. Loại trừ `data\tmp\`, `data\archive\`, `__pycache__`, `.git`. Gộp `vendor\Cache_effect` thành một mục tổng có số file, tổng byte và một hash tổng hợp, không liệt kê từng file, vì nó có 14653 file và cách chữa khi lệch vẫn là chép lại cả thư mục. Không cần cache hash, hash toàn bộ đủ nhanh.
-
-Tiêu chí xong: chạy trên máy lab in ra đúng danh sách những thứ đang thiếu so với máy render. **Đang bị chặn** vì máy render offline nên chưa có `manifests/render.json`. Làm được ngay: viết công cụ, sinh `manifests/lab.json`, tự kiểm bằng đối chứng dương là một bản sao đã cố ý xoá vài mục và sửa vài hash. Tự kiểm đó chỉ chứng minh bộ so biết phát hiện khác biệt, nghiệm thu thật xếp vào "Chờ máy render quay lại". Khi công cụ chạy được thì thêm một dòng cho `manifests/` vào bảng ở mục 4 của `START-HERE.md` và vào khối bố cục của `README.md`.
-
 ## Ưu tiên 2 — công cụ và test
 
 Thả tay một filter **free** trong GUI để có đối chứng dương, rồi vá `tools/v4_mold.py`: đường dẫn ghi ra phải là `molds/capcut-9.1.0/filter.json`, thêm khối `_meta`, mặc định chỉ diff chứ không ghi đè, và khi diff phải phân loại trường — `path` cùng `target_timerange.duration` phụ thuộc máy và project nên được phép khác, các trường còn lại bắt buộc khớp. Đang bị chặn vì hiện không project nào còn material `type=filter`.
+
+**Kiểm khoá Pro cho mọi loại tài nguyên, không chỉ transition.** Hiện chỉ danh sách transition được lọc theo cờ VIP để ra 76 mục dùng được; scene-effect, image-intro, image-outro, image-combo và 468 filter JianYing chưa loại nào được lọc. `failures.md` mục 1 ghi rõ `fx_audit.py` mới chỉ chứng minh `path` trỏ tới file có thật và **không bắt được khoá Pro**, nên một tài nguyên khoá Pro lọt vào bản dựng sẽ qua được cả `lint`, cả panel GUI, cả `fx_audit`, và chỉ lộ ra ở bản export cuối. Việc cần làm: đọc cờ VIP từ `capcut enums` cho từng loại đang dùng, ghi kết quả vào `reference-catalog.md`, rồi cho `fx_audit.py` báo đỏ khi gặp tài nguyên khoá Pro. Tiêu chí xong: dựng một project cố ý cắm một tài nguyên VIP cạnh một tài nguyên free làm đối chứng dương, `fx_audit.py` phải báo đúng mục VIP và chỉ mục đó.
 
 Viết `tools/shots_dump.py` đọc ngược `draft_content.json` ra `shots.csv` rồi kiểm khứ hồi; hạt giống là `tools/shots_crosscheck.py`, và giao diện phải theo cùng một luật với nó là bắt buộc `--project` cùng đường dẫn ra tường minh, không tự dò. Việc này đứng trước việc viết test vì `shots.csv` là hợp đồng đầu vào của `pipeline/`.
 
@@ -44,7 +38,7 @@ Xoá `data\archive\`, khoảng 60–70 MB rác, sau khi chắc chắn `D:\Test_t
 
 Điều kiện bật blur trong `tools/prod_shots.py` là `kx*smin < 1 or ky*smin < 1`, mà `S_HI` bằng 0,92 còn `kx` và `ky` không bao giờ vượt 1, nên vế trái luôn đúng và cột `blur` bằng 3 ở mọi shot. Hoặc thừa nhận blur luôn bật rồi bỏ điều kiện cho khỏi gây hiểu nhầm, hoặc đặt một ngưỡng thật. Suy luận từ mã, **chưa kiểm chứng** bằng cách đếm cột blur trên bảng shot đã sinh.
 
-`vendor\` **trên máy lab** chứa năm thư mục con mà mục 3 của `START-HERE.md` không kể tới: `frames`, `Test_tool_v3`, `snapshots`, `testV3_CLEAN` và `scripts`; ba trong số đó trùng tên với thư mục con của `data\`. Thư mục gốc `vendor\` cũng có 9 file trong khi mục 3 chỉ kể sáu thứ. Hoặc `vendor\` đã tích tụ thêm dữ liệu làm việc và cần dọn, hoặc mục 3 đã lỗi thời và cần viết lại. **Phải quyết trước khi `tools/data_manifest.py` chốt danh sách loại trừ**, vì bản kê sẽ đóng băng hiện trạng thành tiêu chuẩn. Phát hiện ngày 01/08/2026 bằng phép thăm dò `data\tmp\dm_probe.py`, chưa quyết hướng xử lý.
+`vendor\` **trên máy lab** chứa năm thư mục con mà mục 3 của `START-HERE.md` không kể tới: `frames`, `Test_tool_v3`, `snapshots`, `testV3_CLEAN` và `scripts`; ba trong số đó trùng tên với thư mục con của `data\`. Gốc `vendor\` còn có `enums_backup.json` trùng bản với `reference/enums_backup.json` đã nằm trong repo. Từ 02/08/2026 `tools/data_manifest.py` ghi đủ những mục này vào khối `vendor_extra` của bản kê, có kích thước và hash, nhưng khối đó không tham gia phán xử mã thoát, nên hiện trạng được lưu lại làm bằng chứng mà chưa bị phong thành tiêu chuẩn. Phần còn treo là quyết dọn hay hợp thức hoá: dọn thì chuyển dữ liệu làm việc về `data\` rồi xoá khỏi `vendor\`, hợp thức hoá thì viết lại mục 3 của `START-HERE.md` và thêm tên tương ứng vào hằng số `CANON_VENDOR_NAMES`. Tiêu chí xong: khối `vendor_extra` chỉ còn đúng những thứ ta cố ý chấp nhận, và mục 3 kể đúng những gì có thật trên đĩa.
 
 `tools/docs_audit.py` loại trừ `README.md` khỏi phép tìm file .md không ai trỏ tới bằng một điều kiện cứng trong biểu thức dựng danh sách mồ côi. Từ 01/08/2026 README đã có sáu tham chiếu trỏ tới nên điều kiện đó không còn che gì, nhưng nó vẫn là một lỗ im lặng dựng sẵn: nếu về sau mọi tham chiếu tới README biến mất thì công cụ sẽ im lặng thay vì báo. Bỏ điều kiện đó đi, README không cần đặc cách. Ưu tiên thấp, không đổi hành vi hiện tại.
 
@@ -59,6 +53,8 @@ Kiểm thị giác bản export `prod60` theo quy tắc in ground truth trước
 Đo độ nới thực tế của segment audio trên `prod60`; lý thuyết dự đoán +10,5 ms, **chưa kiểm chứng**.
 
 Kéo về máy lab hai thứ không tái tạo được: file `narration59.mp3` và thư mục 326 ảnh gốc ở `D:\IT\capcut-help\Picture`.
+
+Nghiệm thu `tools/data_manifest.py` giữa hai máy, phần bị chặn còn lại của việc đã làm ngày 02/08/2026. Trên máy render chạy `python tools/data_manifest.py --scan --machine render --data <data trên máy render> --vendor <vendor trên máy render> --out manifests/render.json` rồi commit bản kê; sau đó chạy `python tools/data_manifest.py --compare --mine manifests/lab.json --theirs manifests/render.json`. Tiêu chí xong: báo cáo in ra đúng danh sách những thứ máy lab thiếu so với máy render và ngược lại; mã thoát 0 hoặc 2 đều chấp nhận được miễn là mọi dòng lệch giải thích được, còn mã thoát 1 nghĩa là chưa chạy được. Lưu ý khối `vendor_extra` chắc chắn lệch nhiều và đó là bình thường vì `vendor\` hai máy chưa bao giờ đồng bộ; chỉ `data` và `vendor_canonical` mới đáng xử lý.
 
 ## Việc phát sinh
 
