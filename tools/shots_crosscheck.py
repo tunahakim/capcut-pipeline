@@ -1,17 +1,17 @@
 """shots_crosscheck.py
-Đối chiếu shots.csv với draft_content.json trên năm trường: start, duration, mức blur quy đổi từ level 0 tới 4, tên ảnh, và cặp keyframe scale đầu cuối; in thêm số shot có blur, số transition ở hai bên và bản đồ xen kẽ theo khối 50 shot.
-Vào: không tham số, project cứng tên bench300, CSV tự dò trong CAPCUT_LAB và D:/IT/capcut-lab rồi chọn file đầu tiên có số dòng bằng số segment. Ra: chỉ in console.
-Cơ chế tự dò đã một lần đối chiếu nhầm project và nhầm CSV; TODO Ưu tiên 1 yêu cầu chuyển sang bắt buộc --project và --csv tường minh.
+Đối chiếu shots.csv với draft_content.json trên năm trường: start, duration, mức blur quy đổi từ level 0 tới 4, tên ảnh, và cặp keyframe scale đầu cuối; đầu báo cáo in draft_fold_path, tên ảnh của shot 1 ở cả hai phía và kết quả so kích thước bản draft_content.json lồng trong Timelines với bản gốc; cuối báo cáo in số shot có blur, số transition ở hai bên và bản đồ xen kẽ theo khối 50 shot.
+Vào: bắt buộc --project là tên project trong thư mục draft của CapCut hoặc đường dẫn đầy đủ tới thư mục project, và --csv là đường dẫn đầy đủ tới bảng shot; không còn cơ chế tự dò. Ra: chỉ in console.
+Mã thoát 0 khi cả năm trường sạch; 2 khi chạy xong nhưng có lệch, hoặc số dòng không khớp số segment, hoặc thiếu cặp cột kb_s0 và kb_s1 nên trường thứ năm không được kiểm; 1 khi sai tham số hoặc thiếu file.
+Ví dụ: python tools/shots_crosscheck.py --project prod60 --csv D:/IT/capcut-lab/data/prod60/shots.csv
 """
 
-import csv, json, os, sys
+import argparse, csv, json, os, sys
 from pathlib import Path
 
 DRAFTS = Path(os.environ.get("LOCALAPPDATA", "")) / "CapCut" / "User Data" / "Projects" / "com.lveditor.draft"
-LAB = Path(os.environ.get("CAPCUT_LAB") or r"D:\IT\capcut-lab\data")
-PROJ = "bench300"
 LEVELS = {0: None, 1: 0.0625, 2: 0.375, 3: 0.75, 4: 1.0}
-NEED = ["idx", "image", "start_s", "dur_s", "transition", "blur"]
+NEED = ["image", "start_s", "dur_s", "transition", "blur"]
+KBCOLS = ["kb_s0", "kb_s1"]
 
 def load(p):
     with open(p, "r", encoding="utf-8") as f:
@@ -44,29 +44,83 @@ def kf_scales(seg):
                 return vs[0], vs[-1]
     return None, None
 
-def find_csvs():
+def resolve_project(val):
+    p = Path(val)
+    if p.is_dir():
+        return p
+    p2 = DRAFTS / val
+    if p2.is_dir():
+        return p2
+    print("KHONG THAY PROJECT: %s" % val)
+    print("  da thu: %s" % p)
+    print("  da thu: %s" % p2)
+    if DRAFTS.is_dir():
+        names = sorted(d.name for d in DRAFTS.iterdir() if d.is_dir())
+        print("  project dang co: %s" % ", ".join(names))
+    return None
+
+
+def fold_path(pdir):
+    mp = pdir / "draft_meta_info.json"
+    if not mp.is_file():
+        return "KHONG CO draft_meta_info.json"
+    try:
+        m = load(mp)
+    except Exception as e:
+        return "DOC LOI draft_meta_info.json: %s" % e
+    v = m.get("draft_fold_path")
+    if not v:
+        return "draft_meta_info.json KHONG CO khoa draft_fold_path"
+    return str(v)
+
+
+def nested_report(pdir, root_size):
+    tl = pdir / "Timelines"
+    if not tl.is_dir():
+        return "khong co thu muc Timelines"
+    ns = sorted(tl.rglob("draft_content.json"))
+    if not ns:
+        return "Timelines khong chua draft_content.json"
     out = []
-    for root in [LAB, Path(r"D:\IT\capcut-lab")]:
-        if not root.exists():
-            continue
-        for p in root.rglob("*.csv"):
-            try:
-                with open(p, "r", encoding="utf-8-sig", newline="") as f:
-                    head = f.readline().strip().lower()
-            except Exception:
-                continue
-            if all(n in head for n in NEED):
-                out.append(p)
-    return sorted(set(out), key=lambda p: (-p.stat().st_mtime))
+    for n in ns:
+        sz = n.stat().st_size
+        tag = "trung kich thuoc ban goc" if sz == root_size else "CANH BAO LECH KICH THUOC"
+        out.append("%s %d byte %s" % (n.parent.name, sz, tag))
+    return " | ".join(out)
 
 def main():
-    dcp = DRAFTS / PROJ / "draft_content.json"
-    if not dcp.exists():
+    ap = argparse.ArgumentParser(description="Doi chieu shots.csv voi draft_content.json. Khong tu do, phai chi ro project va csv.")
+    ap.add_argument("--project", required=True, help="ten project trong thu muc draft cua CapCut, hoac duong dan day du toi thu muc project")
+    ap.add_argument("--csv", required=True, help="duong dan day du toi bang shot")
+    a = ap.parse_args()
+
+    pdir = resolve_project(a.project)
+    if pdir is None:
+        return 1
+    dcp = pdir / "draft_content.json"
+    if not dcp.is_file():
         print("KHONG THAY %s" % dcp)
         return 1
+    csvp = Path(a.csv)
+    if not csvp.is_file():
+        print("KHONG THAY CSV: %s" % csvp)
+        return 1
+
+    rsz = dcp.stat().st_size
+    print("=== DAU BAO CAO ===")
+    print("project dir     : %s" % pdir)
+    print("draft_fold_path : %s" % fold_path(pdir))
+    print("draft_content   : %d byte" % rsz)
+    print("ban long        : %s" % nested_report(pdir, rsz))
+    print("csv             : %s" % csvp)
+
     dc = load(dcp)
     mi = mat_index(dc)
-    segs = main_track(dc).get("segments") or []
+    tr0 = main_track(dc)
+    if tr0 is None:
+        print("KHONG CO TRACK VIDEO nao trong %s" % dcp)
+        return 1
+    segs = tr0.get("segments") or []
 
     js = []
     for i, s in enumerate(segs):
@@ -88,24 +142,29 @@ def main():
                    "ctype": ctype, "blur": blur, "ntrans": ntrans,
                    "img": Path(str(mat.get("path") or "")).name, "s0": s0, "s1": s1})
 
-    cands = find_csvs()
-    print("CSV ung vien:")
-    for p in cands:
-        print("   %s" % p)
-    csvp = None
-    for p in cands:
-        with open(p, "r", encoding="utf-8-sig", newline="") as f:
-            if sum(1 for _ in csv.DictReader(f)) == len(segs):
-                csvp = p
-                break
-    if csvp is None:
-        print("")
-        print("KHONG THAY CSV nao co dung %d dong. Dung lai." % len(segs))
-        return 1
-    print("")
-    print("dung CSV: %s" % csvp)
+    print("shot 1 anh JSON : %s" % (js[0]["img"] if js else "(khong co segment)"))
+
     with open(csvp, "r", encoding="utf-8-sig", newline="") as f:
-        rows = list(csv.DictReader(f))
+        rd = csv.DictReader(f)
+        cols = [c.strip() for c in (rd.fieldnames or [])]
+        rows = list(rd)
+    if rows:
+        print("shot 1 anh CSV  : %s" % rows[0].get("image", "(khong co cot image)"))
+    else:
+        print("shot 1 anh CSV  : (csv rong)")
+    print("cot CSV         : %s" % ", ".join(cols))
+    print("")
+
+    miss = [c for c in NEED if c not in cols]
+    if miss:
+        print("THIEU COT BAT BUOC: %s" % ", ".join(miss))
+        print("Dung lai, khong doi chieu.")
+        return 1
+    has_kb = all(c in cols for c in KBCOLS)
+    mismatch = len(rows) != len(segs)
+    if mismatch:
+        print("SO DONG KHONG KHOP: CSV %d dong, JSON %d segment, chi doi chieu %d muc dau"
+              % (len(rows), len(segs), min(len(rows), len(segs))))
 
     bad = {"start": [], "dur": [], "blur": [], "img": [], "kb": []}
     for i, (r, j) in enumerate(zip(rows, js)):
@@ -122,16 +181,21 @@ def main():
             bad["blur"].append((n, lv, exp, got, j["ctype"]))
         if r["image"].strip() and Path(r["image"].strip()).name != j["img"]:
             bad["img"].append((n, r["image"], j["img"]))
-        try:
-            k0, k1 = float(r["kb_s0"]), float(r["kb_s1"])
-            if j["s0"] is None or abs(k0 - j["s0"]) > 1e-4 or abs(k1 - j["s1"]) > 1e-4:
-                bad["kb"].append((n, k0, k1, j["s0"], j["s1"]))
-        except (KeyError, TypeError, ValueError):
-            pass
+        if has_kb:
+            try:
+                k0, k1 = float(r["kb_s0"]), float(r["kb_s1"])
+            except (TypeError, ValueError):
+                bad["kb"].append((n, r.get("kb_s0"), r.get("kb_s1"), "GIA TRI KHONG DOC DUOC", ""))
+            else:
+                if j["s0"] is None or abs(k0 - j["s0"]) > 1e-4 or abs(k1 - j["s1"]) > 1e-4:
+                    bad["kb"].append((n, k0, k1, j["s0"], j["s1"]))
 
     print("")
     print("rows CSV = %d, segments JSON = %d" % (len(rows), len(segs)))
     for k in ["start", "dur", "blur", "img", "kb"]:
+        if k == "kb" and not has_kb:
+            print("  lech kb     : KHONG CO COT kb_s0 va kb_s1, truong thu nam KHONG duoc kiem")
+            continue
         print("  lech %-6s : %d" % (k, len(bad[k])))
         for t in bad[k][:5]:
             print("      %s" % (t,))
@@ -150,7 +214,19 @@ def main():
         b = "".join("B" if int(float(rows[k]["blur"] or 0)) > 0 else "." for k in range(off, min(off + 50, len(rows))))
         print("  shot %3d  JSON %s" % (off + 1, a))
         print("            CSV  %s" % b)
-    return 0
+
+    nlech = sum(len(v) for v in bad.values())
+    print("")
+    if nlech == 0 and has_kb and not mismatch:
+        print("KET LUAN: SACH, 0 lech tren ca nam truong")
+        return 0
+    if nlech:
+        print("KET LUAN: CO LECH, tong %d" % nlech)
+    if not has_kb:
+        print("KET LUAN: thieu cot kb, chua du can cu tuyen bo sach")
+    if mismatch:
+        print("KET LUAN: so dong CSV khac so segment JSON")
+    return 2
 
 if __name__ == "__main__":
     sys.exit(main())
