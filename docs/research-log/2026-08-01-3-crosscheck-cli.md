@@ -23,3 +23,11 @@ Kết quả khớp cả ba. Bản sạch cho mã thoát 0. Bản gieo lỗi cho 
 Hai số đo phụ thu được: `draft_fold_path` của `testV3` ghi bằng dấu gạch chéo **xuôi** vì do chính CapCut tạo, còn bản `draft_content.json` lồng trong `Timelines\B88C067B-9DC3-40b8-ABB3-E9505DF69A04` trùng khít 74061 byte với bản gốc.
 
 **Giới hạn bằng chứng, đọc kỹ trước khi trích dẫn phiên này.** Vì CSV sinh ngược từ chính JSON bằng chính các hàm của công cụ, phép kiểm này chỉ chứng minh đường ống chạy và bộ so sánh biết phát hiện khác biệt. Nó **không** chứng minh ngữ nghĩa năm trường khớp với bảng shot do `tools/prod_shots.py` sinh thật. Nghiệm thu thật là chạy trên `prod60` ở **máy render**, chưa làm, đang xếp hàng trong `../TODO.md`.
+
+## Gộp `tools/fix_fold_path.py` vào `scripts_v1/clone_project.py`
+
+`clone_project.py` nay đặt `draft_fold_path` bằng `str(DST.resolve())` ngay trong bước đặt lại dấu thời gian và `draft_name`, rồi in giá trị đó kèm cờ `KHOP` ở báo cáo cuối. Chọn dạng đường dẫn có gạch chéo **ngược** là cố ý, để trùng đúng thứ `fix_fold_path.py` vẫn ghi; nếu đổi sang gạch chéo xuôi cho giống CapCut thì script cũ sẽ báo lệch và ta mất luôn phép kiểm chứng độc lập.
+
+Kiểm chứng: clone `testB_CLEAN` thành `foldtest` trong thư mục draft của **máy lab**, báo cáo in `draft_fold_path ... -> KHOP`, rồi `fix_fold_path.py` chạy trên chính thư mục đó in `da sua : False` với giá trị trước và sau giống nhau. Đã xoá `foldtest`. `fix_fold_path.py` được giữ lại, chỉ đổi docstring, vì nó vẫn là công cụ duy nhất sửa được project bị dời bằng tay.
+
+Ghi nhận một sai sót quy trình: khối lệnh thử clone chạy trong lúc CapCut đang mở sáu tiến trình. Lệnh `Get-Process *CapCut*` đầu khối đã báo, nhưng không ai dừng lại. Kết quả vẫn sạch, không nên lặp lại.

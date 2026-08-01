@@ -4,6 +4,7 @@ Mỗi phiên làm việc một file, tên theo quy ước `<ngày>-<số thứ t
 
 | Phiên | File | Nội dung chính |
 |---|---|---|
+| 01/08 khuya | `2026-08-01-4-readme-cua-vao.md` | README viết lại thành cửa vào, đưa vào bản đồ và thứ tự đọc của START-HERE, thêm luật khai báo lỗ hổng đọc; ghi nhận hai lớp cắt nội dung của công cụ fetch; đo quy mô `data\` và `vendor\` trên máy lab chuẩn bị cho `tools/data_manifest.py` |
 | 01/08 tối | `2026-08-01-3-crosscheck-cli.md` | `shots_crosscheck.py` bắt buộc `--project` và `--csv`, bỏ tự dò, thêm đầu báo cáo và hợp đồng mã thoát, bịt lỗi im lặng cột `kb`; tự kiểm ba bộ trên `testV3` khớp dự đoán; gộp `fix_fold_path.py` vào `clone_project.py` |
 | 01/08 chiều | `2026-08-01-2-kxky.md` | Tổng quát hoá hình học sang KX và KY theo từng ảnh; `prod_shots.py` ghi hai cột mới, `kb_apply.py` có `GEO`, `bench_kb.py` nạp từ CSV; tự kiểm 25600 điểm trên dữ liệu tổng hợp; nghiệm thu thị giác chờ máy render |
 | 01/08 sáng | `2026-08-01-1-docs-headers.md` | Docstring cho 15 script còn thiếu, chốt luật mô tả sinh tự động từ docstring, `scripts.md` tự sinh bằng `tools/scripts_index.py --write`, dời `split_research_log.py` vào kho lưu trữ, viết `artifacts/README.md` |

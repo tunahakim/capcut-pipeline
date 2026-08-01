@@ -6,7 +6,11 @@ Luật ba file, đọc kèm `STATE.md`: file này chứa **thì tương lai**, t
 
 ## Ưu tiên 1 — nợ chặn sản xuất
 
-**Viết `tools/data_manifest.py`** kiểm kê `data\` và `vendor\` ra bản kê có kích thước và hash, commit bản kê vào repo. Tiêu chí xong: chạy trên máy lab in ra đúng danh sách những thứ đang thiếu so với máy render.
+**Viết `tools/data_manifest.py`** kiểm kê `data\` và `vendor\` ra bản kê có kích thước và hash, commit bản kê vào repo.
+
+Thiết kế đã chốt ngày 01/08/2026, chưa viết code; số đo và lý lẽ đầy đủ ở `research-log/2026-08-01-4-readme-cua-vao.md`. Bản kê nằm ở thư mục mới `manifests/` trong repo, mỗi máy một file, `manifests/lab.json` và `manifests/render.json`; không đặt trong `artifacts/` vì thư mục đó dành cho bằng chứng bất biến của một phiên, còn bản kê là file sống. Giao diện theo luật của `tools/shots_crosscheck.py`: tham số bắt buộc và tường minh, không tự dò, mã thoát 0 sạch, 1 không chạy được, 2 có khác biệt; chế độ quét và chế độ so tách riêng. Loại trừ `data\tmp\`, `data\archive\`, `__pycache__`, `.git`. Gộp `vendor\Cache_effect` thành một mục tổng có số file, tổng byte và một hash tổng hợp, không liệt kê từng file, vì nó có 14653 file và cách chữa khi lệch vẫn là chép lại cả thư mục. Không cần cache hash, hash toàn bộ đủ nhanh.
+
+Tiêu chí xong: chạy trên máy lab in ra đúng danh sách những thứ đang thiếu so với máy render. **Đang bị chặn** vì máy render offline nên chưa có `manifests/render.json`. Làm được ngay: viết công cụ, sinh `manifests/lab.json`, tự kiểm bằng đối chứng dương là một bản sao đã cố ý xoá vài mục và sửa vài hash. Tự kiểm đó chỉ chứng minh bộ so biết phát hiện khác biệt, nghiệm thu thật xếp vào "Chờ máy render quay lại". Khi công cụ chạy được thì thêm một dòng cho `manifests/` vào bảng ở mục 4 của `START-HERE.md` và vào khối bố cục của `README.md`.
 
 ## Ưu tiên 2 — công cụ và test
 
@@ -16,7 +20,7 @@ Viết `tools/shots_dump.py` đọc ngược `draft_content.json` ra `shots.csv`
 
 Ba test đầu tiên trong `tests/`: lượng tử hoá frame, công thức lề dạng tổng quát KX KY, khứ hồi `shots.csv`.
 
-`run.bat` thật, rồi bắt đầu viết code trong `pipeline/`.
+**`run.bat` thật cộng khung `pipeline/`, và nối `config.json` vào đường chạy.** Đây là tính năng đích của cả dự án: người dùng sửa đường dẫn trong một file cấu hình rồi gọi một lệnh, không gõ thêm lệnh nào. Hiện `config.example.json` đã nằm trong repo nhưng chưa có mã nào đọc nó, và trình tự chạy vẫn chỉ tồn tại trong `docs/procedures.md` dưới dạng văn xuôi chứ không phải mã. Ba phần: đưa trình tự đã dựng thành công `prod60` thành mã có kiểm điều kiện trước và sau mỗi khâu; đọc mọi đường dẫn từ `config.json`; dừng sạch kèm thông báo đọc được khi một khâu hỏng thay vì chạy tiếp. Tiêu chí xong: trên một máy đã cài đủ, chép `config.example.json` thành `config.json`, điền đường dẫn tới thư mục ảnh, file narration, file SRT và bảng shot, chạy một lệnh duy nhất, rồi mở được project trong CapCut với `fx_audit` báo `OK` toàn bộ và lệch timing 0,0 ms, không gõ thêm lệnh nào ở giữa.
 
 ## Nợ nhỏ, làm khi tiện
 
@@ -40,6 +44,8 @@ Xoá `data\archive\`, khoảng 60–70 MB rác, sau khi chắc chắn `D:\Test_t
 
 Điều kiện bật blur trong `tools/prod_shots.py` là `kx*smin < 1 or ky*smin < 1`, mà `S_HI` bằng 0,92 còn `kx` và `ky` không bao giờ vượt 1, nên vế trái luôn đúng và cột `blur` bằng 3 ở mọi shot. Hoặc thừa nhận blur luôn bật rồi bỏ điều kiện cho khỏi gây hiểu nhầm, hoặc đặt một ngưỡng thật. Suy luận từ mã, **chưa kiểm chứng** bằng cách đếm cột blur trên bảng shot đã sinh.
 
+`vendor\` **trên máy lab** chứa năm thư mục con mà mục 3 của `START-HERE.md` không kể tới: `frames`, `Test_tool_v3`, `snapshots`, `testV3_CLEAN` và `scripts`; ba trong số đó trùng tên với thư mục con của `data\`. Thư mục gốc `vendor\` cũng có 9 file trong khi mục 3 chỉ kể sáu thứ. Hoặc `vendor\` đã tích tụ thêm dữ liệu làm việc và cần dọn, hoặc mục 3 đã lỗi thời và cần viết lại. **Phải quyết trước khi `tools/data_manifest.py` chốt danh sách loại trừ**, vì bản kê sẽ đóng băng hiện trạng thành tiêu chuẩn. Phát hiện ngày 01/08/2026 bằng phép thăm dò `data\tmp\dm_probe.py`, chưa quyết hướng xử lý.
+
 `tools/docs_audit.py` loại trừ `README.md` khỏi phép tìm file .md không ai trỏ tới bằng một điều kiện cứng trong biểu thức dựng danh sách mồ côi. Từ 01/08/2026 README đã có sáu tham chiếu trỏ tới nên điều kiện đó không còn che gì, nhưng nó vẫn là một lỗ im lặng dựng sẵn: nếu về sau mọi tham chiếu tới README biến mất thì công cụ sẽ im lặng thay vì báo. Bỏ điều kiện đó đi, README không cần đặc cách. Ưu tiên thấp, không đổi hành vi hiện tại.
 
 ## Chờ máy render quay lại
@@ -54,21 +60,6 @@ Kiểm thị giác bản export `prod60` theo quy tắc in ground truth trước
 
 Kéo về máy lab hai thứ không tái tạo được: file `narration59.mp3` và thư mục 326 ảnh gốc ở `D:\IT\capcut-help\Picture`.
 
-## Mảnh nội dung cần bảo toàn
-
-Đã xử lý xong ngày 01/08/2026: khối chỉ dẫn vá lạc chỗ giữa `reference.md` đã được áp vào đúng mục và khối chỉ dẫn đã xoá. Không còn mảnh nào treo.
-
-## Gộp `tools/fix_fold_path.py` vào `scripts_v1/clone_project.py`
-
-`clone_project.py` nay đặt `draft_fold_path` bằng `str(DST.resolve())` ngay trong bước đặt lại dấu thời gian và `draft_name`, rồi in giá trị đó kèm cờ `KHOP` ở báo cáo cuối. Chọn dạng đường dẫn có gạch chéo **ngược** là cố ý, để trùng đúng thứ `fix_fold_path.py` vẫn ghi; nếu đổi sang gạch chéo xuôi cho giống CapCut thì script cũ sẽ báo lệch và ta mất luôn phép kiểm chứng độc lập.
-
-Kiểm chứng: clone `testB_CLEAN` thành `foldtest` trong thư mục draft của **máy lab**, báo cáo in `draft_fold_path ... -> KHOP`, rồi `fix_fold_path.py` chạy trên chính thư mục đó in `da sua : False` với giá trị trước và sau giống nhau. Đã xoá `foldtest`. `fix_fold_path.py` được giữ lại, chỉ đổi docstring, vì nó vẫn là công cụ duy nhất sửa được project bị dời bằng tay.
-
-Ghi nhận một sai sót quy trình: khối lệnh thử clone chạy trong lúc CapCut đang mở sáu tiến trình. Lệnh `Get-Process *CapCut*` đầu khối đã báo, nhưng không ai dừng lại. Kết quả vẫn sạch, không nên lặp lại.
-
 ## Việc phát sinh
 
 `data\tmp\gen_cc_fixture.py` trên **máy lab** đọc ngược `draft_content.json` ra bảng shot — đó chính là nguyên mẫu sẵn có cho `tools/shots_dump.py` ở Ưu tiên 2, dùng lại được thay vì viết từ đầu. Script này nằm ngoài repo nên nếu muốn giữ thì phải chép vào `tools/` một cách có ý thức.
-
-Hai câu sai sự thật trong `../TODO.md` đã sửa nhân tiện: `data\Test_tool_v3\shots.csv` trên máy lab không rỗng 0 byte mà có 8 dòng theo lược đồ cũ `file,start,end`, và `docs/scripts.md` đã là 19,4 KB chứ không phải 18,2 KB.
-
