@@ -88,20 +88,30 @@ def nested_report(pdir, root_size):
         out.append("%s %d byte %s" % (n.parent.name, sz, tag))
     return " | ".join(out)
 
+
+class ArgParser(argparse.ArgumentParser):
+    """Thoat bang 1 khi sai tham so, de danh ma 2 cho ca chay xong nhung du lieu co van de."""
+
+    def error(self, message):
+        self.print_usage(sys.stderr)
+        sys.stderr.write("%s: loi tham so: %s\n" % (self.prog, message))
+        raise SystemExit(1)
+
+
 def main():
-    ap = argparse.ArgumentParser(description="Doi chieu shots.csv voi draft_content.json. Khong tu do, phai chi ro project va csv.")
+    ap = ArgParser(description="Doi chieu shots.csv voi draft_content.json. Khong tu do, phai chi ro project va csv.")
     ap.add_argument("--project", required=True, help="ten project trong thu muc draft cua CapCut, hoac duong dan day du toi thu muc project")
     ap.add_argument("--csv", required=True, help="duong dan day du toi bang shot")
-    a = ap.parse_args()
+    args = ap.parse_args()
 
-    pdir = resolve_project(a.project)
+    pdir = resolve_project(args.project)
     if pdir is None:
         return 1
     dcp = pdir / "draft_content.json"
     if not dcp.is_file():
         print("KHONG THAY %s" % dcp)
         return 1
-    csvp = Path(a.csv)
+    csvp = Path(args.csv)
     if not csvp.is_file():
         print("KHONG THAY CSV: %s" % csvp)
         return 1
@@ -175,10 +185,13 @@ def main():
         if abs(cd - j["dur"]) > 0.0005:
             bad["dur"].append((n, cd, j["dur"]))
         lv = int(float(r["blur"] or 0))
-        exp = LEVELS.get(lv, "??")
         got = j["blur"]
-        if (exp is None) != (got is None) or (exp is not None and got is not None and abs(exp - got) > 1e-6):
-            bad["blur"].append((n, lv, exp, got, j["ctype"]))
+        if lv not in LEVELS:
+            bad["blur"].append((n, lv, "MUC BLUR NGOAI THANG 0..4", got, j["ctype"]))
+        else:
+            exp = LEVELS[lv]
+            if (exp is None) != (got is None) or (exp is not None and got is not None and abs(exp - got) > 1e-6):
+                bad["blur"].append((n, lv, exp, got, j["ctype"]))
         if r["image"].strip() and Path(r["image"].strip()).name != j["img"]:
             bad["img"].append((n, r["image"], j["img"]))
         if has_kb:
