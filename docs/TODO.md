@@ -7,8 +7,6 @@ Luật ba file, đọc kèm `STATE.md`: file này chứa **thì tương lai**, t
 
 ## Ưu tiên 1 — nợ chặn sản xuất
 
-**Tổng quát hoá hình học sang KX và KY theo từng ảnh.** Công thức đã có ở `reference.md` mục 3.1. Phần của `tools/img_scan.py` **đã xong từ trước**, xác nhận ngày 01/08/2026 bằng cách đọc mã: nó đã tính và ghi sẵn hai cột `kx`, `ky` vào CSV. Việc còn lại: `tools/prod_shots.py` mang hai cột đó vào `shots.csv`, rồi `scripts_v1/kb_apply.py` và `tools/bench_kb.py` đọc chúng từ CSV thay vì dùng một hằng số chung cho mọi ảnh. Tiêu chí xong: dựng lại `prod60`, trích khung ở giữa mười shot có tỉ lệ ảnh khác nhau, không shot nào hở mép ngoài ý muốn. Bước nghiệm thu này cần máy render.
-
 **Sửa `tools/shots_crosscheck.py`** thành bắt buộc nhận `--project` và `--csv` tường minh, bỏ hẳn cơ chế tự dò, in ở đầu báo cáo `draft_fold_path` và tên ảnh của shot 1. Tiêu chí xong: chạy trên `prod60` cho 0 lệch trên cả năm trường.
 
 **Gộp `tools/fix_fold_path.py` vào `scripts_v1/clone_project.py`** để bớt một bước tay dễ quên. Tiêu chí xong: clone xong là `draft_fold_path` đã đúng, kiểm bằng chính script cũ.
@@ -45,7 +43,11 @@ Xoá `data\archive\`, khoảng 60–70 MB rác, sau khi chắc chắn `D:\Test_t
 
 `data\Test_tool_v3\shots.csv` rỗng 0 byte, là file giữ chỗ; xoá hoặc điền theo lược đồ thật khi `tools/shots_dump.py` chốt xong.
 
+Điều kiện bật blur trong `tools/prod_shots.py` là `kx*smin < 1 or ky*smin < 1`, mà `S_HI` bằng 0,92 còn `kx` và `ky` không bao giờ vượt 1, nên vế trái luôn đúng và cột `blur` bằng 3 ở mọi shot. Hoặc thừa nhận blur luôn bật rồi bỏ điều kiện cho khỏi gây hiểu nhầm, hoặc đặt một ngưỡng thật. Suy luận từ mã, **chưa kiểm chứng** bằng cách đếm cột blur trên bảng shot đã sinh.
+
 ## Chờ máy render quay lại
+
+Nghiệm thu KX và KY. Dựng lại `prod60` bằng `tools/prod_shots.py` mới rồi trích khung ở giữa mười shot có tỉ lệ ảnh khác nhau, **bắt buộc có ít nhất hai ảnh cao hơn khung 16:9**, vì nhánh ảnh cao trong `reference.md` mục 3.1 chưa có phép đo oracle nào. Tiêu chí xong: không shot nào hở mép ngoài ý muốn. Lớp Python đã hoàn tất và đã tự kiểm trên dữ liệu tổng hợp ngày 01/08/2026, phần còn thiếu duy nhất là mắt người nhìn khung hình thật.
 
 Chạy lại đối chiếu CSV với JSON cho `prod60` sau khi sửa `shots_crosscheck.py`.
 

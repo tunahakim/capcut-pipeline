@@ -5,7 +5,8 @@ Xem tai lieu muc X.8. He toa do: muc VIII.6.
   transform la NDC, +-1 = mep canvas
   transform.x = so_tren_UI / 1920      transform.y = so_tren_UI / 1080
   +X = phai, +Y = LEN TREN
-  Rang buoc khong ho mep:  |x| <= 1-s    |y| <= 1-KY*s
+  Rang buoc khong ho mep:  |x| <= 1-KX*s    |y| <= 1-KY*s
+  KX va KY tinh theo TUNG anh, cong thuc o docs/reference.md muc 3.1
 Cach dung:  python kb_apply.py <project-dir>
 """
 import json, pathlib, shutil, sys, uuid
@@ -27,15 +28,28 @@ PLAN = {
     8: (0.80, 0.90, -0.040,  0.020, -0.030,  0.040, "zoom in cham + drift"),
 }
 
-KY = (CW * IMG_H / IMG_W) / CH
+def kxky(w, h):
+    """KX, KY theo reference.md muc 3.1: anh duoc chua tron trong canvas."""
+    ar_i, ar_c = float(w) / float(h), CW / CH
+    return (1.0, ar_c / ar_i) if ar_i >= ar_c else (ar_i / ar_c, 1.0)
 
 
-def lim_x(s):
-    return 1.0 - s
+KX, KY = kxky(IMG_W, IMG_H)
+# idx shot -> (kx, ky). Lop goi ngoai (bench_kb.py) nap tu shots.csv.
+# Shot vang mat trong GEO thi dung KX, KY mac dinh cua bo anh test v3.
+GEO = {}
 
 
-def lim_y(s):
-    return 1.0 - KY * s
+def geo(n):
+    return GEO.get(n, (KX, KY))
+
+
+def lim_x(s, kx=KX):
+    return 1.0 - kx * s
+
+
+def lim_y(s, ky=KY):
+    return 1.0 - ky * s
 
 
 def uid():
@@ -61,17 +75,19 @@ def main():
     if not proj.is_dir():
         sys.exit("Khong phai thu muc: %s" % proj)
 
-    print("KY = %.5f" % KY)
+    print("KX mac dinh = %.5f   KY mac dinh = %.5f" % (KX, KY))
+    print("hinh hoc rieng tung shot: %d shot co trong GEO" % len(GEO))
 
     print("\n=== KIEM TRA BIEN ===")
     bad = 0
     for n, (sa, sb, xa, xb, ya, yb, note) in sorted(PLAN.items()):
+        kx, ky = geo(n)
         err = []
         for tag, s, x, y in (("dau", sa, xa, ya), ("cuoi", sb, xb, yb)):
-            if abs(x) > lim_x(s) + 1e-9:
-                err.append("%s:x %.4f>%.4f" % (tag, abs(x), lim_x(s)))
-            if abs(y) > lim_y(s) + 1e-9:
-                err.append("%s:y %.4f>%.4f" % (tag, abs(y), lim_y(s)))
+            if abs(x) > lim_x(s, kx) + 1e-9:
+                err.append("%s:x %.4f>%.4f" % (tag, abs(x), lim_x(s, kx)))
+            if abs(y) > lim_y(s, ky) + 1e-9:
+                err.append("%s:y %.4f>%.4f" % (tag, abs(y), lim_y(s, ky)))
         if err:
             bad += 1
         print("  shot %d  s %.2f->%.2f  UIpx x %+5.0f->%+5.0f  y %+5.0f->%+5.0f | %-24s %s"

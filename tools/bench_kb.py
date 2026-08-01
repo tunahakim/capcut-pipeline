@@ -3,7 +3,8 @@
 bench_kb.py <project-dir> <shots.csv>
 Lop Python cua project benchmark. CHAY SAU bench_build.py.
 Khong viet lai bo sinh keyframe: nap scripts_v1/kb_apply.py roi thay PLAN
-bang tham so Ken Burns doc tu shots.csv. Moi logic keyframe, bit 4096 va
+bang tham so Ken Burns doc tu shots.csv, va nap GEO tu hai cot kx, ky khi CSV
+co san hai cot do. Moi logic keyframe, bit 4096 va
 ghi du 4 file deu do kb_apply.py lo, giu nguyen duong di da kiem chung.
 
 SAU SCRIPT NAY TUYET DOI KHONG CHAY THEM LENH GHI NAO CUA CLI.
@@ -27,6 +28,11 @@ m.PLAN = {int(r["idx"]): (float(r["kb_s0"]), float(r["kb_s1"]),
                           float(r["kb_y0"]), float(r["kb_y1"]),
                           "bench%03d" % int(r["idx"])) for r in rows}
 print("Nap PLAN tu shots.csv: %d shot" % len(m.PLAN))
+if rows and "kx" in rows[0] and "ky" in rows[0]:
+    m.GEO = {int(r["idx"]): (float(r["kx"]), float(r["ky"])) for r in rows}
+    print("Nap hinh hoc rieng tung shot: %d shot" % len(m.GEO))
+else:
+    print("CANH BAO: shots.csv khong co cot kx, ky -- dung hang so mac dinh")
 
 sys.argv = ["kb_apply.py", proj]
 buf = io.StringIO()

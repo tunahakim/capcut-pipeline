@@ -6,6 +6,7 @@ Thay the tools/bench_shots.py. Khac biet chinh:
   - moc luu bang SO NGUYEN mili giay, luoi 100 ms, khong dung so thuc
   - kiem bien SAU khi lam tron, khong phai truoc
   - hinh hoc tinh theo TUNG anh (KX, KY), chap nhan moi kich thuoc va moi ti le
+  - ghi luon hai cot kx, ky vao shots.csv de lop keyframe dung dung con so do
   - cot blur sinh theo luat hinh hoc, khong rai ngau nhien
 """
 import argparse, csv, math, random, re, subprocess, sys
@@ -14,13 +15,12 @@ from pathlib import Path
 CW, CH = 1920.0, 1080.0
 GRID_MS = 100
 S_LO, S_HI = 0.72, 0.92
-KY_FLOOR = (CW * 768.0 / 1376.0) / CH
 TRANS = ["dissolve", "black-fade", "blur", "gradient-wipe", "dissolve-ii",
          "page-turning", "glitch", "whirlpool", "split", "flip-ii", "shutter"]
 PATTERNS = [("in", 0, 0), ("flat", 1, 0), ("in", 1, 1), ("out", -1, 1),
             ("in", -1, -1), ("flat", 0, 1), ("in", 1, -1), ("out", 0, 0)]
 COLS = ["idx", "image", "start_s", "dur_s", "transition", "blur", "intro", "outro",
-        "kb_s0", "kb_s1", "kb_x0", "kb_x1", "kb_y0", "kb_y1"]
+        "kb_s0", "kb_s1", "kb_x0", "kb_x1", "kb_y0", "kb_y1", "kx", "ky"]
 
 
 def probe_container(p):
@@ -81,7 +81,7 @@ def durations(rng, n, total_ds, dmin, dmax):
     return d
 
 
-def kb_for(rng, i, ky_img):
+def kb_for(rng, i, kx_img, ky_img):
     kind, px, py = PATTERNS[i % len(PATTERNS)]
     amp = rng.uniform(0.06, 0.14)
     if kind == "in":
@@ -92,17 +92,17 @@ def kb_for(rng, i, ky_img):
         s0 = s1 + amp
     else:
         s0 = s1 = rng.uniform(S_LO, S_HI)
-    kye = max(ky_img, KY_FLOOR)
     f = rng.uniform(0.45, 0.85)
     s0 = round(s0, 6)
     s1 = round(s1, 6)
-    ax = min(1.0 - s0, 1.0 - s1) * f
-    ay = min(1.0 - kye * s0, 1.0 - kye * s1) * f
+    ax = min(1.0 - kx_img * s0, 1.0 - kx_img * s1) * f
+    ay = min(1.0 - ky_img * s0, 1.0 - ky_img * s1) * f
     v = [round(-px * ax, 6), round(px * ax, 6), round(-py * ay, 6), round(py * ay, 6)]
     x0, x1, y0, y1 = v
     for s, x, y in ((s0, x0, y0), (s1, x1, y1)):
-        if abs(x) > 1.0 - s + 1e-9 or abs(y) > 1.0 - kye * s + 1e-9:
-            sys.exit("shot %d vuot le SAU khi lam tron: s=%.6f x=%.6f y=%.6f" % (i + 1, s, x, y))
+        if abs(x) > 1.0 - kx_img * s + 1e-9 or abs(y) > 1.0 - ky_img * s + 1e-9:
+            sys.exit("shot %d vuot le SAU khi lam tron: s=%.6f x=%.6f y=%.6f kx=%.6f ky=%.6f"
+                     % (i + 1, s, x, y, kx_img, ky_img))
     return s0, s1, x0, x1, y0, y1
 
 
@@ -157,7 +157,7 @@ def main():
     t_ms = 0
     for i in range(a.n):
         img = pool[i % len(pool)]
-        s0, s1, x0, x1, y0, y1 = kb_for(rng, i, img["ky"])
+        s0, s1, x0, x1, y0, y1 = kb_for(rng, i, img["kx"], img["ky"])
         smin = min(s0, s1)
         need_blur = (img["kx"] * smin < 1.0 - 1e-9) or (img["ky"] * smin < 1.0 - 1e-9)
         dur_ms = d_ds[i] * GRID_MS
@@ -170,7 +170,8 @@ def main():
             "outro": "fade-out" if i == a.n - 1 else "",
             "kb_s0": "%.6f" % s0, "kb_s1": "%.6f" % s1,
             "kb_x0": "%.6f" % x0, "kb_x1": "%.6f" % x1,
-            "kb_y0": "%.6f" % y0, "kb_y1": "%.6f" % y1})
+            "kb_y0": "%.6f" % y0, "kb_y1": "%.6f" % y1,
+            "kx": "%.6f" % img["kx"], "ky": "%.6f" % img["ky"]})
         t_ms += dur_ms
 
     if t_ms != total_ms:
@@ -192,6 +193,10 @@ def main():
     print("tong            : %d ms, khop muc tieu: OK" % t_ms)
     print("moc cuoi        : %.3f s, audio het o %.3f s, thua %.3f s"
           % (t_ms / 1000.0, audio_ms / 1000.0, (t_ms - audio_ms) / 1000.0))
+    kxs = [float(r["kx"]) for r in rows]
+    kys = [float(r["ky"]) for r in rows]
+    print("kx trong bang   : %.4f .. %.4f" % (min(kxs), max(kxs)))
+    print("ky trong bang   : %.4f .. %.4f" % (min(kys), max(kys)))
     print("blur bat        : %d / %d shot" % (sum(1 for r in rows if r["blur"]), a.n))
     print("transition      : %d" % sum(1 for r in rows if r["transition"]))
     print("anh dung lai    : %d lan" % reused)
