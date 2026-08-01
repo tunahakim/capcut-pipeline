@@ -8,6 +8,14 @@ tools/docs_audit.py -- kiem ke tai lieu: kich thuoc va tham chieu cheo.
   python tools/docs_audit.py --compare       # so voi moc chuan
 
 Snapshot ghi vao <CAPCUT_LAB>/perf/. Console chi in ASCII.
+
+Phan loai tham chieu. OK la file co that, dung duong dan. PLANNED la file da len ke
+hoach nhung chua viet. NGOAI la duong dan co y tro ra ngoai repo, vi du script dung
+mot lan trong CAPCUT_LAB. LICHSU la file da xoa ma tai lieu nhac lai nhu qua khu.
+LUUTRU la file da chuyen vao
+_deprecated/ sau khi cau van duoc viet, ma nhat ky chi ghi them nen khong sua lai.
+Nam loai do khong tinh la loi. Loi gom FILE THIEU, TRUNG TEN, MUC THIEU va SAI CHO;
+SAI CHO nghia la file co that nhung nam khac duong dan ma tai lieu ghi.
 """
 import os, re, sys, json, argparse, datetime
 from pathlib import Path
@@ -34,8 +42,12 @@ VALIDATE_EXT   = {".md", ".py"}
 IGNORE = {"file.py", "__init__.py", "capcut_post.py", "scan_paths.py",
           "scripts/pack_vendor.py", "x.mp4", "operations.jsonl"}
 # file da len ke hoach nhung chua viet -- bao rieng, khong tinh la loi
-PLANNED = {"artifacts/README.md", "tools/shots_dump.py", "tools/data_manifest.py",
+PLANNED = {"docs/scripts-archive.md", "tools/shots_dump.py", "tools/data_manifest.py",
            "tools/docs_size.py", "tools/probe_drafts.py"}
+# duong dan co y nam NGOAI repo: thu muc lab CAPCUT_LAB, noi de script dung mot lan
+EXTERNAL_PREFIX = ("data/",)
+# file da tung ton tai roi bi xoa; tai lieu nhac lai lich su, khong phai lien ket hong
+HISTORICAL = {"docs/research-log.md"}
 
 TOKEN_RE   = re.compile(r"[A-Za-z0-9_][A-Za-z0-9_\-./\\]*\.[A-Za-z][A-Za-z0-9]{0,4}")
 FENCE_RE   = re.compile(r"^\s*```")
@@ -102,10 +114,18 @@ def resolve(tok, src, index, byname):
         c = Path(c).as_posix().replace("//", "/")
         if c in index:
             return "OK", c
+    if t.startswith(EXTERNAL_PREFIX):
+        return "NGOAI", ""
+    if t in HISTORICAL:
+        return "LICHSU", ""
     if t in PLANNED:
         return "PLANNED", ""
     hits = byname.get(base, [])
     if len(hits) == 1:
+        if "/" in t and hits[0] != t:
+            if hits[0].startswith("_deprecated/"):
+                return "LUUTRU", ""
+            return "SAI CHO", hits[0]
         return "OK-BASENAME", hits[0]
     if len(hits) > 1:
         return "MULTI", " | ".join(hits)
@@ -143,10 +163,15 @@ def scan():
                 refs.append({"src": src, "line": lineno, "token": m.group(0),
                              "status": st, "target": tgt, "muc": muc})
 
-    problems, planned = [], []
+    problems, planned, ngoai = [], [], []
     for r in refs:
         if r["status"] == "PLANNED":
             planned.append((r["src"], r["line"], r["token"]))
+        elif r["status"] in ("NGOAI", "LICHSU", "LUUTRU"):
+            ngoai.append((r["src"], r["line"], r["token"], r["status"]))
+        elif r["status"] == "SAI CHO":
+            problems.append(("SAI CHO", r["src"], r["line"], r["token"],
+                             "thuc te nam o " + r["target"]))
         elif r["status"] == "MISSING":
             problems.append(("FILE THIEU", r["src"], r["line"], r["token"], ""))
         elif r["status"] == "MULTI":
@@ -161,7 +186,7 @@ def scan():
                if p not in referenced and not p.startswith(NO_SCAN) and p != "README.md"]
 
     return {"sizes": sizes, "refs": refs, "problems": problems, "planned": planned,
-            "romans": romans, "orphans": orphans,
+            "ngoai": ngoai, "romans": romans, "orphans": orphans,
             "when": datetime.datetime.now().isoformat(timespec="seconds")}
 
 
@@ -185,6 +210,7 @@ def report(d):
     print("tham chieu bat duoc: %d" % len(d["refs"]))
     print("tham chieu La Ma   : %d" % len(d["romans"]))
     print("tro toi file KE HOACH chua viet: %d" % len(d["planned"]))
+    print("NGOAI repo, LICH SU, LUU TRU   : %d" % len(d.get("ngoai", [])))
 
     print("")
     print("=== VAN DE (%d) ===" % len(d["problems"]))

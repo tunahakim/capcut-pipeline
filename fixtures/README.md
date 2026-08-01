@@ -17,4 +17,4 @@ Hai con số `duration` trong thư mục này khác nhau và **đó là đúng**
 
 **Media test không nằm ở đây và cố ý không commit.** Bộ tám ảnh PNG 1376×768, `audio.mp3` dài 168,724813 giây và `video1.srt` nằm ở `data\Test_tool_v3\` trên máy phát triển, và trong vendor kit tại `vendor\Test_tool_v3\`. Máy mới chép tay một trong hai nguồn đó vào `data\Test_tool_v3\`.
 
-Lý do không commit: khoảng 10 MB nhị phân không diff được, không bao giờ thay đổi.
+Lý do không commit: khoảng 10 MB nhị phân không diff được và không bao giờ thay đổi, git không phải chỗ chứa nó. Máy render đã cài git và đồng bộ với repo, nhưng media test vẫn chép tay từ vendor kit.

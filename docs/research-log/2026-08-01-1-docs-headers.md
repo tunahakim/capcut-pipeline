@@ -36,6 +36,16 @@ Chênh lệch `duration` giữa hai lược đồ trong `fixtures/parity-gold/` 
 
 Phiên này không sinh ra kết luận thực nghiệm nào. Toàn bộ là tài liệu và đọc mã tĩnh, không có phép đo trên CapCut hay bản export.
 
+## Sự cố trong phiên và bản vá công cụ kiểm
+
+`docs/procedures.md` bị dời nhầm sang `docs/research-log/` lúc lưu file nhật ký này, và lọt qua trọn một lần commit rồi push. Điều đáng ghi lại không phải cú lưu file hụt, mà là `tools/docs_audit.py` **không bắt được**: khi tra theo đường dẫn không thấy, nó tra tiếp theo tên file và chỉ cần cả repo có đúng một file trùng tên là báo hợp lệ. Mọi tham chiếu `docs/procedures.md` vì thế vẫn xanh dù file nằm sai thư mục, và ma trận tham chiếu lặng lẽ đổi đích.
+
+Cùng lúc, công cụ báo chết bốn liên kết mà thật ra không chết: hai script dùng một lần trong `data\tmp\` cố ý nằm ngoài repo nên vĩnh viễn không có trong index, một file nhật ký gộp đã xoá được nhắc lại như quá khứ, và một file đã lên kế hoạch chưa viết. Hướng sai là sửa câu văn cho né công cụ; làm vậy là chữa triệu chứng và làm tài liệu mất chính cái đường dẫn khiến câu đó có ích. Hướng đúng là dạy công cụ phân loại.
+
+`tools/docs_audit.py` nay có năm kết cục không tính là lỗi và hai kết cục tính là lỗi. Không tính lỗi: `OK`, `PLANNED` cho file đã lên kế hoạch, `NGOAI` cho đường dẫn bắt đầu bằng `data/` tức thư mục lab ngoài repo, `LICHSU` cho file đã xoá mà tài liệu nhắc lại, `LUUTRU` cho file đã chuyển vào `_deprecated/` sau khi câu văn được viết. Tính lỗi: các loại cũ, cộng thêm `SAI CHO` — file có thật nhưng nằm khác đường dẫn tài liệu ghi, đúng ca `procedures.md`.
+
+Loại `LUUTRU` sinh ra từ chính bản vá này: sau khi thêm `SAI CHO`, công cụ đỏ ở câu "Chuyển `tools/split_research_log.py` sang `_deprecated/`" ngay phía trên. Câu đó đúng vào lúc viết. Bắt sửa nó là bắt sửa quá khứ, trái luật nhật ký chỉ ghi thêm, nên ngoại lệ nằm ở công cụ.
+
 ## Cách chạy lại
 
 `python tools/scripts_index.py` in báo cáo gồm số script, danh sách file thiếu docstring và trạng thái bảng có cũ so với mã nguồn hay không. Thêm `--write` để sinh lại hai bảng trong `docs/scripts.md`. Thêm script mới thì viết docstring theo quy ước ghi ở đầu `../scripts.md` rồi chạy lại lệnh đó, đừng sửa bảng bằng tay.
