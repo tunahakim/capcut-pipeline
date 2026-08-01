@@ -31,3 +31,8 @@ Không có đường dẫn nào dài quá 240 ký tự trên cả hai nhánh, n�
 Đọc tuần tự file lớn nhất đạt 65,2 MB/s, suy ra hash toàn bộ 1315 MB mất khoảng 20 giây, nên **không cần cơ chế cache hash**. Con số này chỉ đúng cho file lớn, chưa tính phí mở file cho 14653 file nhỏ, nên tổng thời gian thật **chưa kiểm chứng**.
 
 Phát hiện ngoài dự kiến: `vendor\` chứa năm thư mục con mà mục 3 của `../START-HERE.md` không kể tới, ba trong số đó trùng tên với thư mục con của `data\`. Đã ghi thành một mục nợ nhỏ trong `../TODO.md`, chưa quyết hướng xử lý.
+## Đính chính ngày 02/08/2026
+
+Hai chỗ trong phiên này đã được đo lại ở phiên `2026-08-02-1-data-manifest.md` và phải đọc kèm. Dự đoán "hash toàn bộ mất khoảng 20 giây" chỉ đúng khi cache hệ điều hành đã nóng: đo thật trên 1261,3 MB cho 125,0 giây ở lần quét đầu với cache lạnh, tức 10,1 MB/s, rồi 19,6 giây ở lần quét ngay sau đó, tức 64,2 MB/s; riêng `Cache_effect` chiếm 121,8 giây lạnh và 17,9 giây nóng cho 14653 file. Kết luận **không cần cơ chế cache hash** vẫn giữ nguyên, nhưng giá đúng là hai phút cho lần quét nguội chứ không phải hai mươi giây.
+
+Tên thật của bộ cài trong `vendor\` là `CapCut_9.1.0.3879_User_X64_exe_en-US.exe`, đi kèm `CapCut_9.1.0.3879.sha256.txt` và `CapCut_9.1.0.3879_User_X64_exe_en-US.yaml`, không phải cái tên trong URL tải mà mục 3 của `../START-HERE.md` dẫn. Ba file đó nay nằm trong khối canonical của bản kê.

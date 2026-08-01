@@ -8,7 +8,7 @@ Toàn bộ chuỗi từ ảnh cộng narration tới file MP4 60 phút **đã ki
 
 ## 2. Hai máy
 
-Máy lab, nơi làm mọi việc soạn code và tài liệu. Windows 10 build 19045, PowerShell 5.1, Python 3.14.6 bản python.org, Node v24.14.0, npm 11.9.0, capcut-cli 0.15.0, ffmpeg và ffprobe 8.1.2, CapCut 9.1.0.3879 updater đã chặn, Git 2.53. PC văn phòng mười năm tuổi, cấu hình yếu. Ổ C còn khoảng 11 GB trên 100 GB và thư mục draft của CapCut nằm ở đó, ổ D còn khoảng 21,6 GB. **Luôn kiểm dung lượng trước mỗi việc lớn.** `LongPathsEnabled` vẫn bằng 0.
+Máy lab, nơi làm mọi việc soạn code và tài liệu. Windows 10 build 19045, PowerShell 5.1, Python 3.14.6 bản python.org, Node v24.14.0, npm 11.9.0, capcut-cli 0.15.0, ffmpeg và ffprobe 8.1.2, CapCut 9.1.0.3879 updater đã chặn, Git 2.53. PC văn phòng mười năm tuổi, cấu hình yếu. Ổ C còn khoảng 10,2 GB trên 100 GB và thư mục draft của CapCut nằm ở đó, ổ D còn khoảng 17,5 GB. **Luôn kiểm dung lượng trước mỗi việc lớn.** `LongPathsEnabled` vẫn bằng 0.
 
 Máy render, nơi dựng project lớn và export. MSI MS-7E05, i5-10400F 6 nhân 12 luồng, 16 GB RAM, GTX 1080, Windows 10 build 19042, không có winget. Ổ C là SSD NVMe 238 GB chứa thư mục draft, ổ D là SSD SATA chứa `D:\IT\capcut-lab`. CapCut 9.1.0.3879, updater đã chặn bằng deny ACL trên `CapCut-DiffUpgrade.exe` và `hpatchz.exe`. Thư mục ảnh sản xuất ở `D:\IT\capcut-help\Picture`, 326 ảnh.
 
@@ -33,6 +33,8 @@ Hiệu năng lớp ghi: mỗi lệnh CLI tốn phần cố định khoảng **0,
 Kích thước JSON: khoảng **2,9 KB cho mỗi segment trần** do `add-video` sinh ra. Project 300 shot đầy đủ hiệu ứng cho `draft_content.json` khoảng 1,0 MB.
 
 Cache hiệu ứng: mở project 8 shot có 7 transition và 1 effect làm cache tăng khoảng 17 mục; mở project 300 shot không transition không effect làm cache tăng 0 mục. Khi ghi số đếm cache **luôn ghi kèm công cụ nào đếm**, vì ba cách đếm cho ba con số khác nhau.
+
+Bản kê hai nhánh ngoài repo, đo ngày 02/08/2026 bằng `tools/data_manifest.py` trên máy lab: `data\` có 144 file 299,7 MB sau khi loại `tmp\` và `archive\`; `vendor\` khối canonical 9 mục 922,1 MB và khối extra 109 mục 39,4 MB; riêng `vendor\Cache_effect` gộp thành một mục rollup 14653 file 424842366 byte. File `manifests/lab.json` nặng 45260 byte. Quét đủ 1261,3 MB kèm hash SHA256 toàn bộ mất khoảng 125 giây khi cache hệ điều hành lạnh và khoảng 20 giây khi cache nóng. Máy render chưa có bản kê.
 
 ## 5. Việc đang dở và nợ kỹ thuật
 

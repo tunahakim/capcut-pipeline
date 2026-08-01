@@ -4,6 +4,7 @@ Mỗi phiên làm việc một file, tên theo quy ước `<ngày>-<số thứ t
 
 | Phiên | File | Nội dung chính |
 |---|---|---|
+| 02/08 khuya | `2026-08-02-1-data-manifest.md` | Viết `data_manifest.py` kiểm kê `data\` và `vendor\`, vendor chia hai khối canonical và extra; sinh `manifests/lab.json`; tự kiểm đủ ba mã thoát bằng đối chứng dương, đối chứng âm và ca thiếu file; đo lại thời gian hash khi cache lạnh và cache nóng; xoá Ưu tiên 1 khỏi `../TODO.md` |
 | 01/08 khuya | `2026-08-01-4-readme-cua-vao.md` | README viết lại thành cửa vào, đưa vào bản đồ và thứ tự đọc của START-HERE, thêm luật khai báo lỗ hổng đọc; ghi nhận hai lớp cắt nội dung của công cụ fetch; đo quy mô `data\` và `vendor\` trên máy lab chuẩn bị cho `tools/data_manifest.py` |
 | 01/08 tối | `2026-08-01-3-crosscheck-cli.md` | `shots_crosscheck.py` bắt buộc `--project` và `--csv`, bỏ tự dò, thêm đầu báo cáo và hợp đồng mã thoát, bịt lỗi im lặng cột `kb`; tự kiểm ba bộ trên `testV3` khớp dự đoán; gộp `fix_fold_path.py` vào `clone_project.py` |
 | 01/08 chiều | `2026-08-01-2-kxky.md` | Tổng quát hoá hình học sang KX và KY theo từng ảnh; `prod_shots.py` ghi hai cột mới, `kb_apply.py` có `GEO`, `bench_kb.py` nạp từ CSV; tự kiểm 25600 điểm trên dữ liệu tổng hợp; nghiệm thu thị giác chờ máy render |
