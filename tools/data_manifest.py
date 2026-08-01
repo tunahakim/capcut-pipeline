@@ -284,6 +284,7 @@ def cmd_compare(a):
     print("rollup : %s / %s" % (mm.get("rollup_mode", "?"), tm.get("rollup_mode", "?")))
     if nm == nt:
         print("CANH BAO: hai ban ke cung ten may, co the dang so mot ban voi chinh no")
+        nm, nt = nm + "/mine", nt + "/theirs"
     if mm.get("schema") != tm.get("schema"):
         print("LOI: schema khac nhau, %s / %s" % (mm.get("schema"), tm.get("schema")))
         return 1
