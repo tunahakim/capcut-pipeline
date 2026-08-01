@@ -40,6 +40,8 @@ Xoá `data\archive\`, khoảng 60–70 MB rác, sau khi chắc chắn `D:\Test_t
 
 Điều kiện bật blur trong `tools/prod_shots.py` là `kx*smin < 1 or ky*smin < 1`, mà `S_HI` bằng 0,92 còn `kx` và `ky` không bao giờ vượt 1, nên vế trái luôn đúng và cột `blur` bằng 3 ở mọi shot. Hoặc thừa nhận blur luôn bật rồi bỏ điều kiện cho khỏi gây hiểu nhầm, hoặc đặt một ngưỡng thật. Suy luận từ mã, **chưa kiểm chứng** bằng cách đếm cột blur trên bảng shot đã sinh.
 
+`tools/docs_audit.py` loại trừ `README.md` khỏi phép tìm file .md không ai trỏ tới bằng một điều kiện cứng trong biểu thức dựng danh sách mồ côi. Từ 01/08/2026 README đã có sáu tham chiếu trỏ tới nên điều kiện đó không còn che gì, nhưng nó vẫn là một lỗ im lặng dựng sẵn: nếu về sau mọi tham chiếu tới README biến mất thì công cụ sẽ im lặng thay vì báo. Bỏ điều kiện đó đi, README không cần đặc cách. Ưu tiên thấp, không đổi hành vi hiện tại.
+
 ## Chờ máy render quay lại
 
 Nghiệm thu KX và KY. Dựng lại `prod60` bằng `tools/prod_shots.py` mới rồi trích khung ở giữa mười shot có tỉ lệ ảnh khác nhau, **bắt buộc có ít nhất hai ảnh cao hơn khung 16:9**, vì nhánh ảnh cao trong `reference.md` mục 3.1 chưa có phép đo oracle nào. Tiêu chí xong: không shot nào hở mép ngoài ý muốn. Lớp Python đã hoàn tất và đã tự kiểm trên dữ liệu tổng hợp ngày 01/08/2026, phần còn thiếu duy nhất là mắt người nhìn khung hình thật.
