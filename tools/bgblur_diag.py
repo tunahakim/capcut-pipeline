@@ -1,3 +1,9 @@
+"""bgblur_diag.py
+Chẩn đoán lớp canvas của hai project cứng tên bench300 và parity01, đọc cả draft_content.json gốc lẫn mọi bản trong Timelines.
+Vào: không tham số, đọc thẳng thư mục draft của CapCut. Ra: in console và ghi <CAPCUT_LAB>/perf/bgblur_diag.txt.
+Thống kê số canvas theo type, vị trí ref canvas_blur trong extra_material_refs, phân bố check_flag, các mức blur, dải scale, và tám shot blur mạnh nhất kèm mốc thời gian. Chỉ đọc, không sửa gì.
+"""
+
 import json, os, sys
 from pathlib import Path
 from collections import Counter

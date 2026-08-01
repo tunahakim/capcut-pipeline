@@ -1,3 +1,9 @@
+"""enum_list.py
+In catalogue transition, image-intro, image-outro và image-combo lấy từ capcut enums, bỏ mục VIP, riêng transition bỏ luôn mục is_overlap vì nó làm dịch timeline.
+Vào: không tham số, cần capcut-cli trong PATH. Ra: chỉ in console gồm slug, default_duration và tên hiển thị.
+Dùng thay cho capcut enums --type X, vì cú pháp đó trả về mảng rỗng mà không báo lỗi, xem failures.md mục 2.2.
+"""
+
 import subprocess, sys, json
 
 def run(args):

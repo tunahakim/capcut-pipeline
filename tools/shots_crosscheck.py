@@ -1,3 +1,9 @@
+"""shots_crosscheck.py
+Đối chiếu shots.csv với draft_content.json trên năm trường: start, duration, mức blur quy đổi từ level 0 tới 4, tên ảnh, và cặp keyframe scale đầu cuối; in thêm số shot có blur, số transition ở hai bên và bản đồ xen kẽ theo khối 50 shot.
+Vào: không tham số, project cứng tên bench300, CSV tự dò trong CAPCUT_LAB và D:/IT/capcut-lab rồi chọn file đầu tiên có số dòng bằng số segment. Ra: chỉ in console.
+Cơ chế tự dò đã một lần đối chiếu nhầm project và nhầm CSV; TODO Ưu tiên 1 yêu cầu chuyển sang bắt buộc --project và --csv tường minh.
+"""
+
 import csv, json, os, sys
 from pathlib import Path
 

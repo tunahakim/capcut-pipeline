@@ -1,54 +1,87 @@
-# Danh muc script
+# Danh mục script
 
-Sinh tu dong boi `migrate.py`. Cot cuoi dien tay: script lam gi, hop dong dau vao/ra, muc bang chung.
+Cột mô tả trong hai bảng dưới đây **sinh tự động** từ docstring mở đầu của chính file mã nguồn, bằng `python tools/scripts_index.py --write`. Đừng sửa bảng bằng tay: sửa docstring trong file rồi chạy lại lệnh đó. Nguồn sự thật là mã nguồn, bảng chỉ là bản sao của nó, nên hai bên không bao giờ lệch nhau được.
 
-| File | KB | Mo ta |
+Quy ước docstring: dòng đầu là cú pháp gọi, các dòng sau lần lượt là mô tả ngắn, hợp đồng Vào và Ra, rồi cảnh báo hoặc mức bằng chứng nếu có. Không để dòng trống bên trong khối, vì bộ sinh bảng nối mọi dòng của docstring thành một ô.
+
+Chạy `python tools/scripts_index.py` không kèm tham số để xem báo cáo: file nào còn thiếu docstring, và bảng dưới đây đã cũ so với mã nguồn hay chưa. Kiểm kê tài liệu là việc riêng, dùng `python tools/docs_audit.py`.
+
+## 1. Script đang dùng
+
+<!-- scripts_index:begin:live -->
+| File | KB | Mô tả |
 |---|---|---|
-| `scripts_v1/check_sync.py` | 3.3 KB | |
-| `scripts_v1/clone_project.py` | 3.6 KB | |
-| `scripts_v1/diff_timing.py` | 1.1 KB | |
-| `scripts_v1/filter_apply.py` | 9.4 KB | |
-| `scripts_v1/find_ph.py` | 1.0 KB | |
-| `scripts_v1/fx_audit.py` | 2.7 KB | |
-| `scripts_v1/grab_frames.py` | 4.8 KB | |
-| `scripts_v1/kb_apply.py` | 6.5 KB | |
-| `scripts_v1/parity_build.py` | 3.8 KB | |
-| `scripts_v1/patchpath.py` | 1.8 KB | |
-| `scripts_v1/snap.py` | 4.9 KB | |
-| `scripts_v1/strip_filters.py` | 1.9 KB | |
-| `scripts_v1/tr_profile3.py` | 2.3 KB | |
-| `tools/audit_kit.py` | 7.4 KB | |
-| `tools/bulk_build.py` | 2.4 KB | Dựng N shot lặp vòng từ ảnh có sẵn để đo tải. Không thêm audio. Đã chạy ở n=10 và n=300 trên máy render 31/07/2026 |
-| `tools/cache_probe.py` | 5.7 KB | |
-| `tools/enum_list.py` | 1.1 KB | |
-| `tools/filt_enum.py` | 1.9 KB | |
-| `tools/fx_list.py` | 1.2 KB | |
-| `tools/oracle_read.py` | 3.4 KB | |
-| `tools/preflight.py` | 8.9 KB | |
-| `tools/syntax.py` | 0.9 KB | |
-| `tools/v4_mold.py` | 2.7 KB | |
-| `_deprecated/chk_fx.py` | 1.5 KB | |
-| `_deprecated/chkpath.py` | 0.7 KB | |
-| `_deprecated/dump_src.py` | 1.6 KB | |
-| `_deprecated/fix_canvas.py` | 0.7 KB | |
-| `_deprecated/kf_inject.py` | 3.2 KB | |
-| `_deprecated/lab_patch.py` | 2.9 KB | |
-| `_deprecated/make_video.py` | 4.5 KB | |
-| `_deprecated/migrate.py` | 16.5 KB | |
-| `_deprecated/patch_v8.py` | 5.8 KB | |
-| `_deprecated/propagate.py` | 0.6 KB | |
-| `_deprecated/set_scale.py` | 0.9 KB | |
-| `_deprecated/Test_tool_v2__run.py` | 0.7 KB | |
-| `_deprecated/Test_tool_v2__snap.py` | 4.0 KB | |
-| `_deprecated/tr_profile.py` | 1.8 KB | |
-| `_deprecated/tr_profile2.py` | 2.1 KB | |
-| `_deprecated/tr_pytest.py` | 10.9 KB | |
-| `_deprecated/tr_uncached.py` | 7.2 KB | |
-| `_deprecated/v3_apply.py` | 4.8 KB | |
-| `_deprecated/v3_apply2.py` | 4.1 KB | |
-| `_deprecated/v3_check.py` | 2.6 KB | |
-| `_deprecated/v3_fx.py` | 2.5 KB | |
-| `_deprecated/v4_apply.py` | 4.9 KB | |
-| `_deprecated/v4_fx.py` | 2.7 KB | |
-| `_deprecated/pack_vendor.ps1` | 3.6 KB | |
-| `_deprecated/session.ps1` | 3.8 KB | |
+| `scripts_v1/check_sync.py` | 3.3 | `check_sync.py <project-dir> <ten-snapshot> - kiem tra 4 file dong bo + chup timing.` |
+| `scripts_v1/clone_project.py` | 4.5 | `clone_project.py <scaffold-sạch> <thư-mục-drafts> <tên-project-mới>` Tạo project CapCut mới bằng cách nhân bản scaffold: sinh GUID mới cho mọi GUID tìm thấy và giữ nguyên kiểu hoa thường, đổi tên thư mục Timelines theo GUID mới, thay tên project cũ bằng tên mới trong mọi file .json .tmp .bak .txt, xoá .capcut-cli-history cùng các file .prepost .prepost2 .kfbak, đặt lại dấu thời gian và draft_name. Vào: thư mục scaffold sạch. Ra: thư mục project mới trong drafts, kèm báo cáo main_timeline_id, đối chiếu draft_name với tên thư mục, số file còn sót tên cũ. Từ chối chạy nếu thư mục đích đã tồn tại; mọi nội dung JSON đều được kiểm hợp lệ trước khi ghi đè. Chưa đặt draft_fold_path, hiện phải chạy thêm tools/fix_fold_path.py sau khi clone. |
+| `scripts_v1/diff_timing.py` | 1.1 | `diff_timing.py <snap-truoc> <snap-sau>` |
+| `scripts_v1/filter_apply.py` | 9.4 | `filter_apply.py v2 <project-dir>` Thay hoan toan `capcut add-filter` (hong tu goc: catalogue --filters cua namespace CapCut la 10 entry bia, rid chay lien tiep, khong co md5). Python la NGUON SU THAT DUY NHAT cho lop filter: script xoa sach moi filter dang co (ca rac cua CLI lan filter tha tay trong GUI) roi dung lai tu PLAN. Chay lai nhieu lan cho cung mot ket qua. path_mode: "cache" -> path = Cache/effect/<rid>/<md5> "empty" -> path = ""   (thu xem CapCut co tu tai ve khong, giong ca transition) |
+| `scripts_v1/find_ph.py` | 1.0 | `find_ph.py <project-dir> - dinh vi moi chuoi ##_material_placeholder trong cay JSON.` |
+| `scripts_v1/fx_audit.py` | 2.7 | `fx_audit.py <project-dir> - kiem ke tai nguyen moi transition/effect/filter.` |
+| `scripts_v1/grab_frames.py` | 4.8 | `grab_frames.py <video.mp4> [out-dir]` Trich khung hinh tai cac moc kiem chung, kem md5 va mau trung binh RGB. - md5 trung nhau  -> hai khung GIONG HET (dung de phat hien cat cung) - RGB trung binh  -> so sanh khach quan thay vi nhin bang mat |
+| `scripts_v1/kb_apply.py` | 6.5 | `kb_apply.py - sinh keyframe Ken Burns tong quat cho project CapCut 9.1.0` Xem tai lieu muc X.8. He toa do: muc VIII.6. transform la NDC, +-1 = mep canvas transform.x = so_tren_UI / 1920      transform.y = so_tren_UI / 1080 +X = phai, +Y = LEN TREN Rang buoc khong ho mep:  \|x\| <= 1-s    \|y\| <= 1-KY*s Cach dung:  python kb_apply.py <project-dir> |
+| `scripts_v1/parity_build.py` | 3.8 | `parity_build.py <project-dir> [src-dir]` Dung tron bo 8 shot bang capcut-cli, dung cho probe parity tren may moi. Tu doc ID segment nen khong phai chep tay. Dung ngay khi co lenh loi. Sau script nay:  python kb_apply.py <project>  ->  check_sync.py  ->  mo CapCut |
+| `scripts_v1/patchpath.py` | 2.3 | `patchpath.py <project-dir> <chuỗi-cũ> <chuỗi-mới> [--apply]` Thay chuỗi đường dẫn trong mọi file .json .tmp .bak .txt của một project; mặc định chỉ báo cáo, phải có --apply mới ghi. Vào: thư mục project và cặp chuỗi cũ, mới. Ra: các file đã sửa kèm bản sao .pathbak cho từng file, và bảng kiểm media OK hoặc THIẾU đọc từ cả bản gốc lẫn bản LONG. Bỏ qua file nào mà sau khi thay không còn là JSON hợp lệ. |
+| `scripts_v1/snap.py` | 4.9 | `snap.py <project-dir> <ten-snapshot>` LUON doc tu file LONG (Timelines/<id>/) = nguon su that. Ghi ra <LAB>/snapshots/<ten>.json (rut gon) + <ten>_full.json (nguyen ban) |
+| `scripts_v1/strip_filters.py` | 1.9 | `strip_filters.py <project-dir> - go sach lop filter, giu nguyen moi thu khac.` |
+| `scripts_v1/tr_profile3.py` | 2.3 | `tr_profile3.py <video.mp4>` Doc LIEN TUC ca cua so bang MOT lenh ffmpeg -> het trung khung do tua. Nguong lay tu 3 cua so NEN do ben trong shot (chi co Ken Burns). |
+| `tools/audio_prep.py` | 3.4 | `audio_prep.py <audio-nguồn> <audio-đích> [số-phút-mục-tiêu=59]` Nối lặp một file audio ngắn thành file dài dùng cho bài tải, bằng concat demuxer với -c copy nên không mã hoá lại. Vào: file audio nguồn. Ra: file audio đích, file concat_list.txt cạnh nó, và bộ số làm việc cho bộ sinh shot. Đo độ dài hai lần, container bằng ffprobe và giải mã thật bằng ffmpeg -f null, lấy giá trị lớn hơn làm audio_ms, cộng đuôi cố ý 2000 ms, rồi bắt tổng lên lưới 100 ms. |
+| `tools/audit_kit.py` | 7.4 | `audit_kit.py - kiem ke thuc trang dia, doi chieu voi Phu luc B cua tai lieu.` Chi DOC, khong sua gi. Ghi bao cao ra <LAB>\perf\audit_kit.txt Tra loi: 1. script nao co that tren dia, script nao thieu, script nao thua 2. script nao con ghi cung duong dan (doi chieu tuyen bo o muc II.1) 3. vendor kit: dung luong that, so file, so muc cache 4. bytes tren moi segment cua draft_content.json  <-- so quyet dinh kien truc |
+| `tools/bench_build.py` | 4.1 | `bench_build.py <project-dir> <shots.csv> <assets-dir>` Khau CLI cua project benchmark. CHAY TRUOC bench_kb.py. Sau script nay TUYET DOI khong chay them lenh ghi nao cua CLI. |
+| `tools/bench_fixkb.py` | 2.1 | `bench_fixkb.py <shots.csv>` Kep bon cot kb_x/kb_y ve trong gioi han le, TINH TREN GIA TRI DA LAM TRON. Ly do ton tai: sinh so trong bo nho thi hop le, nhung "%.6f" co the lam tron LEN va day gia tri vuot mep. Chi cot kb_* bi sua; cac cot khac giu nguyen. |
+| `tools/bench_kb.py` | 2.6 | `bench_kb.py <project-dir> <shots.csv>` Lop Python cua project benchmark. CHAY SAU bench_build.py. Khong viet lai bo sinh keyframe: nap scripts_v1/kb_apply.py roi thay PLAN bang tham so Ken Burns doc tu shots.csv. Moi logic keyframe, bit 4096 va ghi du 4 file deu do kb_apply.py lo, giu nguyen duong di da kiem chung. SAU SCRIPT NAY TUYET DOI KHONG CHAY THEM LENH GHI NAO CUA CLI. |
+| `tools/bench_shots.py` | 6.0 | `bench_shots.py - sinh shots.csv cho project benchmark va nhan ban anh nguon.` Muc dich: dac ta mot project ~60 phut du hieu ung de do suc may render. Day la ban sinh shots.csv dau tien cua du an; luoc do cot o day la HOP DONG dau vao tam thoi cho pipeline/ va la dich cho tools/shots_dump.py doc nguoc. QUY TAC THOI GIAN - doc ky truoc khi sua: 30 fps -> 1 frame = 33333.333... us, KHONG tron mili giay. capcut-cli nhan tham so giay voi 3 chu so thap phan. => Moc an toan = BOI SO CUA 0.1 GIAY = 3 frame = 100000 us chan. Moi moc sinh ra o day deu la boi so cua 0.1 giay. Don vi noi bo la "phan muoi giay". Cach dung: python tools/bench_shots.py --src <thu-muc-anh> --assets <thu-muc-copy> --out <shots.csv> |
+| `tools/bgblur_diag.py` | 5.6 | `bgblur_diag.py` Chẩn đoán lớp canvas của hai project cứng tên bench300 và parity01, đọc cả draft_content.json gốc lẫn mọi bản trong Timelines. Vào: không tham số, đọc thẳng thư mục draft của CapCut. Ra: in console và ghi <CAPCUT_LAB>/perf/bgblur_diag.txt. Thống kê số canvas theo type, vị trí ref canvas_blur trong extra_material_refs, phân bố check_flag, các mức blur, dải scale, và tám shot blur mạnh nhất kèm mốc thời gian. Chỉ đọc, không sửa gì. |
+| `tools/bgblur_frames.py` | 5.9 | `bgblur_frames.py [đường-dẫn-export.mp4]` Chọn mẫu shot của project bench300 để kiểm thị giác canvas blur, theo quy tắc in ground truth ra trước rồi mới nhìn ở failures.md mục 1. Vào: draft của bench300, tuỳ chọn thêm file MP4 đã export. Ra: bảng shot kèm mức blur, scale nhỏ nhất và lớn nhất, mốc giữa shot, bề rộng viền dự đoán; nếu có MP4 thì trích khung PNG tại giữa mỗi shot ra <CAPCUT_LAB>/perf/bgblur_frames. Mẫu gồm một cặp đối chứng blur mạnh cạnh canvas_color, một shot blur mức 4, một shot blur mức 1, một shot canvas_color âm tính và một shot blur mức giữa. |
+| `tools/bulk_build.py` | 3.1 | `bulk_build.py <project-dir> <thư-mục-ảnh> [số-shot=300] [độ-dài-mỗi-shot=12.0]` Dựng N shot bằng cách lặp vòng danh sách ảnh Shot_*.png và gọi capcut add-video từng lệnh một, mục đích đo tải của lớp ghi. Không thêm audio, không hiệu ứng. Vào: project đã clone và thư mục ảnh. Ra: báo cáo JSON ở <CAPCUT_LAB>/perf/bulk_<N>_<dấu-thời-gian>.json gồm thời gian từng lệnh và kích thước draft_content.json theo mốc 25 shot. Dừng ngay ở lệnh đầu tiên bị lỗi. Đã chạy ở n=10 và n=300 trên máy render. |
+| `tools/cache_probe.py` | 5.7 | `cache_probe.py - chot 2 cau hoi ve Cache/effect:` 1. ten md5 la FILE hay THU MUC  -> quyet dinh cach viet lai fx_audit.py 2. md5 trong enums.json co khop md5 CapCut thuc dung khong -> neu KHONG thi ket luan "CapCut resolve theo md5" o VIII.5 phai sua Chi doc, khong sua gi. |
+| `tools/docs_audit.py` | 9.4 | `tools/docs_audit.py -- kiem ke tai lieu: kich thuoc va tham chieu cheo.` python tools/docs_audit.py                 # quet, in bao cao, ghi snapshot python tools/docs_audit.py --baseline      # quet va ghi de moc chuan python tools/docs_audit.py --compare       # so voi moc chuan Snapshot ghi vao <CAPCUT_LAB>/perf/. Console chi in ASCII. |
+| `tools/enum_list.py` | 1.6 | `enum_list.py` In catalogue transition, image-intro, image-outro và image-combo lấy từ capcut enums, bỏ mục VIP, riêng transition bỏ luôn mục is_overlap vì nó làm dịch timeline. Vào: không tham số, cần capcut-cli trong PATH. Ra: chỉ in console gồm slug, default_duration và tên hiển thị. Dùng thay cho capcut enums --type X, vì cú pháp đó trả về mảng rỗng mà không báo lỗi, xem failures.md mục 2.2. |
+| `tools/filt_enum.py` | 1.9 | `filt_enum.py - xem catalogue filter ca hai namespace + tra ID da biet + kiem cache.` |
+| `tools/fix_fold_path.py` | 1.3 | `fix_fold_path.py <project-dir>` Ghi lại draft_fold_path trong draft_meta_info.json cho khớp vị trí thật của thư mục project, việc bắt buộc sau khi clone hoặc di chuyển project. Vào: thư mục project. Ra: file draft_meta_info.json đã sửa, in giá trị trước và sau cùng cờ đã sửa hay chưa. Ghi thẳng, không sao lưu, không có chế độ chạy thử. Dự kiến gộp vào scripts_v1/clone_project.py để bớt một bước tay dễ quên. |
+| `tools/frame_audit.py` | 6.5 | `frame_audit.py [tên-project=bench300] [đường-dẫn-mp4]` Đối chiếu JSON với pixel thật của bản export, tức bằng chứng mức 5: với mỗi shot, nội suy scale tại giữa shot từ keyframe KFTypeScaleX, dự đoán tỉ lệ diện tích viền, trích một khung xám bằng ffmpeg rồi đếm tỉ lệ pixel tối ở hai ngưỡng 6 và 20 để kết luận BLUR, BLACK hay AMBIG. Vào: draft của project và file MP4. Ra: bảng tổng hợp theo mức blur, danh sách shot mâu thuẫn giữa JSON và pixel, và CSV <CAPCUT_LAB>/perf/frame_audit_<project>.csv. Chỉ kết luận khi viền dự đoán chiếm trên 2 phần trăm khung hình, dưới ngưỡng đó ghi AMBIG. |
+| `tools/fx_list.py` | 1.7 | `fx_list.py` Lọc catalogue scene-effect và filter theo bộ từ khoá phong cách phim cũ, bỏ mục VIP, và in thêm 25 scene effect đầu tiên để tham khảo. Vào: không tham số, cần capcut-cli trong PATH. Ra: chỉ in console. Nhánh filter ở đây chỉ để dò tên; catalogue --filters của namespace CapCut là dữ liệu rác, muốn ID dùng được phải qua tools/filt_enum.py, xem failures.md mục 2.3. |
+| `tools/img_scan.py` | 3.3 | `img_scan.py <thư-mục-ảnh> <out.csv>` Quét đệ quy ảnh .jpg .jpeg .png, đo kích thước bằng ffprobe và tính hai hệ số chiếm chỗ KX, KY của công thức lề trên canvas 1920x1080. Vào: thư mục ảnh. Ra: CSV các cột path, w, h, bytes, ar, kx, ky, cộng thống kê console về hướng ảnh, mười kích thước phổ biến nhất và số ảnh đúng 16:9. Công thức: fit = min(1920/w, 1080/h), kx = w*fit/1920, ky = h*fit/1080, tương đương reference.md mục 3.1. Ảnh không đúng 16:9 luôn hở nền kể cả ở scale 1.0. |
+| `tools/oracle_read.py` | 4.0 | `oracle_read.py <project-dir>` Đọc bản LONG Timelines/<id>/draft_content.json và in toàn cảnh một project để làm phép thử oracle: bảng timing, check_flag, clip, uniform_scale, extra_material_refs phân loại theo bucket, common_keyframes, và ba bucket transitions, material_animations, canvases. Vào: thư mục project. Ra: in console và bản dump đầy đủ ở <CAPCUT_LAB>/oracle_dump.json. Cột delta so với một mốc cứng 8 shot của bộ test v3, chạy trên project khác thì cột đó vô nghĩa. Giá trị mặc định của CAPCUT_LAB trong file còn là đường dẫn cũ D:/Test_tool, cần sửa. |
+| `tools/preflight.py` | 8.9 | `preflight.py - kiem tra moi truong truoc khi refactor. CHI DOC, khong sua gi.` Chay:  python preflight.py          (day du, co tinh dung luong thu muc) python preflight.py --fast   (bo qua tinh dung luong, nhanh hon) |
+| `tools/prod_shots.py` | 7.8 | `prod_shots.py - sinh shots.csv cho project san xuat that, timing khoa theo file audio.` Thay the tools/bench_shots.py. Khac biet chinh: - tong thoi luong lay tu ffprobe file audio, khong phai so tron tu bia - moc luu bang SO NGUYEN mili giay, luoi 100 ms, khong dung so thuc - kiem bien SAU khi lam tron, khong phai truoc - hinh hoc tinh theo TUNG anh (KX, KY), chap nhan moi kich thuoc va moi ti le - cot blur sinh theo luat hinh hoc, khong rai ngau nhien |
+| `tools/scripts_index.py` | 3.4 | `tools/scripts_index.py -- kiem ke script va sinh bang mo ta cho docs/scripts.md.` python tools/scripts_index.py           # bao cao, khong ghi gi python tools/scripts_index.py --write   # ghi lai hai vung giua moc trong docs/scripts.md Mo ta lay tu docstring dau file, do la nguon su that duy nhat; bang chi la ban sinh ra. Console in ASCII khong dau, file ghi UTF-8 khong BOM. |
+| `tools/shots_crosscheck.py` | 6.4 | `shots_crosscheck.py` Đối chiếu shots.csv với draft_content.json trên năm trường: start, duration, mức blur quy đổi từ level 0 tới 4, tên ảnh, và cặp keyframe scale đầu cuối; in thêm số shot có blur, số transition ở hai bên và bản đồ xen kẽ theo khối 50 shot. Vào: không tham số, project cứng tên bench300, CSV tự dò trong CAPCUT_LAB và D:/IT/capcut-lab rồi chọn file đầu tiên có số dòng bằng số segment. Ra: chỉ in console. Cơ chế tự dò đã một lần đối chiếu nhầm project và nhầm CSV; TODO Ưu tiên 1 yêu cầu chuyển sang bắt buộc --project và --csv tường minh. |
+| `tools/syntax.py` | 1.2 | `syntax.py` Đọc capcut describe và in cú pháp đầy đủ của chín lệnh hay dùng: add-effect, add-filter, add-sticker, add-sfx, export, render, tracks, batch, import-srt. Vào: không tham số, cần capcut-cli trong PATH. Ra: in console usage, tham số vị trí và tuỳ chọn kèm mô tả của từng lệnh. |
+| `tools/timing_snap.py` | 3.4 | `timing_snap.py snap <project-dir> <out.json> \| timing_snap.py diff <trước.json> <sau.json>` Chụp và so sánh timing của mọi track trong project, thay cho cặp scripts_v1/check_sync.py và scripts_v1/diff_timing.py. Vào: project ở chế độ snap, hai file snapshot ở chế độ diff. Ra: file JSON gồm duration và danh sách start, duration của từng segment, hoặc bảng lệch tính bằng mili giây kèm lệch start lớn nhất. Đọc bản LONG trước, chỉ quay về bản gốc khi bản LONG không có segment nào. |
+| `tools/v4_mold.py` | 2.6 | `v4_mold.py <project-dir>` Boc khuon filter: in day du track + segment + material cua (A) filter do GUI tao  -> materials.effects        (DUNG) (B) filter do CLI tao  -> materials.video_effects  (LOI) Diff hai material theo tung khoa, ghi khuon ra D:\\Test_tool\\mold_filter.json |
+<!-- scripts_index:end:live -->
+
+## 2. Kho lưu trữ
+
+`_deprecated/` là hồ sơ lịch sử đã đóng: mã nguồn của các phiên trước, giữ lại để tra bằng chứng của những ca lỗi cũ. Không sửa, không thêm docstring, không chạy. Lý do từng file bị loại bỏ ghi ở `_deprecated/README.md`; khuôn JSON tham chiếu để đối chiếu cấu trúc nằm ở `molds/capcut-9.1.0/_README.md`.
+
+<!-- scripts_index:begin:arch -->
+| File | KB |
+|---|---|
+| `_deprecated/chk_fx.py` | 1.5 |
+| `_deprecated/chkpath.py` | 0.7 |
+| `_deprecated/dump_src.py` | 1.6 |
+| `_deprecated/fix_canvas.py` | 0.7 |
+| `_deprecated/kf_inject.py` | 3.2 |
+| `_deprecated/lab_patch.py` | 2.9 |
+| `_deprecated/make_video.py` | 4.5 |
+| `_deprecated/migrate.py` | 16.5 |
+| `_deprecated/pack_vendor.ps1` | 3.6 |
+| `_deprecated/patch_v8.py` | 5.8 |
+| `_deprecated/propagate.py` | 0.6 |
+| `_deprecated/session.ps1` | 3.8 |
+| `_deprecated/set_scale.py` | 0.9 |
+| `_deprecated/split_research_log.py` | 4.7 |
+| `_deprecated/Test_tool_v2__run.py` | 0.7 |
+| `_deprecated/Test_tool_v2__snap.py` | 4.0 |
+| `_deprecated/tr_profile.py` | 1.8 |
+| `_deprecated/tr_profile2.py` | 2.1 |
+| `_deprecated/tr_pytest.py` | 10.9 |
+| `_deprecated/tr_uncached.py` | 7.2 |
+| `_deprecated/v3_apply.py` | 4.8 |
+| `_deprecated/v3_apply2.py` | 4.1 |
+| `_deprecated/v3_check.py` | 2.6 |
+| `_deprecated/v3_fx.py` | 2.5 |
+| `_deprecated/v4_apply.py` | 4.9 |
+| `_deprecated/v4_fx.py` | 2.7 |
+<!-- scripts_index:end:arch -->

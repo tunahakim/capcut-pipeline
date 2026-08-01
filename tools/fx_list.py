@@ -1,3 +1,9 @@
+"""fx_list.py
+Lọc catalogue scene-effect và filter theo bộ từ khoá phong cách phim cũ, bỏ mục VIP, và in thêm 25 scene effect đầu tiên để tham khảo.
+Vào: không tham số, cần capcut-cli trong PATH. Ra: chỉ in console.
+Nhánh filter ở đây chỉ để dò tên; catalogue --filters của namespace CapCut là dữ liệu rác, muốn ID dùng được phải qua tools/filt_enum.py, xem failures.md mục 2.3.
+"""
+
 import subprocess, json
 
 def run(a):

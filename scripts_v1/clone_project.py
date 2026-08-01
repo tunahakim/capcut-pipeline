@@ -1,3 +1,10 @@
+"""clone_project.py <scaffold-sạch> <thư-mục-drafts> <tên-project-mới>
+Tạo project CapCut mới bằng cách nhân bản scaffold: sinh GUID mới cho mọi GUID tìm thấy và giữ nguyên kiểu hoa thường, đổi tên thư mục Timelines theo GUID mới, thay tên project cũ bằng tên mới trong mọi file .json .tmp .bak .txt, xoá .capcut-cli-history cùng các file .prepost .prepost2 .kfbak, đặt lại dấu thời gian và draft_name.
+Vào: thư mục scaffold sạch. Ra: thư mục project mới trong drafts, kèm báo cáo main_timeline_id, đối chiếu draft_name với tên thư mục, số file còn sót tên cũ.
+Từ chối chạy nếu thư mục đích đã tồn tại; mọi nội dung JSON đều được kiểm hợp lệ trước khi ghi đè.
+Chưa đặt draft_fold_path, hiện phải chạy thêm tools/fix_fold_path.py sau khi clone.
+"""
+
 import json, pathlib, re, shutil, sys, time, uuid
 
 SRC = pathlib.Path(sys.argv[1])          # scaffold sach

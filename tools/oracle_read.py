@@ -1,3 +1,9 @@
+"""oracle_read.py <project-dir>
+Đọc bản LONG Timelines/<id>/draft_content.json và in toàn cảnh một project để làm phép thử oracle: bảng timing, check_flag, clip, uniform_scale, extra_material_refs phân loại theo bucket, common_keyframes, và ba bucket transitions, material_animations, canvases.
+Vào: thư mục project. Ra: in console và bản dump đầy đủ ở <CAPCUT_LAB>/oracle_dump.json.
+Cột delta so với một mốc cứng 8 shot của bộ test v3, chạy trên project khác thì cột đó vô nghĩa. Giá trị mặc định của CAPCUT_LAB trong file còn là đường dẫn cũ D:/Test_tool, cần sửa.
+"""
+
 import json, pathlib, sys
 import os
 

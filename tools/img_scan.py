@@ -1,3 +1,9 @@
+"""img_scan.py <thư-mục-ảnh> <out.csv>
+Quét đệ quy ảnh .jpg .jpeg .png, đo kích thước bằng ffprobe và tính hai hệ số chiếm chỗ KX, KY của công thức lề trên canvas 1920x1080.
+Vào: thư mục ảnh. Ra: CSV các cột path, w, h, bytes, ar, kx, ky, cộng thống kê console về hướng ảnh, mười kích thước phổ biến nhất và số ảnh đúng 16:9.
+Công thức: fit = min(1920/w, 1080/h), kx = w*fit/1920, ky = h*fit/1080, tương đương reference.md mục 3.1. Ảnh không đúng 16:9 luôn hở nền kể cả ở scale 1.0.
+"""
+
 import csv, subprocess, sys
 from collections import Counter
 from pathlib import Path

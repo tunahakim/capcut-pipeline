@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""
+r"""
 v4_mold.py <project-dir>
 Boc khuon filter: in day du track + segment + material cua
   (A) filter do GUI tao  -> materials.effects        (DUNG)

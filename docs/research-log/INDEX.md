@@ -4,6 +4,7 @@ Mỗi phiên làm việc một file, tên theo quy ước `<ngày>-<số thứ t
 
 | Phiên | File | Nội dung chính |
 |---|---|---|
+| 01/08 sáng | `2026-08-01-1-docs-headers.md` | Docstring cho 15 script còn thiếu, chốt luật mô tả sinh tự động từ docstring, `scripts.md` tự sinh bằng `tools/scripts_index.py --write`, dời `split_research_log.py` vào kho lưu trữ, viết `artifacts/README.md` |
 | 31/07 đêm | `2026-07-31-5-prod60.md` | Bài sản xuất thật 60 phút có narration. 902 lệnh CLI trong 5,5 phút, lệch 0,0 ms trên 300 shot, export 4,07 GB trong 6 phút. Đính chính con số 20 phút. Phát hiện `shots_crosscheck.py` đối chiếu nhầm project. Hạn chế KY dùng chung cho mọi ảnh |
 | 31/07 tối muộn | `2026-07-31-4-reh10-audio.md` | Tổng duyệt 10 shot có narration. Shot video lệch 0,0 ms, segment audio bị nới +8,5 ms ở mốc cuối, đuôi cố ý hấp thụ trọn |
 | 31/07 tối | `2026-07-31-3-bgblur-timing.md` | Đóng ca lỗi im lặng thứ bảy: `bg-blur` không hỏng, quan sát ban đầu sai. Chốt luật bắt lưới 0,1 giây theo ranh giới tuyệt đối, mốc cuối dùng ceil, cộng đuôi cố ý |

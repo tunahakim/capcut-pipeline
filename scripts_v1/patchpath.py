@@ -1,3 +1,9 @@
+"""patchpath.py <project-dir> <chuỗi-cũ> <chuỗi-mới> [--apply]
+Thay chuỗi đường dẫn trong mọi file .json .tmp .bak .txt của một project; mặc định chỉ báo cáo, phải có --apply mới ghi.
+Vào: thư mục project và cặp chuỗi cũ, mới. Ra: các file đã sửa kèm bản sao .pathbak cho từng file, và bảng kiểm media OK hoặc THIẾU đọc từ cả bản gốc lẫn bản LONG.
+Bỏ qua file nào mà sau khi thay không còn là JSON hợp lệ.
+"""
+
 import json, pathlib, shutil, sys
 
 proj = pathlib.Path(sys.argv[1]); old = sys.argv[2]; new = sys.argv[3]

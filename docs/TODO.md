@@ -1,20 +1,13 @@
+Đã xử lý xong ngày 01/08/2026: khối chỉ dẫn vá lạc chỗ giữa `reference.md` đã được áp vào đúng mục và khối chỉ dẫn đã xoá. Không còn mảnh nào treo.
 # TODO — việc chưa làm
 
 **Cập nhật 01/08/2026.** Trần kích thước file này là **12 KB**, chật hơn trần chung, vì danh sách là thứ dễ phình nhất.
 
 Luật ba file, đọc kèm `STATE.md`: file này chứa **thì tương lai**, tức mọi việc chưa làm kể cả nợ kỹ thuật, vì mỗi món nợ là một việc. `STATE.md` chứa **thì hiện tại đã đo được** và không được liệt kê việc phải làm. `research-log/` chứa **thì quá khứ**. Mỗi mục dưới đây phải có tiêu chí hoàn thành. **Xong thì xoá khỏi file này**, không đánh dấu hoàn thành rồi giữ lại — danh sách đã hoàn thành chính là research-log.
 
-## Ưu tiên 0 — dọn tài liệu, phần còn lại
-
-Chạy `python tools/docs_audit.py --compare` và sửa hết liên kết chết còn lại. Tiêu chí xong: mục `VAN DE` chỉ còn các mục nằm trong danh sách trắng của chính công cụ, rồi chạy `--baseline` để đặt mốc chuẩn mới.
-
-Điền cột mô tả của `docs/scripts.md`, hiện trống toàn bộ, và bổ sung các hàng còn thiếu gồm `tools/bulk_build.py`, `tools/prod_shots.py`, `tools/audio_prep.py`, `tools/img_scan.py`, `tools/timing_snap.py`, `tools/shots_crosscheck.py`, `tools/fix_fold_path.py`, `tools/bgblur_diag.py`, `tools/bgblur_frames.py`, `tools/docs_audit.py`, `tools/split_research_log.py`. Tiêu chí xong: mọi file trong `scripts_v1/` và `tools/` đều có đúng một hàng và một câu mô tả.
-
-Viết `artifacts/README.md`, mỗi file một dòng nói rõ phiên nào sinh ra và nhật ký nào mô tả nó. Cập nhật `fixtures/README.md` cho khớp thực tế.
-
 ## Ưu tiên 1 — nợ chặn sản xuất
 
-**Tổng quát hoá hình học sang KX và KY theo từng ảnh.** Công thức đã có ở `reference.md` mục 3.1. Việc cần làm: `tools/img_scan.py` ghi thêm hai cột `kx` và `ky` cho từng ảnh, `tools/prod_shots.py` mang chúng vào `shots.csv`, `scripts_v1/kb_apply.py` và `tools/bench_kb.py` đọc từ CSV thay vì dùng một hằng số chung. Tiêu chí xong: dựng lại `prod60`, trích khung ở giữa mười shot có tỉ lệ ảnh khác nhau, không shot nào hở mép ngoài ý muốn.
+**Tổng quát hoá hình học sang KX và KY theo từng ảnh.** Công thức đã có ở `reference.md` mục 3.1. Phần của `tools/img_scan.py` **đã xong từ trước**, xác nhận ngày 01/08/2026 bằng cách đọc mã: nó đã tính và ghi sẵn hai cột `kx`, `ky` vào CSV. Việc còn lại: `tools/prod_shots.py` mang hai cột đó vào `shots.csv`, rồi `scripts_v1/kb_apply.py` và `tools/bench_kb.py` đọc chúng từ CSV thay vì dùng một hằng số chung cho mọi ảnh. Tiêu chí xong: dựng lại `prod60`, trích khung ở giữa mười shot có tỉ lệ ảnh khác nhau, không shot nào hở mép ngoài ý muốn. Bước nghiệm thu này cần máy render.
 
 **Sửa `tools/shots_crosscheck.py`** thành bắt buộc nhận `--project` và `--csv` tường minh, bỏ hẳn cơ chế tự dò, in ở đầu báo cáo `draft_fold_path` và tên ảnh của shot 1. Tiêu chí xong: chạy trên `prod60` cho 0 lệch trên cả năm trường.
 
@@ -37,6 +30,14 @@ Ba test đầu tiên trong `tests/`: lượng tử hoá frame, công thức lề
 `tools/bench_shots.py` kiểm biên trước khi làm tròn; phải đảo thành làm tròn rồi mới kiểm và kẹp, giống `tools/bench_fixkb.py`. Ưu tiên thấp vì `tools/prod_shots.py` đã thay nó.
 
 `preflight.py` lỗi thời ba chỗ, xem `failures.md` mục 6. Cân nhắc bỏ hẳn thay vì vá.
+
+`tools/oracle_read.py` còn mặc định `CAPCUT_LAB` là đường dẫn cũ `D:\Test_tool`; sửa thành mặc định giống các công cụ khác. Ngoài ra bảng delta của nó so với một mốc cứng 8 shot của bộ test v3, chạy trên project khác thì cột delta vô nghĩa — hoặc nhận mốc qua tham số, hoặc in cảnh báo.
+
+`tools/bgblur_diag.py`, `tools/bgblur_frames.py` và `tools/frame_audit.py` cứng tên project `bench300`; cho nhận tên project qua tham số dòng lệnh.
+
+`docs/scripts.md` đang 18,2 KB, tức 70 phần trăm trần 26 KB, với 38 script đang dùng. Khi chạm trần thì tách bảng kho lưu trữ sang `docs/scripts-archive.md` và cập nhật `tools/scripts_index.py` cho ghi hai file.
+
+Bổ sung một dòng cho `split_research_log.py` vào `_deprecated/README.md`, file này chuyển vào kho lưu trữ ngày 01/08/2026 vì nguồn của nó đã bị xoá sau khi tách nhật ký.
 
 Dời `scan_paths.py` từ thư mục mẹ `capcut-lab\` vào `data\tmp\`, vì thư mục mẹ chỉ được chứa đúng ba nhánh.
 

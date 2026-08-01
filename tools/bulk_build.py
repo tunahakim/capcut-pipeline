@@ -1,3 +1,9 @@
+"""bulk_build.py <project-dir> <thư-mục-ảnh> [số-shot=300] [độ-dài-mỗi-shot=12.0]
+Dựng N shot bằng cách lặp vòng danh sách ảnh Shot_*.png và gọi capcut add-video từng lệnh một, mục đích đo tải của lớp ghi. Không thêm audio, không hiệu ứng.
+Vào: project đã clone và thư mục ảnh. Ra: báo cáo JSON ở <CAPCUT_LAB>/perf/bulk_<N>_<dấu-thời-gian>.json gồm thời gian từng lệnh và kích thước draft_content.json theo mốc 25 shot.
+Dừng ngay ở lệnh đầu tiên bị lỗi. Đã chạy ở n=10 và n=300 trên máy render.
+"""
+
 import json, os, pathlib, subprocess, sys, time
 
 PROJ = sys.argv[1]

@@ -1,3 +1,8 @@
+"""syntax.py
+Đọc capcut describe và in cú pháp đầy đủ của chín lệnh hay dùng: add-effect, add-filter, add-sticker, add-sfx, export, render, tracks, batch, import-srt.
+Vào: không tham số, cần capcut-cli trong PATH. Ra: in console usage, tham số vị trí và tuỳ chọn kèm mô tả của từng lệnh.
+"""
+
 import subprocess, json
 
 p = subprocess.run("capcut describe", shell=True, capture_output=True)

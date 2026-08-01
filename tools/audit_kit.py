@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""
+r"""
 audit_kit.py - kiem ke thuc trang dia, doi chieu voi Phu luc B cua tai lieu.
 Chi DOC, khong sua gi. Ghi bao cao ra <LAB>\perf\audit_kit.txt
 Tra loi:
