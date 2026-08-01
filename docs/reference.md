@@ -244,7 +244,7 @@ Cảnh báo thực dụng khi trích khung: khung tại tâm `Flip II` là **đe
 | Tính năng | Trạng thái |
 |---|---|
 | Tạo project bằng `compile`/`init`/`quickstart` | **Không dùng được** — CapCut từ chối mở |
-| Tạo project bằng clone scaffold | **Hoạt động** — `clone_project.py`, phải chạy `fix_fold_path.py` sau đó |
+| Tạo project bằng clone scaffold | **Hoạt động** — `clone_project.py`, tự đặt `draft_fold_path` từ 01/08/2026 nên không còn bước tay nào sau đó |
 | `add-video`, `add-audio` | Hoạt động, tự đo dimensions và duration nhờ ffprobe |
 | `bg-blur` ghi material | Hoạt động, nhưng tạo canvas **mới** để lại canvas cũ mồ côi (vô hại) |
 | `bg-blur` kích hoạt | **Cần vá** — phải bật bit 4096 bằng Python. Đã kiểm chứng ở mức 5 trên 300 shot |

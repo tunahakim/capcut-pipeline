@@ -43,7 +43,7 @@ Vì `data\` và `vendor\` là thư mục **ngang hàng** với repo chứ không
 
 **`data\` là cục bộ của từng máy và không bao giờ đồng bộ. Luật một chiều: thứ gì trong `data\` là bằng chứng mà phiên sau cần đọc thì phải được nâng lên repo.**
 
-**Cảnh báo về scaffold:** file scaffold chứa đường dẫn tuyệt đối trỏ về profile của user đã tạo ra nó. `clone_project.py` chỉ thay GUID và tên project, không thay phần user profile, và `draft_fold_path` cũng không được sửa — phải chạy `tools/fix_fold_path.py` sau khi clone. Trên máy mới nên tạo scaffold mới bằng GUI: New Project, mở lại lần nữa rồi đóng, xác nhận tên thư mục trùng `draft_name`, rồi copy nguyên thư mục ra thành `scaffold_CLEAN`.
+**Cảnh báo về scaffold:** file scaffold chứa đường dẫn tuyệt đối trỏ về profile của user đã tạo ra nó. `clone_project.py` thay GUID, tên project và `draft_fold_path`, nhưng **không** thay phần user profile nằm trong những đường dẫn khác, nên scaffold mang từ máy này sang máy kia vẫn còn dấu vết của máy cũ. Trên máy mới nên tạo scaffold mới bằng GUI: New Project, mở lại lần nữa rồi đóng, xác nhận tên thư mục trùng `draft_name`, rồi copy nguyên thư mục ra thành `scaffold_CLEAN`.
 
 **Rủi ro tận thế cần biết.** JianYing từ bản 6.0 đã **mã hoá** `draft_content.json`. CapCut quốc tế hiện chưa, nhưng khả năng theo sau là có thật — trong 76 lệnh của capcut-cli có sẵn lệnh `decrypt`, cho thấy vấn đề này không xa lạ. Nếu xảy ra thì mọi hướng ghi file đều chết, cả CLI lẫn Python. Không có cách phòng nào ngoài giữ bản cài cũ, và đó là lý do `vendor\` phải giữ **vĩnh viễn**.
 

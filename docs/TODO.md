@@ -6,8 +6,6 @@ Luật ba file, đọc kèm `STATE.md`: file này chứa **thì tương lai**, t
 
 ## Ưu tiên 1 — nợ chặn sản xuất
 
-**Gộp `tools/fix_fold_path.py` vào `scripts_v1/clone_project.py`** để bớt một bước tay dễ quên. Tiêu chí xong: clone xong là `draft_fold_path` đã đúng, kiểm bằng chính script cũ.
-
 **Viết `tools/data_manifest.py`** kiểm kê `data\` và `vendor\` ra bản kê có kích thước và hash, commit bản kê vào repo. Tiêu chí xong: chạy trên máy lab in ra đúng danh sách những thứ đang thiếu so với máy render.
 
 ## Ưu tiên 2 — công cụ và test
@@ -57,3 +55,18 @@ Kéo về máy lab hai thứ không tái tạo được: file `narration59.mp3` 
 ## Mảnh nội dung cần bảo toàn
 
 Đã xử lý xong ngày 01/08/2026: khối chỉ dẫn vá lạc chỗ giữa `reference.md` đã được áp vào đúng mục và khối chỉ dẫn đã xoá. Không còn mảnh nào treo.
+
+## Gộp `tools/fix_fold_path.py` vào `scripts_v1/clone_project.py`
+
+`clone_project.py` nay đặt `draft_fold_path` bằng `str(DST.resolve())` ngay trong bước đặt lại dấu thời gian và `draft_name`, rồi in giá trị đó kèm cờ `KHOP` ở báo cáo cuối. Chọn dạng đường dẫn có gạch chéo **ngược** là cố ý, để trùng đúng thứ `fix_fold_path.py` vẫn ghi; nếu đổi sang gạch chéo xuôi cho giống CapCut thì script cũ sẽ báo lệch và ta mất luôn phép kiểm chứng độc lập.
+
+Kiểm chứng: clone `testB_CLEAN` thành `foldtest` trong thư mục draft của **máy lab**, báo cáo in `draft_fold_path ... -> KHOP`, rồi `fix_fold_path.py` chạy trên chính thư mục đó in `da sua : False` với giá trị trước và sau giống nhau. Đã xoá `foldtest`. `fix_fold_path.py` được giữ lại, chỉ đổi docstring, vì nó vẫn là công cụ duy nhất sửa được project bị dời bằng tay.
+
+Ghi nhận một sai sót quy trình: khối lệnh thử clone chạy trong lúc CapCut đang mở sáu tiến trình. Lệnh `Get-Process *CapCut*` đầu khối đã báo, nhưng không ai dừng lại. Kết quả vẫn sạch, không nên lặp lại.
+
+## Việc phát sinh
+
+`data\tmp\gen_cc_fixture.py` trên **máy lab** đọc ngược `draft_content.json` ra bảng shot — đó chính là nguyên mẫu sẵn có cho `tools/shots_dump.py` ở Ưu tiên 2, dùng lại được thay vì viết từ đầu. Script này nằm ngoài repo nên nếu muốn giữ thì phải chép vào `tools/` một cách có ý thức.
+
+Hai câu sai sự thật trong `../TODO.md` đã sửa nhân tiện: `data\Test_tool_v3\shots.csv` trên máy lab không rỗng 0 byte mà có 8 dòng theo lược đồ cũ `file,start,end`, và `docs/scripts.md` đã là 19,4 KB chứ không phải 18,2 KB.
+

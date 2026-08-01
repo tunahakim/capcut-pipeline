@@ -4,6 +4,7 @@ Mỗi phiên làm việc một file, tên theo quy ước `<ngày>-<số thứ t
 
 | Phiên | File | Nội dung chính |
 |---|---|---|
+| 01/08 tối | `2026-08-01-3-crosscheck-cli.md` | `shots_crosscheck.py` bắt buộc `--project` và `--csv`, bỏ tự dò, thêm đầu báo cáo và hợp đồng mã thoát, bịt lỗi im lặng cột `kb`; tự kiểm ba bộ trên `testV3` khớp dự đoán; gộp `fix_fold_path.py` vào `clone_project.py` |
 | 01/08 chiều | `2026-08-01-2-kxky.md` | Tổng quát hoá hình học sang KX và KY theo từng ảnh; `prod_shots.py` ghi hai cột mới, `kb_apply.py` có `GEO`, `bench_kb.py` nạp từ CSV; tự kiểm 25600 điểm trên dữ liệu tổng hợp; nghiệm thu thị giác chờ máy render |
 | 01/08 sáng | `2026-08-01-1-docs-headers.md` | Docstring cho 15 script còn thiếu, chốt luật mô tả sinh tự động từ docstring, `scripts.md` tự sinh bằng `tools/scripts_index.py --write`, dời `split_research_log.py` vào kho lưu trữ, viết `artifacts/README.md` |
 | 31/07 đêm | `2026-07-31-5-prod60.md` | Bài sản xuất thật 60 phút có narration. 902 lệnh CLI trong 5,5 phút, lệch 0,0 ms trên 300 shot, export 4,07 GB trong 6 phút. Đính chính con số 20 phút. Phát hiện `shots_crosscheck.py` đối chiếu nhầm project. Hạn chế KY dùng chung cho mọi ảnh |
