@@ -2,7 +2,7 @@
 
 **Cập nhật 01/08/2026.**
 
-Nếu bạn là AI vừa được đưa vào dự án: đọc hết file này, rồi đọc `STATE.md`, rồi mới quyết định đọc gì tiếp. Đừng đọc `legacy/v0.8-full.md` trừ khi thật sự cần — nó 299 KB và sẽ ăn phần lớn ngữ cảnh của bạn.
+Nếu bạn là AI vừa được đưa vào dự án: đọc hết file này, rồi theo đúng thứ tự đọc ở mục 5. Nếu bạn tới đây mà chưa qua `README.md` thì quay lại đọc nó trước, vì luật xử lý khi công cụ fetch cắt mất nội dung nằm ở đó và nó áp dụng ngay từ lần fetch đầu tiên.
 
 File này chỉ chứa những thứ **không đổi theo phiên**: dự án là gì, luật bất biến, bố cục thư mục, cách làm việc. Mọi số đo và tiến độ nằm ở `STATE.md`.
 
@@ -65,25 +65,28 @@ Phân biệt `fixtures\` với `artifacts\`: `fixtures\` là tiêu chuẩn dùng
 ## 5. Bản đồ tài liệu và thứ tự đọc
 
 ```
+README.md            <- cua vao: luat doc file bi cat, moi truong, bo cuc, phap ly
 docs/
-  START-HERE.md      <- file nay: dieu huong, luat bat bien, bo cuc
-  STATE.md           <- trang thai, so do, viec dang do, no ky thuat
+  START-HERE.md      <- file nay: dieu huong, luat bat bien, cach lam viec
+  STATE.md           <- anh chup thi hien tai: so do, may nao co gi
+  TODO.md            <- thi tuong lai: viec chua lam, xep theo uu tien
   reference.md       <- so tra: hang so, cong thuc, catalogue, danh sach den
   reference-catalog.md  <- catalogue hieu ung va cu phap 76 lenh CLI
   failures.md        <- MOI LOAI LOI IM LANG DA GAP + thang bang chung
   model.md           <- CapCut hoat dong the nao: 4 file, Timelines\, resolve tai nguyen
   procedures.md      <- quy trinh dung video, probe parity, dung may moi
-  scripts.md         <- moi script lam gi
-  TODO.md            <- no tai lieu va no ky thuat, xep theo thu tu lam
-  research-log/      <- nhat ky theo phien, xem INDEX.md
+  scripts.md         <- moi script lam gi, sinh tu dong tu docstring
+  research-log/      <- thi qua khu: nhat ky theo phien, xem INDEX.md
   legacy/v0.8-full.md  <- 299 KB, ban luu tru
 ```
 
-Thứ tự cho một phiên mới: file này, rồi `STATE.md`, rồi `reference.md`, rồi `failures.md`. `model.md` khi cần hiểu vì sao phải làm thế. `procedures.md` khi cần quy trình. `legacy/v0.8-full.md` chỉ khi các file kia thiếu, và khi đó nên tìm mục cụ thể chứ đừng đọc tuần tự.
+Thứ tự cho một phiên mới: `README.md`, rồi file này, rồi `STATE.md`, rồi `TODO.md`, rồi `reference.md`, rồi `failures.md`, rồi `research-log/INDEX.md` cùng nhật ký một hoặc hai phiên gần nhất. `model.md` khi cần hiểu vì sao phải làm thế. `procedures.md` khi cần quy trình. `scripts.md` khi cần biết script nào làm gì. `reference-catalog.md` khi cần tra hiệu ứng hoặc cú pháp lệnh. `legacy/v0.8-full.md` chỉ khi các file kia thiếu, và khi đó tìm mục cụ thể chứ đừng đọc tuần tự.
+
+Luật ba file, để tài liệu không phình và không tự mâu thuẫn: file này giữ thứ **không đổi theo phiên**; `STATE.md` là **ảnh chụp thì hiện tại**, sửa bằng cách ghi đè chứ không thêm vào; `TODO.md` là **thì tương lai**, xong việc thì xoá khỏi đó chứ không đánh dấu hoàn thành; `research-log/` là **thì quá khứ**, chỉ ghi thêm, không sửa lặng lẽ. Cùng một sự thật không được chép ra hai chỗ.
 
 **Mã nguồn in trong `legacy/v0.8-full.md` không đáng tin.** Phần lớn đã lỗi thời, và có ít nhất một script chưa bao giờ tồn tại trên đĩa, nghĩa là mã của nó chưa từng chạy. Nguồn sự thật là file trong `scripts_v1/` và `tools/`. Bài học đã lặp ba lần: mã nằm trong tài liệu mà không có file trên đĩa thì phải coi là **chưa kiểm chứng**, không phải "đã có sẵn".
 
-**Trần kích thước mỗi file tài liệu là 26 KB**, lý do ghi trong `README.md`. Kiểm bằng `python tools/docs_audit.py`.
+**Trần kích thước mỗi file tài liệu là 26 KB**, riêng `STATE.md` và `TODO.md` chật hơn, ghi ở đầu mỗi file. Lý do lịch sử, ngưỡng cắt đã đo được, và luật bắt buộc phải làm gì khi nghi mình đọc thiếu, tất cả nằm ở `README.md`. Kiểm bằng `python tools/docs_audit.py`.
 
 ## 6. Ba điều tuyệt đối không được làm
 
@@ -116,6 +119,8 @@ Khi hướng dẫn sửa tài liệu: nói rõ **file nào, mục nào**, và ch
 Quyết định đã bị thay thế thì **xoá khỏi tài liệu chính** và ghi vào file phiên tương ứng, không giữ song song hai bản.
 
 Kết luận chưa có bằng chứng thực nghiệm phải ghi rõ là **chưa kiểm chứng**. Mỗi phép thử nên có một mục biết chắc pass làm đối chứng dương và một mục nghi ngờ; nếu cả hai fail thì lỗi ở phương pháp, nếu chỉ mục nghi ngờ fail thì lỗi đúng chỗ đang nghi.
+
+Trước khi đề xuất bất kỳ bản vá nào, **khai báo lỗ hổng đọc của mình**. Sau mỗi lần fetch, đối chiếu độ dài nhận được với kích thước thật của file, lấy từ `tools/docs_audit.py` hoặc từ git, rồi nói ngay tên file và chỗ thiếu nếu có. Không viết nội dung thay thế cho một file mà mình không có nguyên văn, và không kết luận rằng một hàm hay một câu văn không tồn tại chỉ vì mình không nhìn thấy nó. Luật đầy đủ ở `README.md`.
 
 Nếu người dùng đề xuất hướng có vấn đề, nói thẳng. Nếu tự phát hiện mình sai, cũng nói thẳng. Không dùng emoji.
 
