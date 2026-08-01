@@ -106,7 +106,7 @@ Bắt đầu tải bộ cài CapCut **ngay lập tức** để nó chạy song s
 ```
 winget download ByteDance.CapCut --version 9.1.0.3879 -d C:\kit
 ```
-Hoặc `curl.exe -L -o C:\kit\capcut.exe "<URL trong reference.md muc 14>"` rồi `Get-FileHash -Algorithm SHA256`.
+Hoặc `curl.exe -L -o C:\kit\capcut.exe "<URL trong reference.md muc 12>"` rồi `Get-FileHash -Algorithm SHA256`.
 
 Trong lúc chờ: cài Python từ python.org, Node.js, `winget install Gyan.FFmpeg`, rồi **mở cửa sổ PowerShell mới**, rồi `npm i -g capcut-cli@0.15.0`. Kiểm bằng `capcut describe` — đừng dùng `capcut version`.
 
@@ -194,6 +194,6 @@ Rồi mở CapCut và ghi lại: mất bao lâu để timeline hiển thị xong
 
 **Cảnh báo dung lượng:** 300 shot × khoảng 900 KB ảnh = 270 MB copy vào `assets\video\` của project, trên ổ chứa thư mục draft. Kiểm chỗ trống trước.
 
-**Ghi lại mọi con số ngay khi đo được** — đó là output quan trọng nhất của phiên máy render, và nó sẽ đi vào `research-log.md`.
+**Ghi lại mọi con số ngay khi đo được** — đó là output quan trọng nhất của phiên máy render, và nó sẽ đi vào `research-log/`.
 
 ---

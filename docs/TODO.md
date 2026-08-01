@@ -1,71 +1,59 @@
-# TODO — nợ tài liệu và nợ kỹ thuật
+# TODO — việc chưa làm
 
-**Cập nhật 31/07/2026.** Xếp theo thứ tự dự kiến làm. Việc nào đang chặn việc khác thì ghi rõ.
+**Cập nhật 01/08/2026.** Trần kích thước file này là **12 KB**, chật hơn trần chung, vì danh sách là thứ dễ phình nhất.
 
-## Ưu tiên 0 — phiên sau, làm trước mọi việc khác
+Luật ba file, đọc kèm `STATE.md`: file này chứa **thì tương lai**, tức mọi việc chưa làm kể cả nợ kỹ thuật, vì mỗi món nợ là một việc. `STATE.md` chứa **thì hiện tại đã đo được** và không được liệt kê việc phải làm. `research-log/` chứa **thì quá khứ**. Mỗi mục dưới đây phải có tiêu chí hoàn thành. **Xong thì xoá khỏi file này**, không đánh dấu hoàn thành rồi giữ lại — danh sách đã hoàn thành chính là research-log.
 
-Việc này người dùng sẽ tự tay dán nội dung đầy đủ từng file cho AI đọc, không đọc qua GitHub, vì nhiều file đã vượt trần 26 KB và bị cắt khi fetch.
+## Ưu tiên 0 — dọn tài liệu, phần còn lại
 
-**Kiểm tham chiếu chéo trước khi tách bất cứ file nào.** Các file trong `docs/` trỏ lẫn nhau chằng chịt, ví dụ `START-HERE.md` trỏ tới mục số trong `failures.md` và `reference.md`, `procedures.md` trỏ tới `reference.md`, `model.md` trỏ tới `legacy/v0.8-full.md`. Phải quét toàn bộ tham chiếu trước, lập bảng, rồi mới tách và sửa đồng loạt. Tách trước rồi sửa sau sẽ để lại liên kết chết.
+Chạy `python tools/docs_audit.py --compare` và sửa hết liên kết chết còn lại. Tiêu chí xong: mục `VAN DE` chỉ còn các mục nằm trong danh sách trắng của chính công cụ, rồi chạy `--baseline` để đặt mốc chuẩn mới.
 
-**Tách toàn bộ `docs/research-log.md`** thành từng phiên trong `docs/research-log/`, quy ước tên `<ngày>-<số thứ tự phiên trong ngày>-<nhãn ngắn>.md`, phiên mới nhất lên đầu trong `docs/research-log/INDEX.md`. Danh sách dự kiến, lấy theo các tiêu đề hiện có: `2026-07-28-1-mo-dau.md` cho phụ lục E1, `2026-07-29-1-v5.md`, `2026-07-29-2-v6.md`, `2026-07-29-3-v7.md` cho E2 tới E4, `2026-07-30-1-refactor.md`, `2026-07-31-1-parity-300shot.md`, `2026-07-31-2-benchmark-render.md`, và `2026-07-31-3-bgblur-audio.md`. **Đổi tên** file đã tạo ở phiên này từ `2026-07-31-2.md` thành `2026-07-31-3-bgblur-audio.md` cho khớp quy ước. Sau khi tách, sửa mọi chỗ trong `START-HERE.md`, `README.md`, `model.md`, `procedures.md` đang trỏ tới `research-log.md` thành trỏ tới file phiên cụ thể. Xoá `research-log.md` hoặc rút nó về một dòng trỏ sang `research-log/INDEX.md`.
+Điền cột mô tả của `docs/scripts.md`, hiện trống toàn bộ, và bổ sung các hàng còn thiếu gồm `tools/bulk_build.py`, `tools/prod_shots.py`, `tools/audio_prep.py`, `tools/img_scan.py`, `tools/timing_snap.py`, `tools/shots_crosscheck.py`, `tools/fix_fold_path.py`, `tools/bgblur_diag.py`, `tools/bgblur_frames.py`, `tools/docs_audit.py`, `tools/split_research_log.py`. Tiêu chí xong: mọi file trong `scripts_v1/` và `tools/` đều có đúng một hàng và một câu mô tả.
 
-**Viết lại cho gọn mà vẫn đủ**, ưu tiên theo thứ tự này: `START-HERE.md` 28.312 byte, `research-log.md` 31.774 byte, `reference.md` 26.794 byte. `START-HERE.md` đang chứa lẫn quyết định cũ đã bị thay thế và quyết định hiện hành, đây là nguồn nhầm lẫn nguy hiểm nhất trong bộ tài liệu. Nguyên tắc viết lại: quyết định đã bị thay thế thì **xoá khỏi tài liệu chính và ghi vào file phiên tương ứng**, không giữ song song hai bản.
+Viết `artifacts/README.md`, mỗi file một dòng nói rõ phiên nào sinh ra và nhật ký nào mô tả nó. Cập nhật `fixtures/README.md` cho khớp thực tế.
 
-**Hạn chế đã biết cần ghi vào `reference.md` khi viết lại:** `scripts_v1/kb_apply.py` kiểm biên bằng `lim_x = 1 - s` và `lim_y = 1 - KY * s` với `KY` là hằng số toàn cục cho ảnh 1376×768. Hệ quả một, không hỗ trợ Ken Burns phóng tràn viền vì `s > 1` làm vế phải âm và mọi giá trị đều bị từ chối. Hệ quả hai, với ảnh có tỉ lệ khác 1376×768 thì phép kiểm sai lệch một chút so với hình học thật. Cách đi vòng đang dùng: bộ sinh `shots.csv` tự tính biên theo từng ảnh rồi lấy giá trị **chặt hơn** giữa biên thật và biên của `kb_apply.py`, nên không có ảnh nào bị cắt. Muốn bỏ cách đi vòng thì phải tổng quát hoá `kb_apply.py` sang `KX`, `KY` theo từng ảnh, và việc đó cần một phép đo oracle cho ảnh cao hơn khung, hiện **chưa có**.
+## Ưu tiên 1 — nợ chặn sản xuất
 
-Gộp bước vá `draft_fold_path` vào `scripts_v1/clone_project.py` để không phải nhớ chạy `tools/fix_fold_path.py` riêng. Nguyên nhân đã xác định ngày 31/07/2026: scaffold mang đường dẫn tuyệt đối của máy đã tạo ra nó, và `clone_project.py` chỉ thay GUID cùng tên project chứ không thay phần `C:/Users/<user>/`. Đây gần như chắc chắn là cơ chế thật đằng sau cảnh báo "scaffold chỉ dùng được trên chính máy đã tạo ra nó" ở `START-HERE.md` mục 3.1; khi viết lại `START-HERE.md` thì sửa cảnh báo đó thành mô tả nguyên nhân kèm cách vá, thay vì để nó là một điều cấm không giải thích.
+**Tổng quát hoá hình học sang KX và KY theo từng ảnh.** Công thức đã có ở `reference.md` mục 3.1. Việc cần làm: `tools/img_scan.py` ghi thêm hai cột `kx` và `ky` cho từng ảnh, `tools/prod_shots.py` mang chúng vào `shots.csv`, `scripts_v1/kb_apply.py` và `tools/bench_kb.py` đọc từ CSV thay vì dùng một hằng số chung. Tiêu chí xong: dựng lại `prod60`, trích khung ở giữa mười shot có tỉ lệ ảnh khác nhau, không shot nào hở mép ngoài ý muốn.
 
-Viết `tools/data_manifest.py` sinh `artifacts/data_manifest.csv` gồm đường dẫn tương đối, kích thước và SHA256 cho `data\` và `vendor\`, kèm chế độ kiểm để một máy biết mình thiếu hoặc lệch file nào. Tạo thư mục `artifacts/` trong repo cho các artifact văn bản nhỏ. Cân nhắc đưa `Test_tool_v3\` vào `fixtures/`.
+**Sửa `tools/shots_crosscheck.py`** thành bắt buộc nhận `--project` và `--csv` tường minh, bỏ hẳn cơ chế tự dò, in ở đầu báo cáo `draft_fold_path` và tên ảnh của shot 1. Tiêu chí xong: chạy trên `prod60` cho 0 lệch trên cả năm trường.
 
-Đưa `reh10` vào `fixtures/` làm project đối chứng dương thay cho `parity01` đã mất, kèm `shots_reh.csv` và hai snapshot timing.
+**Gộp `tools/fix_fold_path.py` vào `scripts_v1/clone_project.py`** để bớt một bước tay dễ quên. Tiêu chí xong: clone xong là `draft_fold_path` đã đúng, kiểm bằng chính script cũ.
 
-## Ưu tiên 1 — làm ngay sau bài render 60 phút có audio
+**Viết `tools/data_manifest.py`** kiểm kê `data\` và `vendor\` ra bản kê có kích thước và hash, commit bản kê vào repo. Tiêu chí xong: chạy trên máy lab in ra đúng danh sách những thứ đang thiếu so với máy render.
 
-Tách `docs/reference.md`, hiện 26.794 byte, vượt trần 26 KB. Đề nghị cắt làm hai: giữ mục 1 tới 5 cộng 14 trong `reference.md` phần lõi ghi và hình học, chuyển mục 6 tới 13 sang `reference-catalog.md` phần tài nguyên, catalogue, cú pháp CLI và bảng trạng thái. Chỉ tách hai, không tách nhỏ hơn.
+## Ưu tiên 2 — công cụ và test
 
-Tổng quát hoá phần hình học ở mục 3 của `reference.md`. Hiện `KY` là hằng số tính sẵn cho ảnh 1376×768 trên khung 1920×1080, và tài liệu còn khuyến nghị "chuẩn hoá mọi ảnh về đúng 1920×1080" — khuyến nghị này **đã bị bãi bỏ** vì dự án cần làm cả video vuông và video dọc, và thư mục ảnh thật có đủ kích thước. Công thức thay thế, dùng `CW` và `CH` là kích thước khung, `IMG_W` và `IMG_H` là kích thước từng ảnh:
+Thả tay một filter **free** trong GUI để có đối chứng dương, rồi vá `tools/v4_mold.py`: đường dẫn ghi ra phải là `molds/capcut-9.1.0/filter.json`, thêm khối `_meta`, mặc định chỉ diff chứ không ghi đè, và khi diff phải phân loại trường — `path` cùng `target_timerange.duration` phụ thuộc máy và project nên được phép khác, các trường còn lại bắt buộc khớp. Đang bị chặn vì hiện không project nào còn material `type=filter`.
 
-```
-fit = min(CW / IMG_W, CH / IMG_H)
-KX  = IMG_W * fit / CW
-KY  = IMG_H * fit / CH
-|transform.x| <= 1 - KX * s
-|transform.y| <= 1 - KY * s
-```
+Viết `tools/shots_dump.py` đọc ngược `draft_content.json` ra `shots.csv` rồi kiểm khứ hồi; hạt giống là `tools/shots_crosscheck.py`. Việc này đứng trước việc viết test vì `shots.csv` là hợp đồng đầu vào của `pipeline/`.
 
-Một trong hai giá trị `KX`, `KY` luôn bằng 1, chính là chiều bị giới hạn khi fit. Đặt `KX = 1` thì công thức rút về đúng dạng đang ghi trong tài liệu, nên bản tổng quát tương thích ngược với ba phép đo oracle đã có. Trường hợp ảnh **cao hơn** khung, tức `KX < 1` và `KY = 1`, hiện đang ghi là `[CHUA XAC MINH]`; bản tổng quát suy ra từ đối xứng nhưng **chưa có phép đo oracle nào xác nhận**, phải đo trước khi tin.
+Ba test đầu tiên trong `tests/`: lượng tử hoá frame, công thức lề dạng tổng quát KX KY, khứ hồi `shots.csv`.
 
-Đồng bộ thân mục 10 của `START-HERE.md` với danh sách tám mục trong `failures.md`.
+`run.bat` thật, rồi bắt đầu viết code trong `pipeline/`.
 
-Cập nhật mục 13 của `reference.md`: dòng `bg-blur` kích hoạt chuyển sang **đã kiểm ở ĐẦU RA** ở quy mô 300 shot ngày 31/07/2026; thêm dòng cho Ken Burns 300 shot và transition 299 cái ở quy mô thật.
+## Nợ nhỏ, làm khi tiện
 
-Cập nhật mục 12 của `reference.md`: con số ngoại suy "60 phút khoảng 5,2 GB" đã bị số đo thật thay thế — `bench300` xuất 60 phút ra 4,07 GB ở 9696 kbps trong khoảng 20 phút trên i5-10400F cộng GTX 1080. Ghi kèm cảnh báo: `bench300` dùng ảnh nhân bản từ một bộ nhỏ nên nén dễ hơn ảnh thật, số này **có thể lạc quan hơn thực tế**, chưa kiểm chứng với bộ ảnh đa dạng.
+`tools/bench_shots.py` kiểm biên trước khi làm tròn; phải đảo thành làm tròn rồi mới kiểm và kẹp, giống `tools/bench_fixkb.py`. Ưu tiên thấp vì `tools/prod_shots.py` đã thay nó.
 
-## Ưu tiên 2 — cấu trúc tài liệu
+`preflight.py` lỗi thời ba chỗ, xem `failures.md` mục 6. Cân nhắc bỏ hẳn thay vì vá.
 
-Di trú bốn phụ lục E1 tới E4 của `research-log.md` sang `docs/legacy/` và các phiên còn lại sang `docs/research-log/<ngày>.md`, chỉ để lại `docs/research-log/INDEX.md` liệt kê các phiên mới nhất lên đầu. `research-log.md` hiện 31.774 byte, vượt trần.
+Dời `scan_paths.py` từ thư mục mẹ `capcut-lab\` vào `data\tmp\`, vì thư mục mẹ chỉ được chứa đúng ba nhánh.
 
-Viết `docs/STATE.md` dưới 3 KB: cái gì đã kiểm chứng, cái gì đang treo, ba việc kế tiếp. Đây là file AI đọc đầu tiên.
+Xoá `data\archive\`, khoảng 60–70 MB rác, sau khi chắc chắn `D:\Test_tool` đã bỏ.
 
-Tách `START-HERE.md`, hiện 28.312 byte, vượt trần. Chỉ tách sau khi có `STATE.md`, vì phần lớn nội dung "trạng thái bàn giao" sẽ chuyển sang đó.
+`data\Test_tool_v3\shots.csv` rỗng 0 byte, là file giữ chỗ; xoá hoặc điền theo lược đồ thật khi `tools/shots_dump.py` chốt xong.
 
-Viết `tools/docs_size.py` báo file nào vượt 26 KB, chạy trước mỗi lần push tài liệu.
+## Chờ máy render quay lại
 
-## Ưu tiên 3 — nợ kỹ thuật
+Chạy lại đối chiếu CSV với JSON cho `prod60` sau khi sửa `shots_crosscheck.py`.
 
-`tools/bench_shots.py` kiểm lề trên số chưa làm tròn và gán cứng hình học cho ảnh 1376×768. **Không vá**, đánh dấu là đã bị `tools/prod_shots.py` thay thế.
+Kiểm thị giác bản export `prod60` theo quy tắc in ground truth trước khi nhìn, ở `failures.md` mục 1.
 
-`capcut-cli` có đặt được `canvas_config` để tạo project vuông hoặc dọc hay không: **chưa kiểm chứng**. Cần cho mục tiêu video dọc và video vuông.
+Đo độ nới thực tế của segment audio trên `prod60`; lý thuyết dự đoán +10,5 ms, **chưa kiểm chứng**.
 
-Chưa có filter free nào được xác minh; filter duy nhất từng chạy là `Film` và nó khoá Pro. Cần mở CapCut vào tab Filters, chọn một mục không có vương miện, bấm mũi tên tải xuống. Việc này cũng tạo ra đối chứng dương mà `tools/v4_mold.py` đang thiếu.
+Kéo về máy lab hai thứ không tái tạo được: file `narration59.mp3` và thư mục 326 ảnh gốc ở `D:\IT\capcut-help\Picture`.
 
-Vá `tools/v4_mold.py` ghi ra `molds/capcut-9.1.0/filter.json` kèm khối `_meta`, mặc định chỉ diff không ghi đè, và khi diff coi `path` cùng `target_timerange.duration` là được phép khác, còn lại bắt buộc khớp.
+## Mảnh nội dung cần bảo toàn
 
-Viết `tools/shots_dump.py` đọc ngược `draft_content.json` ra `shots.csv` rồi kiểm khứ hồi. Đã có sẵn hạt giống là `tools/shots_crosscheck.py`.
-
-Ba test đầu tiên vào `tests/`: lượng tử hoá frame, công thức lề dạng tổng quát, khứ hồi `shots.csv`.
-
-`run.bat` thật, rồi bắt đầu `pipeline/`.
-
-Thư mục `fixtures/` mới có `README.md`, chưa có bộ đối chứng nào. Project `parity01` đã biến mất khỏi máy render nên hiện dự án **không còn project đối chứng dương nào**. Bài tổng duyệt 8 shot có audio sẽ tạo lại và commit vào đây.
+Đã xử lý xong ngày 01/08/2026: khối chỉ dẫn vá lạc chỗ giữa `reference.md` đã được áp vào đúng mục và khối chỉ dẫn đã xoá. Không còn mảnh nào treo.

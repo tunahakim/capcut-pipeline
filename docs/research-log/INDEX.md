@@ -1,6 +1,6 @@
 # Nhật ký nghiên cứu — mục lục
 
-Mỗi phiên làm việc một file, tên theo quy ước `<ngày>-<số thứ tự phiên trong ngày>-<nhãn ngắn>.md`, mới nhất lên đầu. File `research-log.md` gộp chung đã được tách vào thư mục này ngày 01/08/2026 và không còn tồn tại; nội dung không mất chữ nào, chỉ đổi chỗ.
+Mỗi phiên làm việc một file, tên theo quy ước `<ngày>-<số thứ tự phiên trong ngày>-<nhãn ngắn>.md`, mới nhất lên đầu. Nhật ký gộp chung trước đây đã được tách vào thư mục này ngày 01/08/2026 và không còn tồn tại; nội dung không mất chữ nào, chỉ đổi chỗ.
 
 | Phiên | File | Nội dung chính |
 |---|---|---|

@@ -89,7 +89,7 @@ Ví dụ đủ ba mặt: filter "Film" **không có** trong `enums.json` ở b�
 
 **Xử lý:** không bao giờ đổi tên một project định dùng làm scaffold. Nếu lỡ đổi rồi thì vá `draft_fold_path` bằng Python trước khi clone, rồi quét toàn bộ file text trong project tìm chuỗi tên cũ ở dạng đường dẫn để chắc không còn sót.
 
-**Kèm theo, cùng một phép đo:** `draft_meta_info.json` chứa `draft_root_path` là đường dẫn tuyệt đối của máy. Đây là bằng chứng thực nghiệm cho cảnh báo "scaffold chỉ dùng được trên chính máy đã tạo ra nó" ở `START-HERE.md` mục 3.1 — trước đó cảnh báo này chỉ là khẳng định suông.
+**Kèm theo, cùng một phép đo:** `draft_meta_info.json` chứa `draft_root_path` là đường dẫn tuyệt đối của máy. Đây là bằng chứng thực nghiệm cho cảnh báo "scaffold chỉ dùng được trên chính máy đã tạo ra nó" ở `START-HERE.md` mục 3 — trước đó cảnh báo này chỉ là khẳng định suông.
 
 Bổ sung 31/07/2026, cùng cơ chế nhưng khác đường vào: **scaffold clone sang máy khác cũng mang theo `draft_fold_path` của máy cũ.** Đo trên máy render: `scaffold\testV3_CLEAN` chứa `draft_fold_path = C:/Users/anhlt/AppData/Local/CapCut/User Data/Projects/com.lveditor.draft/testV3`, và `clone_project.py` không sửa trường này vì nó chỉ thay GUID cùng tên project. Sau khi vá bằng `tools/fix_fold_path.py`, project `reh10` mở và lưu bình thường, timing lệch 0,0 ms. Đây là lời giải thích cho cảnh báo "scaffold chỉ dùng được trên chính máy đã tạo ra nó": không phải scaffold hỏng, mà là một trường đường dẫn tuyệt đối chưa được thay. Cách phát hiện: sau mỗi lần clone, in `draft_fold_path` ra và so với thư mục thật.
 
