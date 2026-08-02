@@ -8,7 +8,7 @@ Toàn bộ chuỗi từ ảnh cộng narration tới file MP4 60 phút **đã ki
 
 ## 2. Hai máy
 
-Máy lab, nơi làm mọi việc soạn code và tài liệu. Windows 10 build 19045, PowerShell 5.1, Python 3.14.6 bản python.org, Node v24.14.0, npm 11.9.0, capcut-cli 0.15.0, ffmpeg và ffprobe 8.1.2, CapCut 9.1.0.3879 updater đã chặn, Git 2.53. PC văn phòng mười năm tuổi, cấu hình yếu. Ổ C còn khoảng 10,8 GB trên 100 GB và thư mục draft của CapCut nằm ở đó, ổ D còn khoảng 17,5 GB; ổ C tụt dần vì snapshot của `docs_audit.py` dồn vào `data\perf\`. **Luôn kiểm dung lượng trước mỗi việc lớn.** `LongPathsEnabled` vẫn bằng 0.
+Máy lab, nơi làm mọi việc soạn code và tài liệu. Windows 10 build 19045, PowerShell 5.1, Python 3.14.6 bản python.org, Node v24.14.0, npm 11.9.0, capcut-cli 0.15.0, ffmpeg và ffprobe 8.1.2, CapCut 9.1.0.3879 updater đã chặn, Git 2.53. PC văn phòng mười năm tuổi, cấu hình yếu. Ổ C còn khoảng 10,8 GB trên 100 GB và thư mục draft của CapCut nằm ở đó, ổ D còn khoảng 17,5 GB. Snapshot của `docs_audit.py` ghi vào `data\perf\` tức trên **ổ D**, không phải ổ C. **Luôn kiểm dung lượng trước mỗi việc lớn.** `LongPathsEnabled` vẫn bằng 0.
 
 Máy render, nơi dựng project lớn và export. MSI MS-7E05, i5-10400F 6 nhân 12 luồng, 16 GB RAM, GTX 1080, Windows 10 build 19042, không có winget. Ổ C là SSD NVMe 238 GB chứa thư mục draft, ổ D là SSD SATA chứa `D:\IT\capcut-lab`. CapCut 9.1.0.3879, updater đã chặn bằng deny ACL trên `CapCut-DiffUpgrade.exe` và `hpatchz.exe`. Thư mục ảnh sản xuất ở `D:\IT\capcut-help\Picture`, 326 ảnh.
 
@@ -36,7 +36,7 @@ Cache hiệu ứng: mở project 8 shot có 7 transition và 1 effect làm cache
 
 Bản kê hai nhánh ngoài repo, đo ngày 02/08/2026 bằng `tools/data_manifest.py` trên máy lab: `data\` có 144 file 299,7 MB sau khi loại `tmp\` và `archive\`; `vendor\` khối canonical 9 mục 922,1 MB và khối extra 109 mục 39,4 MB; riêng `vendor\Cache_effect` gộp thành một mục rollup 14653 file 424842366 byte. File `manifests/lab.json` nặng 45260 byte. Quét đủ 1261,3 MB kèm hash SHA256 toàn bộ mất khoảng 125 giây khi cache hệ điều hành lạnh và khoảng 20 giây khi cache nóng. Máy render chưa có bản kê.
 
-Catalogue filter JianYing: 468 mục, 300 khoá VIP, 168 free, không mục nào thiếu cờ `is_vip`; chi tiết ở `reference-catalog.md`. Thư mục draft trên máy lab có 11 project đọc được và **không project nào còn material `type=filter`**, đo ngày 02/08/2026. `bench300` và `parity01` không tồn tại trên máy lab.
+Catalogue filter JianYing: 468 mục, 300 khoá VIP, 168 free, không mục nào thiếu cờ `is_vip`. Cờ đó **không dự đoán được** khoá Pro trong GUI CapCut bản quốc tế, và `resource_id` của hai namespace không trùng nhau; số đo ở `reference-catalog.md`. Thư mục draft trên máy lab có 14 mục: `.recycle_bin` cộng 13 project. `Test_A_v2` không có thư mục `Timelines\`; `fxlab01`, `testB_CLEAN` và `Test_A_v2` rỗng. Chỉ **`fxprobe01`** có material `type=filter`, hai mục thả tay từ GUI ngày 02/08/2026, nằm trong bucket `materials.effects` trên một track `type=filter` — **không** phải bucket tên `filters`. `bench300` và `parity01` không tồn tại trên máy lab.
 
 ## 5. Việc đang dở và nợ kỹ thuật
 

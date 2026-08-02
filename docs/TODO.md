@@ -6,17 +6,29 @@ Luật ba file, đọc kèm `STATE.md`: file này chứa **thì tương lai**, t
 
 ## Ưu tiên 2 — công cụ và test
 
-Thả tay một filter **free** trong GUI để có đối chứng dương, rồi vá `tools/v4_mold.py`: đường dẫn ghi ra phải là `molds/capcut-9.1.0/filter.json`, thêm khối `_meta`, mặc định chỉ diff chứ không ghi đè, và khi diff phải phân loại trường — `path` cùng `target_timerange.duration` phụ thuộc máy và project nên được phép khác, các trường còn lại bắt buộc khớp. Đang bị chặn vì hiện không project nào còn material `type=filter`.
+Vá `tools/v4_mold.py`: đường dẫn ghi ra phải là `molds/capcut-9.1.0/filter.json`, thêm khối `_meta`, mặc định chỉ diff chứ không ghi đè, và khi diff phải phân loại trường — `path` cùng `target_timerange.duration` phụ thuộc máy và project nên được phép khác, các trường còn lại bắt buộc khớp. **Đã gỡ chặn 02/08/2026**: project `fxprobe01` có hai material `type=filter` thả tay từ GUI, nằm ở bucket `materials.effects`. Phải quyết trước khi viết code: `molds/capcut-9.1.0/filter.json` đã tồn tại 3218 byte, chụp từ `testV4` filter Film, và đang là nền của `scripts_v1/filter_apply.py`; hoặc thêm nhóm trường thứ ba là định danh được phép khác, hoặc ghi khuôn mới ra tên khác. Tiêu chí xong: chụp được khuôn, chạy lần hai trên cùng project cho diff sạch, cố ý sửa một trường bắt buộc khớp thì diff bắt được.
 
-**Kiểm khoá Pro cho mọi loại tài nguyên, không chỉ transition.** Hiện chỉ danh sách transition được lọc theo cờ VIP để ra 76 mục dùng được; scene-effect, image-intro, image-outro, image-combo và 468 filter JianYing chưa loại nào được lọc. `failures.md` mục 1 ghi rõ `fx_audit.py` mới chỉ chứng minh `path` trỏ tới file có thật và **không bắt được khoá Pro**, nên một tài nguyên khoá Pro lọt vào bản dựng sẽ qua được cả `lint`, cả panel GUI, cả `fx_audit`, và chỉ lộ ra ở bản export cuối. Việc cần làm: đọc cờ VIP từ `capcut enums` cho từng loại đang dùng, ghi kết quả vào `reference-catalog.md`, rồi cho `fx_audit.py` báo đỏ khi gặp tài nguyên khoá Pro. Tiêu chí xong: dựng một project cố ý cắm một tài nguyên VIP cạnh một tài nguyên free làm đối chứng dương, `fx_audit.py` phải báo đúng mục VIP và chỉ mục đó.
+**Kiểm khoá Pro cho mọi loại tài nguyên.** `failures.md` mục 1: `fx_audit.py` chỉ chứng minh `path` trỏ tới file có thật, **không bắt được khoá Pro**, nên tài nguyên Pro lọt vào bản dựng chỉ lộ ở bản export cuối. **Chặn vì phương pháp, đo 02/08/2026**: filter trong GUI CapCut quốc tế là namespace khác hẳn 468 mục JianYing, `resource_id` không trùng và `is_vip` không dự đoán được vương miện, nên **chưa tạo được đối chứng dương bằng filter**. Phần còn làm được ngay: đọc cờ VIP của scene-effect, image-intro, image-outro, image-combo từ `capcut enums` rồi ghi vào `reference-catalog.md`; nếu loại nào không có cờ thì ghi rõ là chưa kiểm chứng. Tiêu chí xong cho phần này: bốn con số nằm trong `reference-catalog.md`. Phần `fx_audit.py` báo đỏ phải chờ tìm được một tài nguyên Pro thật làm đối chứng dương, ở loại khác filter hoặc bằng cách liệt kê được catalogue thật của GUI.
 
-Viết `tools/shots_dump.py` đọc ngược `draft_content.json` ra `shots.csv` rồi kiểm khứ hồi; hạt giống là `tools/shots_crosscheck.py`, và giao diện phải theo cùng một luật với nó là bắt buộc `--project` cùng đường dẫn ra tường minh, không tự dò. Việc này đứng trước việc viết test vì `shots.csv` là hợp đồng đầu vào của `pipeline/`.
+Viết `tools/shots_dump.py` đọc ngược `draft_content.json` ra `shots.csv` rồi kiểm khứ hồi; hạt giống là `tools/shots_crosscheck.py`, và giao diện phải theo cùng một luật với nó là bắt buộc `--project` cùng đường dẫn ra tường minh, không tự dò. Việc này đứng trước việc viết test vì `shots.csv` là hợp đồng đầu vào của `pipeline/`. Nguyên mẫu nằm ngoài repo: `data\tmp\gen_cc_fixture.py` trên máy lab đã đọc ngược `draft_content.json` ra bảng shot; dùng lại thay vì viết từ đầu, và chép vào `tools/` một cách có ý thức.
 
 Ba test đầu tiên trong `tests/`: lượng tử hoá frame, công thức lề dạng tổng quát KX KY, khứ hồi `shots.csv`.
 
 **`run.bat` thật cộng khung `pipeline/`, và nối `config.json` vào đường chạy.** Đây là tính năng đích của cả dự án: người dùng sửa đường dẫn trong một file cấu hình rồi gọi một lệnh, không gõ thêm lệnh nào. Hiện `config.example.json` đã nằm trong repo nhưng chưa có mã nào đọc nó, và trình tự chạy vẫn chỉ tồn tại trong `docs/procedures.md` dưới dạng văn xuôi chứ không phải mã. Ba phần: đưa trình tự đã dựng thành công `prod60` thành mã có kiểm điều kiện trước và sau mỗi khâu; đọc mọi đường dẫn từ `config.json`; dừng sạch kèm thông báo đọc được khi một khâu hỏng thay vì chạy tiếp. Tiêu chí xong: trên một máy đã cài đủ, chép `config.example.json` thành `config.json`, điền đường dẫn tới thư mục ảnh, file narration, file SRT và bảng shot, chạy một lệnh duy nhất, rồi mở được project trong CapCut với `fx_audit` báo `OK` toàn bộ và lệch timing 0,0 ms, không gõ thêm lệnh nào ở giữa.
 
 ## Nợ nhỏ, làm khi tiện
+
+Xoá project rỗng `fxlab01` trong thư mục draft; nó không chứa gì và không tài liệu nào giải thích.
+
+Thêm cờ `--brief` cho `tools/docs_audit.py`: chỉ in TONG QUAN, VAN DE, SO VOI MOC CHUAN, bỏ ma trận tham chiếu.
+
+Viết hướng dẫn dựng lại máy mới từ bản clone repo: cây ba nhánh phải tạo, biến `CAPCUT_LAB`, lấy `data\scaffold\` và `vendor\` từ đâu. `tools/data_manifest.py` đã là một nửa cơ chế.
+
+Thống nhất giao diện tham số nhóm `scripts_v1` cũ; `clone_project.py` nhận ba tham số vị trí, gõ `--help` thì chết bằng `IndexError`.
+
+Thử áp filter thẳng vào clip bằng CLI hoặc Python thay vì tạo segment trên track filter riêng; GUI cho phép cả hai kiểu.
+
+Project `testB` có `materials.hsl` một mục, không project nào khác có và chưa tài liệu nào nhắc.
 
 `tools/bench_shots.py` kiểm biên trước khi làm tròn; phải đảo thành làm tròn rồi mới kiểm và kẹp, giống `tools/bench_fixkb.py`. Ưu tiên thấp vì `tools/prod_shots.py` đã thay nó.
 
@@ -47,7 +59,3 @@ Kiểm thị giác bản export `prod60` theo quy tắc in ground truth trước
 Kéo về máy lab hai thứ không tái tạo được: file `narration59.mp3` và thư mục 326 ảnh gốc ở `D:\IT\capcut-help\Picture`.
 
 Nghiệm thu `tools/data_manifest.py` giữa hai máy, phần bị chặn còn lại của việc đã làm ngày 02/08/2026. Trên máy render chạy `python tools/data_manifest.py --scan --machine render --data <data trên máy render> --vendor <vendor trên máy render> --out manifests/render.json` rồi commit bản kê; sau đó chạy `python tools/data_manifest.py --compare --mine manifests/lab.json --theirs manifests/render.json`. Tiêu chí xong: báo cáo in ra đúng danh sách những thứ máy lab thiếu so với máy render và ngược lại; mã thoát 0 hoặc 2 đều chấp nhận được miễn là mọi dòng lệch giải thích được, còn mã thoát 1 nghĩa là chưa chạy được. Lưu ý khối `vendor_extra` chắc chắn lệch nhiều và đó là bình thường vì `vendor\` hai máy chưa bao giờ đồng bộ; chỉ `data` và `vendor_canonical` mới đáng xử lý.
-
-## Việc phát sinh
-
-`data\tmp\gen_cc_fixture.py` trên **máy lab** đọc ngược `draft_content.json` ra bảng shot — đó chính là nguyên mẫu sẵn có cho `tools/shots_dump.py` ở Ưu tiên 2, dùng lại được thay vì viết từ đầu. Script này nằm ngoài repo nên nếu muốn giữ thì phải chép vào `tools/` một cách có ý thức.

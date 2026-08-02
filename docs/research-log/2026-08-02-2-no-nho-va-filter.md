@@ -30,6 +30,8 @@ Thư mục draft có 11 project đọc được: `0728` 1 shot, `trpath` và `tr
 
 Phiên trước ghi ba file lệch kích thước giữa đĩa và blob GitHub do CRLF. Đối chiếu đầy đủ trong phiên này tìm ra sáu: `../STATE.md` +38, `../procedures.md` +198, `../model.md` +57, `../../_deprecated/README.md` +22, `2026-08-01-1-docs-headers.md` +50, `2026-08-01-4-readme-cua-vao.md` +32. Phần lệch của mỗi file đúng bằng số dòng, `git status` sạch, không mất chữ nào. Ghi lại để phép đối chiếu độ dài sau mỗi lần fetch không báo động nhầm lần nữa.
 
+**Đính chính, phiên 02/08/2026 (3).** Thực ra là **bảy** file chứ không phải sáu, và một con số sai: `../STATE.md` lệch **+40** chứ không phải +38, còn `../../molds/capcut-9.1.0/_README.md` +18 bị sót khỏi danh sách. Ngoài ra câu hỏi bỏ ngỏ ở mục "Chưa kiểm chứng" bên dưới, về việc cờ `is_vip` có dự đoán đúng vương miện trong GUI hay không, đã có câu trả lời là **không**. Cả hai đính chính ở `2026-08-02-3-filter-gui-vip.md`.
+
 ## Hai kỹ thuật làm việc mới, đã chốt vào mục 8 của START-HERE
 
 Trích dòng thay vì đọc trọn file. Khi trợ lý cần vài dòng trong một file mã dài, viết một script in ra số dòng thật của file, phần đầu file, và những dòng khớp từ khoá kèm ngữ cảnh, đồng thời in rõ mỗi khoảng bị bỏ qua kèm số dòng đã bỏ. Trong phiên này bốn file tổng 29,5 KB được rút còn 264 dòng trích. Dấu khoảng bị bỏ qua là phần quan trọng nhất: nó ngăn việc kết luận nhầm rằng một đoạn mã không tồn tại.
