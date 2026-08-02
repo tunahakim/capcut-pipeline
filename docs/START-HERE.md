@@ -115,7 +115,15 @@ Console của script nên in **ASCII không dấu**, vì PowerShell 5.1 hay hỏ
 
 Đưa lệnh chép-dán được ngay. Chỗ nào phải làm tay thì hướng dẫn chi tiết kể cả bấm chuột ở đâu.
 
-Khi hướng dẫn sửa tài liệu: nói rõ **file nào, mục nào**, và chỉ ra **ranh giới đoạn bị thay** bằng câu mở đầu và câu kết thúc. Nếu một mục phải vá quá nhiều chỗ lặt vặt thì viết lại nguyên cả mục. Ba điều **tuyệt đối không làm** khi viết nội dung thay thế: không bọc vào khối rào mã kèm nhãn `markdown`; không thêm dấu lớn hơn ở đầu dòng kiểu trích dẫn; không tự ngắt dòng giữa câu, mỗi đoạn văn phải là **một dòng liền** dài bao nhiêu cũng được. Nội dung thay thế viết ra đúng như nó sẽ nằm trong file.
+Khi hướng dẫn sửa tài liệu: nói rõ **file nào, mục nào**. Vá một phần thì đưa hai khối riêng có tiêu đề "TÌM ĐOẠN NÀY" và "THAY BẰNG", đoạn cần tìm phải đủ dài và duy nhất để định vị chính xác, kèm dòng tiêu đề hoặc dòng liền trước nếu cần. Thêm nội dung mới thì nói rõ chèn vào file nào, sau tiêu đề hoặc mục nào. Nếu một mục phải vá quá nhiều chỗ lặt vặt, hoặc thay đổi vượt quá 40% tài liệu, thì viết lại nguyên cả mục hoặc nguyên cả file trong một khối thay vì vá lẻ.
+
+Mọi đoạn người dùng phải chép vào file đặt trọn trong **một khối rào mã có nhãn ngôn ngữ** đúng loại, kể cả khi nội dung là Markdown. Nếu bên trong đã chứa khối rào ba backtick thì khối bọc ngoài dùng **bốn backtick**. Luật này thay cho luật cũ cấm bọc nội dung Markdown vào khối rào mã.
+
+**KHÔNG hard wrap.** Đây là luật bị quên nhiều nhất dù đã nhắc kỹ, nên tách riêng ra đây: không tự ngắt dòng để giới hạn độ rộng 80 hay 100 ký tự, không ngắt dòng giữa câu. Mỗi đoạn văn là **một dòng liền**, dài bao nhiêu cũng được; chỉ xuống dòng khi sang đoạn mới, sang mục danh sách mới, hoặc sang dòng mới của bảng.
+
+Nội dung trong khối phải **nguyên văn và đầy đủ**: không rút gọn, không dùng dấu ba chấm thay cho phần bỏ đi, không viết "giữ nguyên phần còn lại", không chèn bình luận vào giữa. Mọi giải thích, ghi chú và lý do sửa để **bên ngoài** khối. Không thêm dấu lớn hơn ở đầu dòng kiểu trích dẫn. Giữ nguyên dấu nháy thẳng, dấu gạch ngang, thụt lề và ký tự đặc biệt của bản gốc, không tự làm đẹp chính tả hay định dạng ở chỗ không được yêu cầu sửa. Nội dung thay thế viết ra đúng như nó sẽ nằm trong file.
+
+Luật này áp dụng cho mọi văn bản đưa ra để người dùng chép, kể cả prompt và checklist, không riêng file tài liệu.
 
 Quyết định đã bị thay thế thì **xoá khỏi tài liệu chính** và ghi vào file phiên tương ứng, không giữ song song hai bản.
 
