@@ -22,15 +22,7 @@ Ba test đầu tiên trong `tests/`: lượng tử hoá frame, công thức lề
 
 `preflight.py` lỗi thời ba chỗ, xem `failures.md` mục 6. Cân nhắc bỏ hẳn thay vì vá.
 
-`tools/oracle_read.py` còn mặc định `CAPCUT_LAB` là đường dẫn cũ `D:\Test_tool`; sửa thành mặc định giống các công cụ khác. Ngoài ra bảng delta của nó so với một mốc cứng 8 shot của bộ test v3, chạy trên project khác thì cột delta vô nghĩa — hoặc nhận mốc qua tham số, hoặc in cảnh báo.
-
-`tools/bgblur_diag.py`, `tools/bgblur_frames.py` và `tools/frame_audit.py` cứng tên project `bench300`; cho nhận tên project qua tham số dòng lệnh.
-
-`docs/scripts.md` đang 19,4 KB, tức 75 phần trăm trần 26 KB, với 38 script đang dùng và 26 script lưu trữ. Khi chạm trần thì tách bảng kho lưu trữ sang `docs/scripts-archive.md` và cập nhật `tools/scripts_index.py` cho ghi hai file.
-
-Bổ sung một dòng cho `split_research_log.py` vào `_deprecated/README.md`, file này chuyển vào kho lưu trữ ngày 01/08/2026 vì nguồn của nó đã bị xoá sau khi tách nhật ký.
-
-Dời `scan_paths.py` từ thư mục mẹ `capcut-lab\` vào `data\tmp\`, vì thư mục mẹ chỉ được chứa đúng ba nhánh.
+`docs/scripts.md` đang tiến dần tới trần 26 KB; số hiện hành lấy bằng `python tools/docs_audit.py` chứ không chép vào đây. Khi chạm trần thì tách bảng kho lưu trữ sang `docs/scripts-archive.md` và cập nhật `tools/scripts_index.py` cho ghi hai file.
 
 Xoá `data\archive\`, khoảng 60–70 MB rác, sau khi chắc chắn `D:\Test_tool` đã bỏ.
 
@@ -39,8 +31,6 @@ Xoá `data\archive\`, khoảng 60–70 MB rác, sau khi chắc chắn `D:\Test_t
 Điều kiện bật blur trong `tools/prod_shots.py` là `kx*smin < 1 or ky*smin < 1`, mà `S_HI` bằng 0,92 còn `kx` và `ky` không bao giờ vượt 1, nên vế trái luôn đúng và cột `blur` bằng 3 ở mọi shot. Hoặc thừa nhận blur luôn bật rồi bỏ điều kiện cho khỏi gây hiểu nhầm, hoặc đặt một ngưỡng thật. Suy luận từ mã, **chưa kiểm chứng** bằng cách đếm cột blur trên bảng shot đã sinh.
 
 `vendor\` **trên máy lab** chứa năm thư mục con mà mục 3 của `START-HERE.md` không kể tới: `frames`, `Test_tool_v3`, `snapshots`, `testV3_CLEAN` và `scripts`; ba trong số đó trùng tên với thư mục con của `data\`. Gốc `vendor\` còn có `enums_backup.json` trùng bản với `reference/enums_backup.json` đã nằm trong repo. Từ 02/08/2026 `tools/data_manifest.py` ghi đủ những mục này vào khối `vendor_extra` của bản kê, có kích thước và hash, nhưng khối đó không tham gia phán xử mã thoát, nên hiện trạng được lưu lại làm bằng chứng mà chưa bị phong thành tiêu chuẩn. Phần còn treo là quyết dọn hay hợp thức hoá: dọn thì chuyển dữ liệu làm việc về `data\` rồi xoá khỏi `vendor\`, hợp thức hoá thì viết lại mục 3 của `START-HERE.md` và thêm tên tương ứng vào hằng số `CANON_VENDOR_NAMES`. Tiêu chí xong: khối `vendor_extra` chỉ còn đúng những thứ ta cố ý chấp nhận, và mục 3 kể đúng những gì có thật trên đĩa.
-
-`tools/docs_audit.py` loại trừ `README.md` khỏi phép tìm file .md không ai trỏ tới bằng một điều kiện cứng trong biểu thức dựng danh sách mồ côi. Từ 01/08/2026 README đã có sáu tham chiếu trỏ tới nên điều kiện đó không còn che gì, nhưng nó vẫn là một lỗ im lặng dựng sẵn: nếu về sau mọi tham chiếu tới README biến mất thì công cụ sẽ im lặng thay vì báo. Bỏ điều kiện đó đi, README không cần đặc cách. Ưu tiên thấp, không đổi hành vi hiện tại.
 
 ## Chờ máy render quay lại
 
