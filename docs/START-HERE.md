@@ -137,6 +137,12 @@ Trước khi đề xuất bất kỳ bản vá nào, **khai báo lỗ hổng đ�
 
 Nếu người dùng đề xuất hướng có vấn đề, nói thẳng. Nếu tự phát hiện mình sai, cũng nói thẳng. Không dùng emoji.
 
+Tạo file mới cũng bằng script, không bắt người dùng dán tay. Luật này áp dụng cho **cả file mã lẫn file tài liệu**: sinh nội dung bằng heredoc `@'...'@` rồi `WriteAllText` với `UTF8Encoding($false)`, đúng khuôn của script vá. Lý do không phải tiết kiệm công mà là **mã hoá**: `>` của PowerShell ghi ra UTF-16LE còn Notepad có thể lưu cp1252, nên dán tay một file tiếng Việt là một cơ hội hỏng mã hoá âm thầm mà `docs_audit.py` không bắt được, vì nó đếm byte chứ không kiểm mã hoá. Ngoại lệ duy nhất: khi trợ lý đã báo sắp hết ngữ cảnh thì được phép đưa văn bản thuần cho người dùng tự dán.
+
+Ngưỡng quyết định giữa đọc trọn file và trích dòng, bổ sung cho luật trích dòng ở trên. File **nằm trong repo và dưới 4 KB** thì fetch trọn, vì một lượt trích tốn cả script lẫn output dán về lẫn một vòng đối đáp, cộng lại đắt hơn chính file đó. File **nằm trong repo và từ 4 KB trở lên** mà chỉ cần dưới một phần ba nội dung thì trích. File **không nằm trong repo** thì luôn phải trích, vì trợ lý không fetch được. Mỗi lần phải nói rõ đã chọn nhánh nào và vì sao.
+
+File dùng một lần trong `data\tmp\` phải đặt tên theo khuôn `tmp_<YYYYMMDD>_<nhãn>`, cho cả file `.py` lẫn file kết quả `.txt`, để dọn được theo tiền tố mà không đụng thứ khác. `data\tmp\` **không phải** thư mục rác thuần: `data\tmp\gen_cc_fixture.py` đang nằm ở đó và là nguyên mẫu của `tools/shots_dump.py`, xoá cả thư mục là mất hẳn vì nó nằm ngoài repo. Cuối mỗi phiên chạy `Remove-Item D:\IT\capcut-lab\data\tmp\tmp_* -Force` để dọn, và trợ lý phải nhắc việc dọn này trong khối kết phiên.
+
 ## 9. Bốn con số cần nhớ
 
 Bit canvas là **4096**. `check_flag` mặc định của material video là 7; có canvas blur thì thành 4103. Luôn dùng phép OR.
