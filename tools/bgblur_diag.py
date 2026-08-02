@@ -1,16 +1,18 @@
-"""bgblur_diag.py
-Chẩn đoán lớp canvas của hai project cứng tên bench300 và parity01, đọc cả draft_content.json gốc lẫn mọi bản trong Timelines.
-Vào: không tham số, đọc thẳng thư mục draft của CapCut. Ra: in console và ghi <CAPCUT_LAB>/perf/bgblur_diag.txt.
+"""bgblur_diag.py <tên-project> [<tên-project> ...]
+Chẩn đoán lớp canvas của một hoặc nhiều project chỉ định trên dòng lệnh, đọc cả draft_content.json gốc lẫn mọi bản trong Timelines.
+Vào: một hoặc nhiều tên project trong thư mục draft của CapCut. Ra: in console và ghi <CAPCUT_LAB>/perf/bgblur_diag_<các-tên-project-nối-bằng-gạch-dưới>.txt.
 Thống kê số canvas theo type, vị trí ref canvas_blur trong extra_material_refs, phân bố check_flag, các mức blur, dải scale, và tám shot blur mạnh nhất kèm mốc thời gian. Chỉ đọc, không sửa gì.
 """
 
-import json, os, sys
+import argparse, json, os, sys
 from pathlib import Path
 from collections import Counter
 
 DRAFTS = Path(os.environ.get("LOCALAPPDATA", "")) / "CapCut" / "User Data" / "Projects" / "com.lveditor.draft"
 LAB = Path(os.environ.get("CAPCUT_LAB") or (Path(__file__).resolve().parents[2] / "data"))
-NAMES = ["bench300", "parity01"]
+_AP = argparse.ArgumentParser(description="Chan doan lop canvas cua mot hay nhieu project CapCut.")
+_AP.add_argument("projects", nargs="+", metavar="PROJECT", help="ten project trong thu muc draft cua CapCut")
+NAMES = _AP.parse_args().projects
 LINES = []
 
 def say(s=""):
@@ -136,9 +138,10 @@ def main():
     outdir = LAB / "perf"
     try:
         outdir.mkdir(parents=True, exist_ok=True)
-        (outdir / "bgblur_diag.txt").write_text("\n".join(LINES), encoding="utf-8")
+        rep = outdir / ("bgblur_diag_%s.txt" % "_".join(NAMES))
+        rep.write_text("\n".join(LINES), encoding="utf-8")
         print("")
-        print("report: %s" % (outdir / "bgblur_diag.txt"))
+        print("report: %s" % rep)
     except Exception as e:
         print("khong ghi duoc report: %s" % e)
     return 0

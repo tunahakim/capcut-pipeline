@@ -183,7 +183,7 @@ def scan():
 
     referenced = {r["target"] for r in refs if r["target"]}
     orphans = [p for p in md_files
-               if p not in referenced and not p.startswith(NO_SCAN) and p != "README.md"]
+               if p not in referenced and not p.startswith(NO_SCAN)]
 
     return {"sizes": sizes, "refs": refs, "problems": problems, "planned": planned,
             "ngoai": ngoai, "romans": romans, "orphans": orphans,

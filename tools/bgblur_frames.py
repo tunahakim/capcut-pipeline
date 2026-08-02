@@ -1,17 +1,21 @@
-"""bgblur_frames.py [đường-dẫn-export.mp4]
-Chọn mẫu shot của project bench300 để kiểm thị giác canvas blur, theo quy tắc in ground truth ra trước rồi mới nhìn ở failures.md mục 1.
-Vào: draft của bench300, tuỳ chọn thêm file MP4 đã export. Ra: bảng shot kèm mức blur, scale nhỏ nhất và lớn nhất, mốc giữa shot, bề rộng viền dự đoán; nếu có MP4 thì trích khung PNG tại giữa mỗi shot ra <CAPCUT_LAB>/perf/bgblur_frames.
+"""bgblur_frames.py --project <tên-project> [--mp4 <đường-dẫn-export.mp4>]
+Chọn mẫu shot của một project chỉ định để kiểm thị giác canvas blur, theo quy tắc in ground truth ra trước rồi mới nhìn ở failures.md mục 1.
+Vào: tên project trong thư mục draft, tuỳ chọn thêm file MP4 đã export. Ra: bảng shot kèm mức blur, scale nhỏ nhất và lớn nhất, mốc giữa shot, bề rộng viền dự đoán; nếu có MP4 thì trích khung PNG tại giữa mỗi shot ra <CAPCUT_LAB>/perf/bgblur_frames_<tên-project>.
 Mẫu gồm một cặp đối chứng blur mạnh cạnh canvas_color, một shot blur mức 4, một shot blur mức 1, một shot canvas_color âm tính và một shot blur mức giữa.
 """
 
-import json, os, subprocess, sys
+import argparse, json, os, subprocess, sys
 from pathlib import Path
 
 DRAFTS = Path(os.environ.get("LOCALAPPDATA", "")) / "CapCut" / "User Data" / "Projects" / "com.lveditor.draft"
 LAB = Path(os.environ.get("CAPCUT_LAB") or r"D:\IT\capcut-lab\data")
-PROJ = "bench300"
+_AP = argparse.ArgumentParser(description="Chon mau shot de kiem thi giac canvas blur.")
+_AP.add_argument("--project", required=True, help="ten project trong thu muc draft cua CapCut")
+_AP.add_argument("--mp4", default="", help="tuy chon; duong dan MP4 da export de trich khung PNG")
+_ARGS = _AP.parse_args()
+PROJ = _ARGS.project
 CW, CH = 1920.0, 1080.0
-MP4 = sys.argv[1] if len(sys.argv) > 1 and sys.argv[1].strip() else ""
+MP4 = _ARGS.mp4.strip()
 
 def load(p):
     with open(p, "r", encoding="utf-8") as f:
@@ -117,7 +121,7 @@ def main():
     print("")
     print("%-4s %-14s %-8s %-6s %-6s %-9s %-7s %-9s %-11s %s" % (
         "shot", "role", "blur", "smin", "smax", "start", "dur", "mid", "borderX px", "image"))
-    outdir = LAB / "perf" / "bgblur_frames"
+    outdir = LAB / "perf" / ("bgblur_frames_%s" % PROJ)
     outdir.mkdir(parents=True, exist_ok=True)
     jobs = []
     for r, why in picks:
@@ -132,7 +136,7 @@ def main():
 
     if not MP4:
         print("")
-        print("CHUA CO MP4. Chay lai: python tools\\bgblur_frames.py \"D:\\duong\\dan\\export.mp4\"")
+        print("CHUA CO MP4. Chay lai kem --mp4 \"D:\\duong\\dan\\export.mp4\"")
         return 0
     print("")
     print("mp4: %s" % MP4)

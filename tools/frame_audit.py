@@ -1,16 +1,20 @@
-"""frame_audit.py [tên-project=bench300] [đường-dẫn-mp4]
+"""frame_audit.py --project <tên-project> --mp4 <đường-dẫn-mp4>
 Đối chiếu JSON với pixel thật của bản export, tức bằng chứng mức 5: với mỗi shot, nội suy scale tại giữa shot từ keyframe KFTypeScaleX, dự đoán tỉ lệ diện tích viền, trích một khung xám bằng ffmpeg rồi đếm tỉ lệ pixel tối ở hai ngưỡng 6 và 20 để kết luận BLUR, BLACK hay AMBIG.
 Vào: draft của project và file MP4. Ra: bảng tổng hợp theo mức blur, danh sách shot mâu thuẫn giữa JSON và pixel, và CSV <CAPCUT_LAB>/perf/frame_audit_<project>.csv.
 Chỉ kết luận khi viền dự đoán chiếm trên 2 phần trăm khung hình, dưới ngưỡng đó ghi AMBIG.
 """
 
-import csv, json, os, subprocess, sys
+import argparse, csv, json, os, subprocess, sys
 from pathlib import Path
 
 DRAFTS = Path(os.environ.get("LOCALAPPDATA", "")) / "CapCut" / "User Data" / "Projects" / "com.lveditor.draft"
 LAB = Path(os.environ.get("CAPCUT_LAB") or r"D:\IT\capcut-lab\data")
-PROJ = sys.argv[1] if len(sys.argv) > 1 else "bench300"
-MP4 = sys.argv[2] if len(sys.argv) > 2 else r"D:\IT\capcut-lab\capcut-render\bench300.mp4"
+_AP = argparse.ArgumentParser(description="Doi chieu JSON voi pixel that cua ban export, bang chung muc 5.")
+_AP.add_argument("--project", required=True, help="ten project trong thu muc draft cua CapCut")
+_AP.add_argument("--mp4", required=True, help="duong dan MP4 da export cua chinh project do")
+_ARGS = _AP.parse_args()
+PROJ = _ARGS.project
+MP4 = _ARGS.mp4
 CW, CH = 1920, 1080
 NPIX = CW * CH
 T_DARK, T_GRAIN = 6, 20
