@@ -24,6 +24,8 @@ Ba test đầu tiên trong `tests/`: lượng tử hoá frame, công thức lề
 
 `docs/scripts.md` đang tiến dần tới trần 26 KB; số hiện hành lấy bằng `python tools/docs_audit.py` chứ không chép vào đây. Khi chạm trần thì tách bảng kho lưu trữ sang `docs/scripts-archive.md` và cập nhật `tools/scripts_index.py` cho ghi hai file.
 
+Ba script `tools/bgblur_diag.py`, `tools/bgblur_frames.py` và `tools/frame_audit.py` đã nhận project qua tham số từ 02/08/2026 nhưng mới chạy thử trên `testV3` và `paritytest`; `frame_audit.py` chưa chạy lần nào ngoài `--help` vì máy lab không có bản MP4 nào khớp project đang có. Nghiệm thu đủ khi có bản export ở máy render. Tiêu chí xong: mỗi script chạy trọn một lần trên project có đủ mẫu blur và in ra bảng không rỗng.
+
 Xoá `data\archive\`, khoảng 60–70 MB rác, sau khi chắc chắn `D:\Test_tool` đã bỏ.
 
 `data\Test_tool_v3\shots.csv` **trên máy lab**, nằm ngoài repo, không rỗng 0 byte như từng ghi ở đây mà có 8 dòng thật theo lược đồ `file,start,end`, tức lược đồ cũ của bộ test v3 chứ không phải lược đồ bảng shot hiện hành; nó thiếu `start_s`, `dur_s`, `transition`, `blur`, `kb_s0` và `kb_s1` nên `tools/shots_crosscheck.py` không dùng được nó. Xoá hoặc điền lại theo lược đồ thật khi `tools/shots_dump.py` chốt xong.

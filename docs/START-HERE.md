@@ -125,6 +125,10 @@ Nội dung trong khối phải **nguyên văn và đầy đủ**: không rút g�
 
 Luật này áp dụng cho mọi văn bản đưa ra để người dùng chép, kể cả prompt và checklist, không riêng file tài liệu.
 
+Ưu tiên **sửa file bằng script chạy được** thay vì bắt người dùng tự tìm và sửa tay, vì sửa tay dễ sai và không kiểm lại được. Script vá phải theo đúng khuôn: đọc file với `newline=""` để giữ nguyên ký tự xuống dòng, tự dò file đang dùng CRLF hay LF rồi đổi khuôn so khớp cho khớp, đếm số lần khớp của **từng** đoạn và bắt buộc bằng đúng 1, kiểm hết mọi đoạn rồi mới ghi, và nếu có bất kỳ chỗ nào không khớp thì in `KHONG KHOP` rồi thoát mã 1 mà **không sửa file nào**. Nhiều đoạn vá trên cùng một file phải gộp vào một lần đọc một lần ghi, nếu không đoạn sau sẽ ghi đè đoạn trước.
+
+Khi cần đọc mã nguồn dài mà chỉ dùng vài dòng, **đừng đọc trọn file**. Viết một script trích in ra số dòng thật của file, phần đầu file, và những dòng khớp từ khoá kèm vài dòng ngữ cảnh, đồng thời in rõ mỗi khoảng bị bỏ qua kèm số dòng đã bỏ. Người dùng chạy script rồi dán kết quả. Dấu khoảng bị bỏ qua là phần quan trọng nhất, vì nó ngăn việc kết luận nhầm rằng một đoạn mã không tồn tại. Script Python phải tự ghi kết quả ra file UTF-8 rồi mở bằng Notepad, đừng pipe qua `Out-File`, vì stdout của Python khi bị pipe trong PowerShell 5.1 là cp1252 và sẽ gãy ở chữ có dấu đầu tiên.
+
 Quyết định đã bị thay thế thì **xoá khỏi tài liệu chính** và ghi vào file phiên tương ứng, không giữ song song hai bản.
 
 Kết luận chưa có bằng chứng thực nghiệm phải ghi rõ là **chưa kiểm chứng**. Mỗi phép thử nên có một mục biết chắc pass làm đối chứng dương và một mục nghi ngờ; nếu cả hai fail thì lỗi ở phương pháp, nếu chỉ mục nghi ngờ fail thì lỗi đúng chỗ đang nghi.

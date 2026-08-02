@@ -20,7 +20,9 @@ Thêm `--jianying` để lấy namespace JianYing. Cú pháp là **flag**, khôn
 | `--image-combos` | 108 | 108, không đè keyframe (đã kiểm chứng) |
 | `--scene-effects` | 345 | ~47 thuộc nhóm phim cũ/retro |
 | `--filters` | 10 | **0 — DỮ LIỆU RÁC**, rid bịa chạy liên tiếp, không md5 |
-| `--filters --jianying` | **468** | 468, có md5, cache-first |
+| `--filters --jianying` | **468** | **168 free**, 300 mục khoá VIP. Mọi mục có md5, cache-first |
+
+Cờ `is_vip` của namespace JianYing, đo ngày 02/08/2026: 468 mục, **300 mục `is_vip: true`, 168 mục `false`, không mục nào thiếu cờ**. Cờ nằm ở cấp trên cùng của mỗi mục, cạnh `slug`, `name`, `md5`, `effect_id`, `resource_id`. Mục free có slug Latin: `1980`, `abg`, `ditto`, `ke1`, `kv5-d`, `vhs-iii`. Mục VIP có slug Latin: `160-c`, `2077`, `400-h`, `800-z`, `90s`, `city-walk`, `fxn`. Phần lớn số còn lại slug rỗng và name tiếng Trung. **Chưa kiểm chứng** chuyện cờ này có dự đoán đúng biểu tượng khoá Pro trong GUI CapCut bản quốc tế hay không; `failures.md` mục 2.5 đã ghi một ca ngược chiều là filter "Film" thả tay từ GUI không có trong `enums.json` ở bất kỳ namespace nào.
 
 **Năm transition nhẹ đã dùng thành công**, đều 466666 µs `is_overlap=false`: `dissolve`, `black-fade`, `blur`, `gradient-wipe`, `dissolve-ii`.
 
