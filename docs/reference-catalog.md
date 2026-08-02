@@ -1,6 +1,6 @@
 # Reference catalog — catalogue hiệu ứng và cú pháp CLI
 
-**Cập nhật 01/08/2026.** Tách khỏi `reference.md` để giữ cả hai file dưới trần 26 KB. Hằng số, công thức và bảng trạng thái tính năng nằm ở `reference.md`.
+**Cập nhật 02/08/2026.** Tách khỏi `reference.md` để giữ cả hai file dưới trần 26 KB. Hằng số, công thức và bảng trạng thái tính năng nằm ở `reference.md`.
 
 ## 1. Catalogue
 
@@ -27,6 +27,8 @@ Cờ `is_vip` của namespace JianYing, đo ngày 02/08/2026: 468 mục, **300 m
 Cùng phép đo, **namespace CapCut mặc định**: `--scene-effects` 345 mục, `--image-intros` 43, `--image-outros` 23, `--image-combos` 108. Cả bốn loại đều **có** khoá `is_vip` trên **mọi** mục, không mục nào thiếu, và giá trị **toàn bộ là `false`** — 0 mục VIP ở cả bốn. Cờ tồn tại nhưng hằng, nên ở namespace này nó **không phân biệt được gì**; đây là kết luận khác với "không có cờ". Khoá `member` đứng cạnh `is_vip` **không** phải cờ khoá Pro: nó kiểu `str`, mỗi mục một giá trị riêng, là tên thành viên enum kiểu `Zoom_In`, `Alt_BW`, `_70s`. Cùng bốn loại đó ở namespace JianYing thì cờ có phân bố thật: scene-effect 297 VIP trên 912, image-intro 58 trên 95, image-outro 54 trên 72, image-combo 16 trên 123.
 
 **Chưa kiểm chứng:** chưa có đối chứng dương nào nối `is_vip` với vương miện trong GUI bản quốc tế, cho bất kỳ loại nào trong bốn loại trên. Bài học của filter ở `failures.md` mục 1 là cờ trong enums không suy ra được vương miện, nên bốn con số 0 ở trên **không** được đọc thành "bốn loại này hoàn toàn miễn phí trong GUI".
+
+**Đã kiểm chứng bằng quan sát GUI, 02/08/2026.** Tab Animation mục Out của CapCut 9.1.0.3879 bản quốc tế có **rất nhiều** mục, nhiều hơn hẳn 23, và **đa số đeo vương miện**; trong khung nhìn chỉ Fade Out và Slide Right là không có. Trong khi `capcut enums --image-outros` báo đúng 23 mục và cả 23 đều `is_vip: false`. Hai điều đó không thể cùng mô tả một danh mục. Kết luận: **danh mục enums của namespace CapCut không phải danh mục mà GUI đang hiện**, nên 0 VIP là hệ quả của việc chỉ thấy một tập con chứ không phải bằng chứng rằng tủ hàng miễn phí. Không kiểm được bằng cách đếm nhóm Basic, vì GUI không gom phần free vào một chỗ và mọi nhóm đều trộn lẫn free với VIP.
 
 Hình dạng material filter do GUI ghi ra, đo trên `fxprobe01` ngày 02/08/2026: nằm ở `materials.effects` với `"type": "filter"`, trên một track riêng `"type": "filter"` có `name` rỗng — **không** phải bucket tên `filters`. `effect_id`, `resource_id` và `third_resource_id` bằng nhau; `value` là cường độ; `category_name` là `heycan_search_filter` khi thả từ kết quả tìm kiếm; `path` trỏ vào `Cache/effect/<resource_id>/<md5>` bằng gạch chéo xuôi. Độ dài mặc định khi kéo một filter xuống timeline khoảng 3 giây.
 

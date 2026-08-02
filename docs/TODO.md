@@ -1,22 +1,22 @@
 # TODO — việc chưa làm
 
-**Cập nhật 01/08/2026.** Trần kích thước file này là **12 KB**, chật hơn trần chung, vì danh sách là thứ dễ phình nhất.
+**Cập nhật 02/08/2026.** Trần kích thước file này là **12 KB**, chật hơn trần chung, vì danh sách là thứ dễ phình nhất.
 
 Luật ba file, đọc kèm `STATE.md`: file này chứa **thì tương lai**, tức mọi việc chưa làm kể cả nợ kỹ thuật, vì mỗi món nợ là một việc. `STATE.md` chứa **thì hiện tại đã đo được** và không được liệt kê việc phải làm. `research-log/` chứa **thì quá khứ**. Mỗi mục dưới đây phải có tiêu chí hoàn thành. **Xong thì xoá khỏi file này**, không đánh dấu hoàn thành rồi giữ lại — danh sách đã hoàn thành chính là research-log.
 
 ## Ưu tiên 2 — công cụ và test
 
-Vá `tools/v4_mold.py`: đường dẫn ghi ra phải là `molds/capcut-9.1.0/filter.json`, thêm khối `_meta`, mặc định chỉ diff chứ không ghi đè, và khi diff phải phân loại trường — `path` cùng `target_timerange.duration` phụ thuộc máy và project nên được phép khác, các trường còn lại bắt buộc khớp. **Đã gỡ chặn 02/08/2026**: project `fxprobe01` có hai material `type=filter` thả tay từ GUI, nằm ở bucket `materials.effects`. Phải quyết trước khi viết code: `molds/capcut-9.1.0/filter.json` đã tồn tại 3218 byte, chụp từ `testV4` filter Film, và đang là nền của `scripts_v1/filter_apply.py`; hoặc thêm nhóm trường thứ ba là định danh được phép khác, hoặc ghi khuôn mới ra tên khác. Tiêu chí xong: chụp được khuôn, chạy lần hai trên cùng project cho diff sạch, cố ý sửa một trường bắt buộc khớp thì diff bắt được.
-
-**Kiểm khoá Pro cho mọi loại tài nguyên.** `failures.md` mục 1: `fx_audit.py` chỉ chứng minh `path` trỏ tới file có thật, **không bắt được khoá Pro**, nên tài nguyên Pro lọt vào bản dựng chỉ lộ ở bản export cuối. **Chặn vì phương pháp, đo 02/08/2026**: filter trong GUI CapCut quốc tế là namespace khác hẳn 468 mục JianYing, `resource_id` không trùng và `is_vip` không dự đoán được vương miện, nên **chưa tạo được đối chứng dương bằng filter**. Phần còn làm được ngay: đọc cờ VIP của scene-effect, image-intro, image-outro, image-combo từ `capcut enums` rồi ghi vào `reference-catalog.md`; nếu loại nào không có cờ thì ghi rõ là chưa kiểm chứng. Tiêu chí xong cho phần này: bốn con số nằm trong `reference-catalog.md`. Phần `fx_audit.py` báo đỏ phải chờ tìm được một tài nguyên Pro thật làm đối chứng dương, ở loại khác filter hoặc bằng cách liệt kê được catalogue thật của GUI.
-
-Viết `tools/shots_dump.py` đọc ngược `draft_content.json` ra `shots.csv` rồi kiểm khứ hồi; hạt giống là `tools/shots_crosscheck.py`, và giao diện phải theo cùng một luật với nó là bắt buộc `--project` cùng đường dẫn ra tường minh, không tự dò. Việc này đứng trước việc viết test vì `shots.csv` là hợp đồng đầu vào của `pipeline/`. Nguyên mẫu nằm ngoài repo: `data\tmp\gen_cc_fixture.py` trên máy lab đã đọc ngược `draft_content.json` ra bảng shot; dùng lại thay vì viết từ đầu, và chép vào `tools/` một cách có ý thức.
+**Kiểm khoá Pro cho mọi loại tài nguyên.** `failures.md` mục 1: `fx_audit.py` chỉ chứng minh `path` trỏ tới file có thật, **không bắt được khoá Pro**. Phần đọc cờ từ enums **đã xong 02/08/2026 và đóng lại**: bốn loại scene-effect, image-intro, image-outro, image-combo ở namespace CapCut đều có `is_vip` trên mọi mục nhưng **hằng false**, số liệu ở `reference-catalog.md`; khoá `member` là tên thành viên enum chứ không phải cờ khoá Pro. Ảnh chụp tab Animation mục Out cho thấy GUI có rất nhiều mục và đa số đeo vương miện trong khi enums chỉ có 23 mục, nên **enums không phải catalogue của GUI**. Không đếm được phần free riêng vì GUI trộn free với VIP trong mọi nhóm. Phần còn lại chặn vì thiếu nguồn dữ liệu, phụ thuộc mục tìm catalogue thật ở dưới. Tiêu chí xong: `fx_audit.py` báo đỏ đúng một tài nguyên Pro thật đã đối chứng bằng vương miện trong GUI.
 
 Ba test đầu tiên trong `tests/`: lượng tử hoá frame, công thức lề dạng tổng quát KX KY, khứ hồi `shots.csv`.
 
 **`run.bat` thật cộng khung `pipeline/`, và nối `config.json` vào đường chạy.** Đây là tính năng đích của cả dự án: người dùng sửa đường dẫn trong một file cấu hình rồi gọi một lệnh, không gõ thêm lệnh nào. Hiện `config.example.json` đã nằm trong repo nhưng chưa có mã nào đọc nó, và trình tự chạy vẫn chỉ tồn tại trong `docs/procedures.md` dưới dạng văn xuôi chứ không phải mã. Ba phần: đưa trình tự đã dựng thành công `prod60` thành mã có kiểm điều kiện trước và sau mỗi khâu; đọc mọi đường dẫn từ `config.json`; dừng sạch kèm thông báo đọc được khi một khâu hỏng thay vì chạy tiếp. Tiêu chí xong: trên một máy đã cài đủ, chép `config.example.json` thành `config.json`, điền đường dẫn tới thư mục ảnh, file narration, file SRT và bảng shot, chạy một lệnh duy nhất, rồi mở được project trong CapCut với `fx_audit` báo `OK` toàn bộ và lệch timing 0,0 ms, không gõ thêm lệnh nào ở giữa.
 
 ## Nợ nhỏ, làm khi tiện
+
+Tìm catalogue tài nguyên thật mà GUI CapCut bản quốc tế đang dùng, có thể trong `Cache\effect\` hoặc một CSDL của bản cài. Đây là nút thắt của mục kiểm khoá Pro. Tiêu chí xong: liệt kê được một danh sách mà `resource_id` trùng với `resource_id` GUI ghi vào `draft_content.json` khi thả tay.
+
+Truy vì sao dòng `tham chieu La Ma` của `tools/docs_audit.py` tăng từ 38 lên 39 sau khi thêm vào `reference-catalog.md` một đoạn không chứa số La Mã nào, ngày 02/08/2026. Không cấp bách, `VAN DE` vẫn 0. Tiêu chí xong: giải thích được cách phân loại, hoặc sửa nếu là lỗi đếm.
 
 Xoá project rỗng `fxlab01` trong thư mục draft; nó không chứa gì và không tài liệu nào giải thích.
 

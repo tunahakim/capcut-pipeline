@@ -1,6 +1,6 @@
 # START HERE — đọc trước mọi file khác
 
-**Cập nhật 01/08/2026.**
+**Cập nhật 02/08/2026.**
 
 Nếu bạn là AI vừa được đưa vào dự án: đọc hết file này, rồi theo đúng thứ tự đọc ở mục 5. Nếu bạn tới đây mà chưa qua `README.md` thì quay lại đọc nó trước, vì luật xử lý khi công cụ fetch cắt mất nội dung nằm ở đó và nó áp dụng ngay từ lần fetch đầu tiên.
 

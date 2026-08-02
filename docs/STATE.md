@@ -1,6 +1,6 @@
 # STATE — trạng thái dự án
 
-**Cập nhật 01/08/2026.** File này là **ảnh chụp thì hiện tại**: cái gì đang đúng ngay bây giờ, máy nào có gì, số đo hiện hành là bao nhiêu, đã kiểm chứng tới mức nào. Không có ngày tháng trong thân bài, không có chữ "đã làm", không có việc phải làm. Cách sửa file này là **ghi đè**, không phải thêm vào — đó là cơ chế chống phình, vì một ảnh chụp không dài ra theo thời gian. Trần kích thước là **10 KB**. Việc phải làm nằm ở `TODO.md`, diễn biến và số liệu lịch sử nằm ở `research-log/INDEX.md`, thứ không đổi theo phiên nằm ở `START-HERE.md`.
+**Cập nhật 02/08/2026.** File này là **ảnh chụp thì hiện tại**: cái gì đang đúng ngay bây giờ, máy nào có gì, số đo hiện hành là bao nhiêu, đã kiểm chứng tới mức nào. Không có ngày tháng trong thân bài, không có chữ "đã làm", không có việc phải làm. Cách sửa file này là **ghi đè**, không phải thêm vào — đó là cơ chế chống phình, vì một ảnh chụp không dài ra theo thời gian. Trần kích thước là **10 KB**. Việc phải làm nằm ở `TODO.md`, diễn biến và số liệu lịch sử nằm ở `research-log/INDEX.md`, thứ không đổi theo phiên nằm ở `START-HERE.md`.
 
 ## 1. Tóm tắt một câu
 
@@ -8,11 +8,11 @@ Toàn bộ chuỗi từ ảnh cộng narration tới file MP4 60 phút **đã ki
 
 ## 2. Hai máy
 
-Máy lab, nơi làm mọi việc soạn code và tài liệu. Windows 10 build 19045, PowerShell 5.1, Python 3.14.6 bản python.org, Node v24.14.0, npm 11.9.0, capcut-cli 0.15.0, ffmpeg và ffprobe 8.1.2, CapCut 9.1.0.3879 updater đã chặn, Git 2.53. PC văn phòng mười năm tuổi, cấu hình yếu. Ổ C còn khoảng 10,8 GB trên 100 GB và thư mục draft của CapCut nằm ở đó, ổ D còn khoảng 17,5 GB. Snapshot của `docs_audit.py` ghi vào `data\perf\` tức trên **ổ D**, không phải ổ C. **Luôn kiểm dung lượng trước mỗi việc lớn.** `LongPathsEnabled` vẫn bằng 0.
+Máy lab, nơi làm mọi việc soạn code và tài liệu. Windows 10 build 19045, PowerShell 5.1, Python 3.14.6 bản python.org, Node v24.14.0, npm 11.9.0, capcut-cli 0.15.0, ffmpeg và ffprobe 8.1.2, CapCut 9.1.0.3879 updater đã chặn, Git 2.53. PC văn phòng mười năm tuổi, cấu hình yếu. Ổ C còn khoảng 10,7 GB trên 100 GB và thư mục draft của CapCut nằm ở đó, ổ D còn khoảng 17,5 GB. Snapshot của `docs_audit.py` ghi vào `data\perf\` tức trên **ổ D**, không phải ổ C. **Luôn kiểm dung lượng trước mỗi việc lớn.** `LongPathsEnabled` vẫn bằng 0.
 
 Máy render, nơi dựng project lớn và export. MSI MS-7E05, i5-10400F 6 nhân 12 luồng, 16 GB RAM, GTX 1080, Windows 10 build 19042, không có winget. Ổ C là SSD NVMe 238 GB chứa thư mục draft, ổ D là SSD SATA chứa `D:\IT\capcut-lab`. CapCut 9.1.0.3879, updater đã chặn bằng deny ACL trên `CapCut-DiffUpgrade.exe` và `hpatchz.exe`. Thư mục ảnh sản xuất ở `D:\IT\capcut-help\Picture`, 326 ảnh.
 
-**Từ 01/08/2026 máy render tạm không truy cập được, dự kiến ba tới bốn ngày.** Mọi việc cần mở CapCut ở quy mô lớn hoặc cần export đều phải xếp hàng chờ. Máy lab không thay thế được: một bản export 60 phút nặng 4,07 GB trong khi ổ C của máy lab chỉ còn khoảng 10,8 GB.
+**Từ 01/08/2026 máy render tạm không truy cập được, dự kiến ba tới bốn ngày.** Mọi việc cần mở CapCut ở quy mô lớn hoặc cần export đều phải xếp hàng chờ. Máy lab không thay thế được: một bản export 60 phút nặng 4,07 GB trong khi ổ C của máy lab chỉ còn khoảng 10,7 GB.
 
 ## 3. Đã kiểm chứng tới đâu
 
@@ -37,6 +37,8 @@ Cache hiệu ứng: mở project 8 shot có 7 transition và 1 effect làm cache
 Bản kê hai nhánh ngoài repo, đo ngày 02/08/2026 bằng `tools/data_manifest.py` trên máy lab: `data\` có 144 file 299,7 MB sau khi loại `tmp\` và `archive\`; `vendor\` khối canonical 9 mục 922,1 MB và khối extra 109 mục 39,4 MB; riêng `vendor\Cache_effect` gộp thành một mục rollup 14653 file 424842366 byte. File `manifests/lab.json` nặng 45260 byte. Quét đủ 1261,3 MB kèm hash SHA256 toàn bộ mất khoảng 125 giây khi cache hệ điều hành lạnh và khoảng 20 giây khi cache nóng. Máy render chưa có bản kê.
 
 Catalogue filter JianYing: 468 mục, 300 khoá VIP, 168 free, không mục nào thiếu cờ `is_vip`. Cờ đó **không dự đoán được** khoá Pro trong GUI CapCut bản quốc tế, và `resource_id` của hai namespace không trùng nhau; số đo ở `reference-catalog.md`. Thư mục draft trên máy lab có 14 mục: `.recycle_bin` cộng 13 project. `Test_A_v2` không có thư mục `Timelines\`; `fxlab01`, `testB_CLEAN` và `Test_A_v2` rỗng. Chỉ **`fxprobe01`** có material `type=filter`, hai mục thả tay từ GUI ngày 02/08/2026, nằm trong bucket `materials.effects` trên một track `type=filter` — **không** phải bucket tên `filters`. `bench300` và `parity01` không tồn tại trên máy lab.
+
+Cờ VIP ở namespace CapCut mặc định, đo 02/08/2026: scene-effect **0 VIP trên 345**, image-intro **0 trên 43**, image-outro **0 trên 23**, image-combo **0 trên 108**. Khoá `is_vip` có mặt trên mọi mục nhưng hằng `false`, và khoá `member` là tên thành viên enum chứ không phải cờ khoá Pro. Quan sát GUI cùng ngày: tab Animation mục Out có rất nhiều mục, đa số đeo vương miện, nên **enums không phải catalogue của GUI** và cờ đó không dùng được cho bản quốc tế. Cùng bốn loại ở namespace JianYing thì cờ có phân bố thật: 297/912, 58/95, 54/72, 16/123.
 
 ## 5. Việc đang dở và nợ kỹ thuật
 
