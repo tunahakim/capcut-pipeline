@@ -7,6 +7,7 @@ lai mot ket luan cu deu vi khong con dau vet cua duong da di.
 |---|---|---|
 | migrate.py | script MOT LAN, dung de dung cay thu muc nay | khong con can |
 | patch_v8.py | script va MOT LAN, da chay xong 29/07 22:47 | khong con can |
+| split_research_log.py | script MOT LAN, da tach nhat ky gop thanh thu muc docs/research-log/ ngay 01/08 | khong con can |
 | tr_uncached.py | vong luan quan: dung md5 tu enums.json de xac dinh "chua cache", ma md5 do chinh la thu bi bac bo | viet lai theo huong chup cache truoc/sau |
 | lab_patch.py | khong con duong dan ghi cung de va | test kiem duong dan tuyet doi |
 | chk_fx.py | fx_audit.py bao gom day du | fx_audit.py |
