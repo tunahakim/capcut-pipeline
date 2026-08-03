@@ -6,6 +6,7 @@ tools/docs_audit.py -- kiem ke tai lieu: kich thuoc va tham chieu cheo.
   python tools/docs_audit.py                 # quet, in bao cao, ghi snapshot
   python tools/docs_audit.py --baseline      # quet va ghi de moc chuan
   python tools/docs_audit.py --compare       # so voi moc chuan
+  python tools/docs_audit.py --brief         # bo ma tran, chi in file gan tran
 
 Snapshot ghi vao <CAPCUT_LAB>/perf/. Console chi in ASCII.
 
@@ -181,6 +182,14 @@ def scan():
                 problems.append(("MUC THIEU", r["src"], r["line"],
                                  r["token"] + " muc " + r["muc"], r["target"]))
 
+    for p, s in sorted(sizes.items()):
+        if p.startswith(NO_SCAN):
+            continue
+        cap = PER_FILE_BUDGET.get(p, BUDGET)
+        if s > cap:
+            problems.append(("VUOT TRAN", p, 0, p,
+                             "%d byte > tran %d byte" % (s, cap)))
+
     referenced = {r["target"] for r in refs if r["target"]}
     orphans = [p for p in md_files
                if p not in referenced and not p.startswith(NO_SCAN)]
@@ -190,11 +199,17 @@ def scan():
             "when": datetime.datetime.now().isoformat(timespec="seconds")}
 
 
-def report(d):
+def report(d, brief=False):
     print("")
     print("=== KICH THUOC ===")
     print("%-48s %8s %7s  %s" % ("file", "byte", "KB", "trang thai"))
+    an = 0
     for p, s in sorted(d["sizes"].items(), key=lambda kv: -kv[1]):
+        cap0 = PER_FILE_BUDGET.get(p, BUDGET)
+        if brief and p not in PER_FILE_BUDGET and (
+                p.startswith(NO_SCAN) or s <= cap0 * 0.70):
+            an += 1
+            continue
         cap = PER_FILE_BUDGET.get(p, BUDGET)
         if p.startswith(NO_SCAN):
             tag = "mien tru (legacy)"
@@ -205,6 +220,9 @@ def report(d):
         print("%-48s %8d %7.1f  %s" % (p, s, s / 1024.0, tag))
 
     print("")
+    if an:
+        print("... %d file khac duoi 70%% tran, khong in (--brief)" % an)
+        print("")
     print("=== TONG QUAN ===")
     print("file .md quet ref  : %d" % len([p for p in d["sizes"] if not p.startswith(NO_SCAN)]))
     print("tham chieu bat duoc: %d" % len(d["refs"]))
@@ -220,6 +238,12 @@ def report(d):
         print("[%-10s] %s:%d  -> %s %s" % (kind, src, line, tok, extra))
 
     print("")
+    if brief:
+        nsrc = len({r["src"] for r in d["refs"]
+                    if r["target"].lower().endswith(".md")})
+        print("ma tran: %d file nguon | mo coi: %d -- bo qua (--brief)"
+              % (nsrc, len(d["orphans"])))
+        return
     print("=== MA TRAN NGUON -> DICH (.md) ===")
     mat = {}
     for r in d["refs"]:
@@ -240,22 +264,29 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--baseline", action="store_true")
     ap.add_argument("--compare", action="store_true")
+    ap.add_argument("--brief", action="store_true")
     a = ap.parse_args()
 
     PERF.mkdir(parents=True, exist_ok=True)
     d = scan()
-    report(d)
+    report(d, brief=a.brief)
 
     ts = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
     snap = PERF / ("docs_xref_%s.json" % ts)
     snap.write_text(json.dumps(d, ensure_ascii=False, indent=1), encoding="utf-8")
     base = PERF / "docs_xref_baseline.json"
     if a.baseline:
-        base.write_text(json.dumps(d, ensure_ascii=False, indent=1), encoding="utf-8")
+        if d["problems"]:
+            print("")
+            print("KHONG ghi moc chuan: con %d van de, xem khoi VAN DE"
+                  % len(d["problems"]))
+        else:
+            base.write_text(json.dumps(d, ensure_ascii=False, indent=1),
+                            encoding="utf-8")
+            print("")
+            print("moc chuan da ghi de: %s" % base)
     print("")
     print("snapshot: %s" % snap)
-    if a.baseline:
-        print("moc chuan da ghi de: %s" % base)
 
     if a.compare:
         print("")
@@ -273,7 +304,7 @@ def main():
             print("-- DA CHUA (%d) --" % len(ok - nw))
             for x in sorted(ok - nw):
                 print("  %s  %s  %s" % x)
-    return 0
+    return 2 if d["problems"] else 0
 
 
 if __name__ == "__main__":

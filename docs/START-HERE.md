@@ -87,7 +87,7 @@ Luật ba file, để tài liệu không phình và không tự mâu thuẫn: fi
 
 **Mã nguồn in trong `legacy/v0.8-full.md` không đáng tin.** Phần lớn đã lỗi thời, và có ít nhất một script chưa bao giờ tồn tại trên đĩa, nghĩa là mã của nó chưa từng chạy. Nguồn sự thật là file trong `scripts_v1/` và `tools/`. Bài học đã lặp ba lần: mã nằm trong tài liệu mà không có file trên đĩa thì phải coi là **chưa kiểm chứng**, không phải "đã có sẵn".
 
-**Trần kích thước mỗi file tài liệu là 26 KB**, riêng `STATE.md` và `TODO.md` chật hơn, ghi ở đầu mỗi file. Lý do lịch sử, ngưỡng cắt đã đo được, và luật bắt buộc phải làm gì khi nghi mình đọc thiếu, tất cả nằm ở `README.md`. Kiểm bằng `python tools/docs_audit.py`.
+**Trần kích thước mỗi file tài liệu là 26 KB**, riêng `STATE.md` và `TODO.md` chật hơn, ghi ở đầu mỗi file. Lý do lịch sử, ngưỡng cắt đã đo được, và luật bắt buộc phải làm gì khi nghi mình đọc thiếu, tất cả nằm ở `README.md`. Kiểm bằng `python tools/docs_audit.py`; từ 03/08/2026 vượt trần là một mục trong khối `VAN DE` và làm mã thoát khác 0. Vì sao trần tồn tại, nó còn hiệu lực tới đâu, và cách gửi tài liệu cho trợ lý sao cho rẻ nhất: `ai-reading-channel.md`, đọc khi cần chứ không nằm trong thứ tự bắt buộc.
 
 ## 6. Ba điều tuyệt đối không được làm
 

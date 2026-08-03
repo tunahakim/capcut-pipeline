@@ -46,7 +46,7 @@ Canvas blur trên bốn project `testV3`, `testV4`, `v2oracle`, `testB`, đo 03/
 
 Cơ chế ghi vết, đếm 03/08/2026 trên 40 file `.py` của `tools/` và `scripts_v1/`: **0 file dùng `logging`**, 38 khối `try`, 39 `except`, 1 `raise`, 62 chỗ `sys.exit`, 0 chỗ `traceback`. Có xử lý lỗi nhưng không ghi vết ra file.
 
-Kênh đọc tài liệu qua GitHub, đo 03/08/2026: `tools/repo_bytecheck.py` cho 129 blob, khớp 129, lệch 0, thiếu 0. Công cụ fetch của trợ lý ở chế độ đọc thô chặn 10000 byte và khai báo sai kích thước file; chỉ chế độ markdown lấy trọn. Chi tiết ở `research-log/2026-08-03-3-toi-uu-doc-tai-lieu.md`.
+Kênh đọc tài liệu qua GitHub, đo 03/08/2026: `tools/repo_bytecheck.py` cho 134 blob, khớp 134, lệch 0, thiếu 0. Cơ chế cắt ngữ cảnh, ngữ cảnh áp dụng và mô hình đọc ba tầng ở `ai-reading-channel.md`.
 
 ## 5. Việc đang dở và nợ kỹ thuật
 
