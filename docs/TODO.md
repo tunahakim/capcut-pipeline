@@ -18,7 +18,7 @@ Luật ba file, đọc kèm `STATE.md`: file này chứa **thì tương lai**, t
 
 ## Ưu tiên 2 — công cụ và test
 
-**Kiểm khoá Pro cho mọi loại tài nguyên.** `failures.md` mục 1: `fx_audit.py` chỉ chứng minh `path` trỏ tới file có thật, **không bắt được khoá Pro**. Hướng đọc cờ từ enums **đã chết hẳn**, đóng bằng oracle 03/08/2026; số đo ở `STATE.md`. Nay đã có **đối chứng dương thật**: transition `resource_id` 6724227090872275463 trong `v2oracle` bị chính CapCut chặn export, còn 6724846395116753416 trong cùng project thì free. Tiêu chí xong: `fx_audit.py` báo đỏ đúng cái thứ nhất và báo xanh cái thứ hai. Ba việc phụ: xác nhận trực tiếp bằng cách xoá transition ở 72,733 giây rồi export lại, vì hiện mới suy từ mốc 00:01:12; kiểm giả thuyết có `request_id` cùng `category_name` là dấu hiệu tài nguyên tải từ CDN; và rà chữ vương miện còn sót trong `failures.md` cùng nhật ký cũ, đổi thành dấu Pro kim cương tím.
+**Kiểm khoá Pro cho mọi loại tài nguyên.** `failures.md` mục 1: `fx_audit.py` chỉ chứng minh `path` trỏ tới file có thật, **không bắt được khoá Pro**. Hướng đọc cờ từ enums **đã chết hẳn**, đóng bằng oracle 03/08/2026; số đo ở `STATE.md`. Nay đã có **đối chứng dương thật**: transition `resource_id` 6724227090872275463 trong `v2oracle` bị chính CapCut chặn export, còn 6724846395116753416 trong cùng project thì free. Tiêu chí xong: `fx_audit.py` báo đỏ đúng cái thứ nhất và báo xanh cái thứ hai. Hai việc phụ: kiểm giả thuyết có `request_id` cùng `category_name` là dấu hiệu tài nguyên tải từ CDN; và rà chữ vương miện còn sót trong `failures.md` cùng nhật ký cũ, đổi thành dấu Pro kim cương tím.
 
 Ba test đầu tiên trong `tests/`: lượng tử hoá frame, công thức lề dạng tổng quát KX KY, khứ hồi `shots.csv`.
 
@@ -44,11 +44,11 @@ Project `testB` có `materials.hsl` một mục, không project nào khác có v
 
 `docs/scripts.md` đang tiến dần tới trần 26 KB; số hiện hành lấy bằng `python tools/docs_audit.py` chứ không chép vào đây. Khi chạm trần thì tách bảng kho lưu trữ sang `docs/scripts-archive.md` và cập nhật `tools/scripts_index.py` cho ghi hai file.
 
-Nghiệm thu `tools/frame_audit.py`, món cuối của ba script blur; `bgblur_diag.py` và `bgblur_frames.py` **đã đạt 03/08/2026**. Cần một MP4 của `v2oracle`, mà muốn export phải gỡ transition Pro ở 72,733 giây trước. Dự đoán đã chốt theo luật in ground truth trước khi nhìn, giữ nguyên: shot 3 tại 41,800 giây ra BLUR, shot 6 tại 99,333 giây ra BLACK, shot 1 tại 9,883 giây ra AMBIG. Tiêu chí xong: ba nhãn ra đúng ba dự đoán đó.
+`tools/shots_dump.py` bỏ qua mọi hiệu ứng thả tay mà không cảnh báo, đo 03/08/2026 trên `fxprobe01`: hai filter ở `materials.effects` và track `type=filter` mất sạch. Không phải lỗi vì docstring chỉ hứa sáu cột bảng shot, nhưng nó chặn tính năng sửa project dựng tay. Tiêu chí xong: gặp track không phải video hoặc bucket `effects` không rỗng thì in cảnh báo nêu rõ cái gì sẽ mất.
 
-Vá `tools/bgblur_frames.py` cho nó **nói ra khi thiếu mẫu**: docstring hứa sáu vai nhưng thực tế trả ba vai trên `v2oracle` và đúng một vai trên `testV4` mà không cảnh báo gì. Tiêu chí xong: in rõ số vai tìm được trên số vai mong đợi và cảnh báo khi thiếu.
+`tools/bgblur_frames.py` chọn vai `blur-max` bằng phép so sánh `blur == 1.0` trên số thực. **Chưa kiểm chứng** là lỗi hay không vì lab chưa có mẫu blur khác 0,75. Tiêu chí xong: so bằng sai số, hoặc chứng minh được CapCut luôn ghi đúng bốn giá trị rời rạc.
 
-Kiểm `tools/shots_dump.py` có giữ được hiệu ứng và animation người dùng thêm tay hay chỉ giữ shot và timing. Đây là điều kiện sống còn của tính năng sửa một project dựng tay rồi chèn audio giữa chừng: nếu dump ngược mất phần chỉnh tay thì dựng lại sẽ xoá sạch công của người dùng. **Chưa kiểm chứng.** Tiêu chí xong: dump ngược `fxprobe01` rồi dựng lại, hai filter thả tay còn nguyên `resource_id`.
+`tools/frame_audit.py` đếm `dark20` trên cả khung nên không tách được pixel tối của viền khỏi pixel tối của ảnh; đo 03/08/2026 thấy shot không viền vẫn có `dark20` tới 0,2570. Vùng viền trung bình **chưa có bằng chứng**. Tiêu chí xong: chỉ đếm pixel trong dải viền dự đoán, hoặc dựng được một phản ví dụ thật rồi chốt ngưỡng.
 
 Xoá `data\archive\`, khoảng 60–70 MB rác, sau khi chắc chắn `D:\Test_tool` đã bỏ.
 
