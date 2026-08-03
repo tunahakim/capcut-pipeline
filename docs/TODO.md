@@ -4,17 +4,27 @@
 
 Luật ba file, đọc kèm `STATE.md`: file này chứa **thì tương lai**, tức mọi việc chưa làm kể cả nợ kỹ thuật, vì mỗi món nợ là một việc. `STATE.md` chứa **thì hiện tại đã đo được** và không được liệt kê việc phải làm. `research-log/` chứa **thì quá khứ**. Mỗi mục dưới đây phải có tiêu chí hoàn thành. **Xong thì xoá khỏi file này**, không đánh dấu hoàn thành rồi giữ lại — danh sách đã hoàn thành chính là research-log.
 
-## Ưu tiên 2 — công cụ và test
-
-**Kiểm khoá Pro cho mọi loại tài nguyên.** `failures.md` mục 1: `fx_audit.py` chỉ chứng minh `path` trỏ tới file có thật, **không bắt được khoá Pro**. Phần đọc cờ từ enums **đã xong 02/08/2026 và đóng lại**: bốn loại scene-effect, image-intro, image-outro, image-combo ở namespace CapCut đều có `is_vip` trên mọi mục nhưng **hằng false**, số liệu ở `reference-catalog.md`; khoá `member` là tên thành viên enum chứ không phải cờ khoá Pro. Ảnh chụp tab Animation mục Out cho thấy GUI có rất nhiều mục và đa số đeo vương miện trong khi enums chỉ có 23 mục, nên **enums không phải catalogue của GUI**. Không đếm được phần free riêng vì GUI trộn free với VIP trong mọi nhóm. Phần còn lại chặn vì thiếu nguồn dữ liệu, phụ thuộc mục tìm catalogue thật ở dưới. Tiêu chí xong: `fx_audit.py` báo đỏ đúng một tài nguyên Pro thật đã đối chứng bằng vương miện trong GUI.
-
-Ba test đầu tiên trong `tests/`: lượng tử hoá frame, công thức lề dạng tổng quát KX KY, khứ hồi `shots.csv`.
+## Ưu tiên 1 — đóng gói thành ứng dụng dùng được
 
 **`run.bat` thật cộng khung `pipeline/`, và nối `config.json` vào đường chạy.** Đây là tính năng đích của cả dự án: người dùng sửa đường dẫn trong một file cấu hình rồi gọi một lệnh, không gõ thêm lệnh nào. Hiện `config.example.json` đã nằm trong repo nhưng chưa có mã nào đọc nó, và trình tự chạy vẫn chỉ tồn tại trong `docs/procedures.md` dưới dạng văn xuôi chứ không phải mã. Ba phần: đưa trình tự đã dựng thành công `prod60` thành mã có kiểm điều kiện trước và sau mỗi khâu; đọc mọi đường dẫn từ `config.json`; dừng sạch kèm thông báo đọc được khi một khâu hỏng thay vì chạy tiếp. Tiêu chí xong: trên một máy đã cài đủ, chép `config.example.json` thành `config.json`, điền đường dẫn tới thư mục ảnh, file narration, file SRT và bảng shot, chạy một lệnh duy nhất, rồi mở được project trong CapCut với `fx_audit` báo `OK` toàn bộ và lệch timing 0,0 ms, không gõ thêm lệnh nào ở giữa.
 
+**Kiến trúc đã chốt 03/08/2026**, lý lẽ đầy đủ ở `research-log/2026-08-03-1-bgblur-va-oracle-pro.md`; đây chỉ chép phần phải làm. Cài tại chỗ dạng editable qua `pyproject.toml`, **không** đóng gói exe. Ba tầng: hàm thuần trong `pipeline/steps/`, mỗi khâu một file tự khai đầu vào đầu ra kèm kiểm điều kiện trước và sau; rồi CLI có lệnh con; rồi TUI. Thêm tính năng nghĩa là thả thêm một file vào `steps/` và thêm một dòng vào `config.json`. Cổng kiểu ports-and-adapters chỉ đặt ở hai chỗ có nguy cơ đổi thật là lớp ghi CapCut và lớp media ffmpeg, không dựng tầng domain riêng. Bảng shot là nguồn sự thật, draft là sản phẩm phái sinh dựng lại được. `config.json` có trường số hiệu lược đồ, bản thật để ngoài git, mỗi lượt chạy chụp một bản vào `artifacts/`.
+
+**Module log dùng chung ở tầng core.** Đếm 03/08/2026: **0 trên 40** file `.py` dùng `logging`. Không nhét `logging` vào từng script. Tiêu chí xong: một lượt chạy hỏng để lại đúng một file trong `data\logs` có dấu thời gian, mã thoát và dòng lỗi, gửi nguyên file được thay vì copy console.
+
+**Lệnh `doctor`, thay hẳn `preflight.py`.** Đọc một file khai phiên bản ghim, đối chiếu với thứ đang cài, từ chối chạy khi lệch. Được phép tự cài, nhưng **mọi lệnh cài phải ghim phiên bản tường minh**, không bao giờ để trình cài chọn bản mới nhất. Lớp nền Git, Node, Python, ffmpeg thì winget lo được; CapCut 9.1.0.3879 phải để tay vì updater đang cố ý chặn. Bootstrap bắt buộc là `.bat` hoặc `.ps1` vì Python không tự cài được Python. Tiêu chí xong: máy trắng chạy bootstrap rồi `doctor` báo xanh toàn bộ.
+
+**TUI, làm sau cùng.** Làm sau vì phải bọc quanh một CLI đã ổn định, không phải vì ít giá trị. Luật: TUI **không giữ trạng thái**, mọi thứ nó hỏi phải ghi vào `config.json` trước rồi lượt chạy mới đọc từ đó; TUI **in ra đúng lệnh CLI tương đương trước khi chạy**; tiến trình phần trăm và thời gian phát ra từ core để cả CLI lẫn TUI cùng thấy; màu dùng `rich`, xanh đạt đỏ hỏng vàng cảnh báo, nhưng vẫn in chữ OK, LOI, CANH BAO vì màu mất khi copy; khung menu viết tiếng Việt không dấu. Tiêu chí xong: một người chưa từng gõ lệnh dựng xong một project chỉ bằng menu.
+
+## Ưu tiên 2 — công cụ và test
+
+**Kiểm khoá Pro cho mọi loại tài nguyên.** `failures.md` mục 1: `fx_audit.py` chỉ chứng minh `path` trỏ tới file có thật, **không bắt được khoá Pro**. Hướng đọc cờ từ enums **đã chết hẳn**, đóng bằng oracle 03/08/2026; số đo ở `STATE.md`. Nay đã có **đối chứng dương thật**: transition `resource_id` 6724227090872275463 trong `v2oracle` bị chính CapCut chặn export, còn 6724846395116753416 trong cùng project thì free. Tiêu chí xong: `fx_audit.py` báo đỏ đúng cái thứ nhất và báo xanh cái thứ hai. Ba việc phụ: xác nhận trực tiếp bằng cách xoá transition ở 72,733 giây rồi export lại, vì hiện mới suy từ mốc 00:01:12; kiểm giả thuyết có `request_id` cùng `category_name` là dấu hiệu tài nguyên tải từ CDN; và rà chữ vương miện còn sót trong `failures.md` cùng nhật ký cũ, đổi thành dấu Pro kim cương tím.
+
+Ba test đầu tiên trong `tests/`: lượng tử hoá frame, công thức lề dạng tổng quát KX KY, khứ hồi `shots.csv`.
+
 ## Nợ nhỏ, làm khi tiện
 
-Tìm catalogue tài nguyên thật mà GUI CapCut bản quốc tế đang dùng, có thể trong `Cache\effect\` hoặc một CSDL của bản cài. Đây là nút thắt của mục kiểm khoá Pro. Tiêu chí xong: liệt kê được một danh sách mà `resource_id` trùng với `resource_id` GUI ghi vào `draft_content.json` khi thả tay.
+Tìm catalogue tài nguyên thật mà GUI CapCut bản quốc tế đang dùng. Manh mối mới 03/08/2026: trường `md5` trong enums **chính là tên file trong thư mục cache hiệu ứng**, và thư mục cha là `resource_id` với mục tải từ CDN. Tiêu chí xong: liệt kê được một danh sách mà `resource_id` trùng với `resource_id` GUI ghi vào `draft_content.json` khi thả tay.
 
 Truy vì sao dòng `tham chieu La Ma` của `tools/docs_audit.py` tăng từ 38 lên 39 sau khi thêm vào `reference-catalog.md` một đoạn không chứa số La Mã nào, ngày 02/08/2026. Không cấp bách, `VAN DE` vẫn 0. Tiêu chí xong: giải thích được cách phân loại, hoặc sửa nếu là lỗi đếm.
 
@@ -32,25 +42,27 @@ Project `testB` có `materials.hsl` một mục, không project nào khác có v
 
 `tools/bench_shots.py` kiểm biên trước khi làm tròn; phải đảo thành làm tròn rồi mới kiểm và kẹp, giống `tools/bench_fixkb.py`. Ưu tiên thấp vì `tools/prod_shots.py` đã thay nó.
 
-`preflight.py` lỗi thời ba chỗ, xem `failures.md` mục 6. Cân nhắc bỏ hẳn thay vì vá.
-
 `docs/scripts.md` đang tiến dần tới trần 26 KB; số hiện hành lấy bằng `python tools/docs_audit.py` chứ không chép vào đây. Khi chạm trần thì tách bảng kho lưu trữ sang `docs/scripts-archive.md` và cập nhật `tools/scripts_index.py` cho ghi hai file.
 
-Ba script `tools/bgblur_diag.py`, `tools/bgblur_frames.py` và `tools/frame_audit.py` đã nhận project qua tham số từ 02/08/2026 nhưng mới chạy thử trên `testV3` và `paritytest`; `frame_audit.py` chưa chạy lần nào ngoài `--help` vì máy lab không có bản MP4 nào khớp project đang có. Nghiệm thu đủ khi có bản export ở máy render. Tiêu chí xong: mỗi script chạy trọn một lần trên project có đủ mẫu blur và in ra bảng không rỗng.
+Nghiệm thu `tools/frame_audit.py`, món cuối của ba script blur; `bgblur_diag.py` và `bgblur_frames.py` **đã đạt 03/08/2026**. Cần một MP4 của `v2oracle`, mà muốn export phải gỡ transition Pro ở 72,733 giây trước. Dự đoán đã chốt theo luật in ground truth trước khi nhìn, giữ nguyên: shot 3 tại 41,800 giây ra BLUR, shot 6 tại 99,333 giây ra BLACK, shot 1 tại 9,883 giây ra AMBIG. Tiêu chí xong: ba nhãn ra đúng ba dự đoán đó.
+
+Vá `tools/bgblur_frames.py` cho nó **nói ra khi thiếu mẫu**: docstring hứa sáu vai nhưng thực tế trả ba vai trên `v2oracle` và đúng một vai trên `testV4` mà không cảnh báo gì. Tiêu chí xong: in rõ số vai tìm được trên số vai mong đợi và cảnh báo khi thiếu.
+
+Kiểm `tools/shots_dump.py` có giữ được hiệu ứng và animation người dùng thêm tay hay chỉ giữ shot và timing. Đây là điều kiện sống còn của tính năng sửa một project dựng tay rồi chèn audio giữa chừng: nếu dump ngược mất phần chỉnh tay thì dựng lại sẽ xoá sạch công của người dùng. **Chưa kiểm chứng.** Tiêu chí xong: dump ngược `fxprobe01` rồi dựng lại, hai filter thả tay còn nguyên `resource_id`.
 
 Xoá `data\archive\`, khoảng 60–70 MB rác, sau khi chắc chắn `D:\Test_tool` đã bỏ.
 
-`data\Test_tool_v3\shots.csv` **trên máy lab**, nằm ngoài repo, không rỗng 0 byte như từng ghi ở đây mà có 8 dòng thật theo lược đồ `file,start,end`, tức lược đồ cũ của bộ test v3 chứ không phải lược đồ bảng shot hiện hành; nó thiếu `start_s`, `dur_s`, `transition`, `blur`, `kb_s0` và `kb_s1` nên `tools/shots_crosscheck.py` không dùng được nó. Xoá hoặc điền lại theo lược đồ thật khi `tools/shots_dump.py` chốt xong.
+`data\Test_tool_v3\shots.csv` **trên máy lab**, ngoài repo, có 8 dòng theo lược đồ cũ `file,start,end` nên thiếu sáu cột của lược đồ hiện hành và `tools/shots_crosscheck.py` không dùng được. Xoá hoặc điền lại khi `tools/shots_dump.py` chốt xong.
 
 Điều kiện bật blur trong `tools/prod_shots.py` là `kx*smin < 1 or ky*smin < 1`, mà `S_HI` bằng 0,92 còn `kx` và `ky` không bao giờ vượt 1, nên vế trái luôn đúng và cột `blur` bằng 3 ở mọi shot. Hoặc thừa nhận blur luôn bật rồi bỏ điều kiện cho khỏi gây hiểu nhầm, hoặc đặt một ngưỡng thật. Suy luận từ mã, **chưa kiểm chứng** bằng cách đếm cột blur trên bảng shot đã sinh.
 
-`vendor\` **trên máy lab** chứa năm thư mục con mà mục 3 của `START-HERE.md` không kể tới: `frames`, `Test_tool_v3`, `snapshots`, `testV3_CLEAN` và `scripts`; ba trong số đó trùng tên với thư mục con của `data\`. Gốc `vendor\` còn có `enums_backup.json` trùng bản với `reference/enums_backup.json` đã nằm trong repo. Từ 02/08/2026 `tools/data_manifest.py` ghi đủ những mục này vào khối `vendor_extra` của bản kê, có kích thước và hash, nhưng khối đó không tham gia phán xử mã thoát, nên hiện trạng được lưu lại làm bằng chứng mà chưa bị phong thành tiêu chuẩn. Phần còn treo là quyết dọn hay hợp thức hoá: dọn thì chuyển dữ liệu làm việc về `data\` rồi xoá khỏi `vendor\`, hợp thức hoá thì viết lại mục 3 của `START-HERE.md` và thêm tên tương ứng vào hằng số `CANON_VENDOR_NAMES`. Tiêu chí xong: khối `vendor_extra` chỉ còn đúng những thứ ta cố ý chấp nhận, và mục 3 kể đúng những gì có thật trên đĩa.
+`vendor` **trên máy lab** chứa năm thư mục con mà mục 3 của `START-HERE.md` không kể tới: `frames`, `Test_tool_v3`, `snapshots`, `testV3_CLEAN`, `scripts`; gốc còn có `enums_backup.json` trùng bản với `reference/enums_backup.json`. Từ 02/08/2026 `tools/data_manifest.py` ghi đủ vào khối `vendor_extra`, khối này không tham gia phán xử mã thoát. Phần còn treo là quyết dọn hay hợp thức hoá. Tiêu chí xong: khối `vendor_extra` chỉ còn thứ ta cố ý chấp nhận, và mục 3 kể đúng những gì có thật trên đĩa.
 
 ## Chờ máy render quay lại
 
 Nghiệm thu KX và KY. Dựng lại `prod60` bằng `tools/prod_shots.py` mới rồi trích khung ở giữa mười shot có tỉ lệ ảnh khác nhau, **bắt buộc có ít nhất hai ảnh cao hơn khung 16:9**, vì nhánh ảnh cao trong `reference.md` mục 3.1 chưa có phép đo oracle nào. Tiêu chí xong: không shot nào hở mép ngoài ý muốn. Lớp Python đã hoàn tất và đã tự kiểm trên dữ liệu tổng hợp ngày 01/08/2026, phần còn thiếu duy nhất là mắt người nhìn khung hình thật.
 
-Đối chiếu CSV với JSON cho `prod60` bằng `tools/shots_crosscheck.py` đã đổi giao diện ngày 01/08/2026. Việc này chạy **trên máy render**, vì cả thư mục draft chứa `prod60` lẫn bảng shot của nó đều chỉ tồn tại ở đó và không nằm trong repo; máy lab không có bản sao nào. Chạy `python tools/shots_crosscheck.py --project prod60 --csv <đường dẫn thật tới shots.csv của prod60 trên máy render>`; công cụ nay bắt buộc cả hai tham số và không còn cơ chế tự dò, nên gọi thiếu sẽ hỏng ngay chứ không âm thầm đối chiếu nhầm project. Năm dòng đầu báo cáo in `draft_fold_path`, kích thước `draft_content.json` gốc so với bản lồng trong `Timelines\`, và tên ảnh shot 1 ở cả hai phía — đọc năm dòng đó trước, nếu tên ảnh shot 1 lệch thì dừng luôn vì đang so nhầm cặp. Tiêu chí xong: mã thoát 0 kèm dòng "SACH, 0 lech tren ca nam truong". Mã thoát 2 kèm dòng báo thiếu cột `kb_s0` và `kb_s1` **không** được coi là đạt, vì khi đó trường thứ năm chưa hề được kiểm; gặp ca đó thì sinh lại bảng shot bằng `tools/prod_shots.py` rồi chạy lại.
+Đối chiếu CSV với JSON cho `prod60` bằng `tools/shots_crosscheck.py`, chạy **trên máy render** vì cả draft lẫn bảng shot chỉ có ở đó. Gọi `python tools/shots_crosscheck.py --project prod60 --csv <đường dẫn thật>`; đọc năm dòng đầu báo cáo trước, nếu tên ảnh shot 1 lệch thì dừng ngay vì đang so nhầm cặp. Tiêu chí xong: mã thoát 0 kèm dòng SACH, 0 lech tren ca nam truong. Mã thoát 2 báo thiếu cột `kb_s0` và `kb_s1` **không** tính là đạt; gặp ca đó thì sinh lại bảng bằng `tools/prod_shots.py` rồi chạy lượt mới.
 
 Kiểm thị giác bản export `prod60` theo quy tắc in ground truth trước khi nhìn, ở `failures.md` mục 1.
 
@@ -58,4 +70,4 @@ Kiểm thị giác bản export `prod60` theo quy tắc in ground truth trước
 
 Kéo về máy lab hai thứ không tái tạo được: file `narration59.mp3` và thư mục 326 ảnh gốc ở `D:\IT\capcut-help\Picture`.
 
-Nghiệm thu `tools/data_manifest.py` giữa hai máy, phần bị chặn còn lại của việc đã làm ngày 02/08/2026. Trên máy render chạy `python tools/data_manifest.py --scan --machine render --data <data trên máy render> --vendor <vendor trên máy render> --out manifests/render.json` rồi commit bản kê; sau đó chạy `python tools/data_manifest.py --compare --mine manifests/lab.json --theirs manifests/render.json`. Tiêu chí xong: báo cáo in ra đúng danh sách những thứ máy lab thiếu so với máy render và ngược lại; mã thoát 0 hoặc 2 đều chấp nhận được miễn là mọi dòng lệch giải thích được, còn mã thoát 1 nghĩa là chưa chạy được. Lưu ý khối `vendor_extra` chắc chắn lệch nhiều và đó là bình thường vì `vendor\` hai máy chưa bao giờ đồng bộ; chỉ `data` và `vendor_canonical` mới đáng xử lý.
+Nghiệm thu `tools/data_manifest.py` giữa hai máy. Trên máy render chạy `--scan --machine render` rồi commit bản kê, sau đó `--compare --mine manifests/lab.json --theirs manifests/render.json`. Tiêu chí xong: báo cáo in đúng danh sách hai máy thiếu của nhau; mã thoát 0 hoặc 2 đều được miễn mọi dòng lệch giải thích được, mã thoát 1 là chưa chạy được. Khối `vendor_extra` lệch nhiều là bình thường; chỉ `data` và `vendor_canonical` mới đáng xử lý.
