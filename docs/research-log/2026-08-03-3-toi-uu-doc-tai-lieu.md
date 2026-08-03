@@ -26,4 +26,8 @@ Luật công cụ tái sử dụng: đoạn mã sắp phải viết lần thứ 
 
 ## Dữ kiện mới cho món nợ "tham chieu La Ma"
 
-Sau khi vá thêm chữ vào README và START-HERE, "tham chieu bat duoc" tăng 636 lên 645 nhưng "tham chieu La Ma" **đứng yên ở 44**, tức nó không đếm theo lượng chữ. Dự đoán chốt trước khi thêm file này: nếu nó đếm theo số file `.md` thì lượt audit kế tiếp phải ra **45**. Vẫn **chưa kiểm chứng** cho tới khi đọc mã `docs_audit.py`.
+Sau khi vá thêm chữ vào README và START-HERE, "tham chieu bat duoc" tăng 636 lên 645 nhưng "tham chieu La Ma" **đứng yên ở 44**, tức nó không đếm theo lượng chữ. Dự đoán chốt trước khi thêm file nhật ký này: nếu đếm theo số file `.md` thì lượt audit kế tiếp phải ra 45.
+
+**Dự đoán sai.** Sau khi thêm đúng một file `.md`, "file .md quét ref" tăng 35 lên 36 và "tham chieu bat duoc" lên 657, nhưng "tham chieu La Ma" vẫn **đúng 44**. Giả thuyết "đếm theo số file" bị bác bỏ bằng thực nghiệm; con số này bất động qua cả hai phép thử trong phiên, một phép thêm chữ và một phép thêm file. Lần tăng duy nhất từng ghi nhận là 38 lên 39 ngày 02/08 khi thêm một đoạn vào `reference-catalog.md`. Hướng tra tiếp cho phiên sau: nó nhiều khả năng đếm một tập cố định các mục có đánh số La Mã trong nội dung chứ không phải đơn vị file, phải đọc mã `docs_audit.py` mới chốt được. Vẫn **chưa kiểm chứng**.
+
+Bài học phương pháp: dự đoán sai được ghi nguyên trạng cùng dự đoán ban đầu, không sửa lặng lẽ, đúng luật oracle của dự án.
