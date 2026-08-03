@@ -1,6 +1,6 @@
 # STATE — trạng thái dự án
 
-**Cập nhật 02/08/2026.** File này là **ảnh chụp thì hiện tại**: cái gì đang đúng ngay bây giờ, máy nào có gì, số đo hiện hành là bao nhiêu, đã kiểm chứng tới mức nào. Không có ngày tháng trong thân bài, không có chữ "đã làm", không có việc phải làm. Cách sửa file này là **ghi đè**, không phải thêm vào — đó là cơ chế chống phình, vì một ảnh chụp không dài ra theo thời gian. Trần kích thước là **10 KB**. Việc phải làm nằm ở `TODO.md`, diễn biến và số liệu lịch sử nằm ở `research-log/INDEX.md`, thứ không đổi theo phiên nằm ở `START-HERE.md`.
+**Cập nhật 03/08/2026.** File này là **ảnh chụp thì hiện tại**: cái gì đang đúng ngay bây giờ, máy nào có gì, số đo hiện hành là bao nhiêu, đã kiểm chứng tới mức nào. Không có ngày tháng trong thân bài, không có chữ "đã làm", không có việc phải làm. Cách sửa file này là **ghi đè**, không phải thêm vào — đó là cơ chế chống phình, vì một ảnh chụp không dài ra theo thời gian. Trần kích thước là **15 KB**. Việc phải làm nằm ở `TODO.md`, diễn biến và số liệu lịch sử nằm ở `research-log/INDEX.md`, thứ không đổi theo phiên nằm ở `START-HERE.md`.
 
 ## 1. Tóm tắt một câu
 
@@ -46,7 +46,7 @@ Canvas blur trên bốn project `testV3`, `testV4`, `v2oracle`, `testB`, đo 03/
 
 Cơ chế ghi vết, đếm 03/08/2026 trên 40 file `.py` của `tools/` và `scripts_v1/`: **0 file dùng `logging`**, 38 khối `try`, 39 `except`, 1 `raise`, 62 chỗ `sys.exit`, 0 chỗ `traceback`. Có xử lý lỗi nhưng không ghi vết ra file.
 
-Kênh đọc tài liệu qua GitHub, đo 03/08/2026: `tools/repo_bytecheck.py` cho 134 blob, khớp 134, lệch 0, thiếu 0. Cơ chế cắt ngữ cảnh, ngữ cảnh áp dụng và mô hình đọc ba tầng ở `ai-reading-channel.md`.
+Kênh đọc tài liệu qua GitHub, đo 03/08/2026: `repo_bytecheck.py` cho 134 blob, khớp 134, lệch 0, thiếu 0. Trần công cụ fetch là **10000 token mỗi lượt gọi**, không phải byte: 22296 và 24798 byte tiếng Việt về trọn, 32393 byte JSON bị cắt ở 10544 token. Trần tài liệu nay ba lớp; chi tiết ở `ai-reading-channel.md`.
 
 ## 5. Việc đang dở và nợ kỹ thuật
 

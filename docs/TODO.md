@@ -1,6 +1,6 @@
 # TODO — việc chưa làm
 
-**Cập nhật 03/08/2026.** Trần file này là **12 KB**, chật hơn trần chung, vì danh sách là thứ dễ phình nhất; trần này chống phình, không liên quan tới fetch — xem `ai-reading-channel.md`.
+**Cập nhật 03/08/2026.** Trần file này là **15 KB**, chật hơn trần chung, vì danh sách là thứ dễ phình nhất; trần này chống phình, không liên quan tới fetch — xem `ai-reading-channel.md`.
 
 Luật ba file: file này là **thì tương lai**, gồm mọi việc chưa làm kể cả nợ kỹ thuật; `STATE.md` là **thì hiện tại đã đo được**; `research-log/` là **thì quá khứ**. Mỗi mục phải có tiêu chí hoàn thành, và **xong thì xoá khỏi file này** chứ không đánh dấu rồi giữ lại.
 
@@ -24,13 +24,19 @@ Ba test đầu tiên trong `tests/`: lượng tử hoá frame, công thức lề
 
 ## Nợ nhỏ, làm khi tiện
 
-**Kiểm chứng ngưỡng fetch ở chế độ markdown, rồi chốt lại trần chung.** Đo 03/08/2026 chỉ chứng minh một file 24,8 KB về trọn; mốc 26 KB suy từ một lượt fetch 28 KB bị cắt mà **không rõ lúc đó dùng chế độ nào**. Tiêu chí xong: fetch markdown một file 30–40 KB rồi hỏi trợ lý ba mốc đầu, giữa, cuối; ghi số đo vào `ai-reading-channel.md` mục 2 rồi nới trần chung theo số đo — đề xuất 40 KB — trong khi bốn file cửa vào giữ trần chật vì phiên nào cũng đọc nguội chúng.
+**Chống phình `docs/research-log/INDEX.md`.** Nhật ký chỉ được ghi thêm nên số phiên tăng vô hạn, và trần từng file không cứu được chỗ này; `INDEX.md` dài thêm một dòng mỗi phiên. Tiêu chí xong: `INDEX.md` chỉ liệt kê ba mươi phiên gần nhất, phần cũ hơn đẩy sang một file mục lục lưu trữ, và kích thước của nó không còn tăng theo số phiên.
+
+Nhãn mức kiểm chứng cho từng script. Bảng `docs/scripts.md` ghi script làm gì nhưng không ghi nó đáng tin tới đâu. Khai bằng hậu tố `[KIEM: ...]` ở cuối dòng docstring, tự hiện ở cột Mô tả; rồi sửa `tools/scripts_index.py` cho nhãn thành **cột riêng** vì tách cột dễ nhìn hơn, và ghi quy ước nhãn vào tài liệu để script sinh về sau khai đúng khuôn. Tiêu chí xong: mọi script có nhãn, thiếu thì ghi `chua`.
+
+Chống phình `docs/research-log/INDEX.md`, dài thêm một dòng mỗi phiên nên trần từng file không cứu được. Tiêu chí xong: chỉ giữ ba mươi phiên gần nhất, phần cũ sang file mục lục lưu trữ.
+
+Rút mục trần của `README.md`, nay kể lại gần trọn cơ chế đã có ở `docs/ai-reading-channel.md`. Tiêu chí xong: chỉ còn luật áp dụng ngay lần fetch đầu cộng một dòng trỏ sang.
 
 Tìm catalogue tài nguyên thật mà GUI CapCut bản quốc tế đang dùng. Manh mối 03/08/2026: trường `md5` trong enums **chính là tên file trong thư mục cache hiệu ứng**, thư mục cha là `resource_id` với mục tải từ CDN. Tiêu chí xong: liệt kê được danh sách mà `resource_id` trùng với `resource_id` GUI ghi vào `draft_content.json` khi thả tay.
 
 Dòng `tham chieu La Ma` của `tools/docs_audit.py` chưa ai giải thích được. Giả thuyết "đếm theo số file" **đã bị bác**: đo 03/08/2026 cho 38 file `.md` được quét mà dòng này báo 44. Tiêu chí xong: giải thích được cách phân loại, hoặc sửa nếu là lỗi đếm.
 
-Mặc định của `tools/read_src.py` nên là **không in số dòng**, thêm cờ để bật lại. Đo 03/08/2026: trợ lý suy đúng cả bốn số dòng của một file dán không kèm số, mà tiền tố số dòng ngốn chừng một phần tư token của cả lượt; số dòng vẫn cần khi có `--grep` và cho mô hình khác không tự đếm được. Tiêu chí xong: chế độ in trọn mặc định không có số dòng, `--grep` vẫn có, cờ bật lại có ghi trong docstring.
+Mặc định của `tools/read_src.py` nên là **không in số dòng**, thêm cờ bật lại: tiền tố số dòng ngốn chừng một phần tư token mỗi lượt mà trợ lý tự suy đúng khi không có. Tiêu chí xong: in trọn mặc định không số dòng, `--grep` vẫn có, cờ bật lại ghi trong docstring.
 
 Dọn `data\tmp\`: xoá file cũ không theo khuôn tên `tmp_<YYYYMMDD>_<nhãn>`, trừ `data\tmp\gen_cc_fixture.py` là nguyên mẫu của `tools/shots_dump.py`, nằm ngoài repo nên mất là mất hẳn. Cùng lượt xoá project rỗng `fxlab01` trong thư mục draft.
 
@@ -43,8 +49,6 @@ Thử áp filter thẳng vào clip bằng CLI hoặc Python thay vì tạo segme
 Project `testB` có `materials.hsl` một mục, không project nào khác có và chưa tài liệu nào nhắc.
 
 `tools/bench_shots.py` kiểm biên trước khi làm tròn; phải đảo thành làm tròn rồi mới kiểm và kẹp, giống `tools/bench_fixkb.py`. Ưu tiên thấp vì `tools/prod_shots.py` đã thay nó.
-
-`docs/scripts.md` ở 89% trần 26 KB. Khi chạm trần thì **chọn** giữa hai đường: trần riêng tường minh trong `PER_FILE_BUDGET` kèm lý do, hoặc tách bảng kho lưu trữ sang `docs/scripts-archive.md` rồi cập nhật `tools/scripts_index.py` cho ghi hai file.
 
 `tools/shots_dump.py` mất hiệu ứng thả tay mà không cảnh báo, đo 03/08/2026 trên `fxprobe01`. Tiêu chí xong: gặp track không phải video hoặc bucket `effects` không rỗng thì cảnh báo rõ cái gì sẽ mất.
 

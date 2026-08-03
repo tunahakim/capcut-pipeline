@@ -30,7 +30,18 @@ REPO = Path(__file__).resolve().parents[1]
 LAB  = Path(os.environ.get("CAPCUT_LAB") or (Path(__file__).resolve().parents[2] / "data"))
 PERF = LAB / "perf"
 BUDGET = 26 * 1024
-PER_FILE_BUDGET = {"docs/STATE.md": 10 * 1024, "docs/TODO.md": 12 * 1024}
+# Tran rieng, khai bao tuong minh kem ly do. Hai nhom, hai ly do khac nhau.
+# Nhom chat hon BUDGET -- chong phinh, khong lien quan gi toi fetch: hai file nay
+# la anh chup va danh sach, phien nao tro ly cung doc nguoi chung tu dau phien.
+# Nhom rong hon BUDGET -- thuoc tang DAN o docs/ai-reading-channel.md muc 5, nguoi
+# dung dan thang vao hoi thoai nen khong dinh nguong cat 10000 token cua crawler.
+PER_FILE_BUDGET = {
+    "docs/STATE.md":    15 * 1024,  # chong phinh: anh chup thi hien tai, sua bang ghi de
+    "docs/TODO.md":     15 * 1024,  # chong phinh: danh sach la thu de phinh nhat
+    "docs/scripts.md":  40 * 1024,  # tang DAN: sinh tu dong, dai theo so script
+    "docs/reference.md": 40 * 1024, # tang DAN: so tra, day len theo kien thuc da do
+    "docs/failures.md": 40 * 1024,  # tang DAN: so tra loi, chi ghi them
+}
 
 SKIP_DIRS = {".git", "node_modules", "__pycache__", ".idea", ".vscode", ".pytest_cache"}
 NO_SCAN   = ("docs/legacy/",)
