@@ -44,11 +44,11 @@ Project `testB` có `materials.hsl` một mục, không project nào khác có v
 
 `docs/scripts.md` đang tiến dần tới trần 26 KB; số hiện hành lấy bằng `python tools/docs_audit.py` chứ không chép vào đây. Khi chạm trần thì tách bảng kho lưu trữ sang `docs/scripts-archive.md` và cập nhật `tools/scripts_index.py` cho ghi hai file.
 
-`tools/shots_dump.py` bỏ qua mọi hiệu ứng thả tay mà không cảnh báo, đo 03/08/2026 trên `fxprobe01`: hai filter ở `materials.effects` và track `type=filter` mất sạch. Không phải lỗi vì docstring chỉ hứa sáu cột bảng shot, nhưng nó chặn tính năng sửa project dựng tay. Tiêu chí xong: gặp track không phải video hoặc bucket `effects` không rỗng thì in cảnh báo nêu rõ cái gì sẽ mất.
+`tools/shots_dump.py` mất hiệu ứng thả tay mà không cảnh báo, đo 03/08/2026 trên `fxprobe01`. Tiêu chí xong: gặp track không phải video hoặc bucket `effects` không rỗng thì cảnh báo rõ cái gì sẽ mất.
 
-`tools/bgblur_frames.py` chọn vai `blur-max` bằng phép so sánh `blur == 1.0` trên số thực. **Chưa kiểm chứng** là lỗi hay không vì lab chưa có mẫu blur khác 0,75. Tiêu chí xong: so bằng sai số, hoặc chứng minh được CapCut luôn ghi đúng bốn giá trị rời rạc.
+`tools/bgblur_frames.py` chọn `blur-max` bằng `blur == 1.0` trên số thực, chưa kiểm chứng vì lab chỉ có blur 0,75. Tiêu chí xong: so bằng sai số, hoặc chứng minh CapCut chỉ ghi bốn giá trị rời rạc.
 
-`tools/frame_audit.py` đếm `dark20` trên cả khung nên không tách được pixel tối của viền khỏi pixel tối của ảnh; đo 03/08/2026 thấy shot không viền vẫn có `dark20` tới 0,2570. Vùng viền trung bình **chưa có bằng chứng**. Tiêu chí xong: chỉ đếm pixel trong dải viền dự đoán, hoặc dựng được một phản ví dụ thật rồi chốt ngưỡng.
+`tools/frame_audit.py` đếm `dark20` cả khung nên không tách viền khỏi nội dung tối, đo được shot không viền vẫn 0,2570; vùng viền trung bình chưa có bằng chứng. Tiêu chí xong: chỉ đếm pixel trong dải viền dự đoán, hoặc dựng phản ví dụ thật rồi chốt ngưỡng.
 
 Xoá `data\archive\`, khoảng 60–70 MB rác, sau khi chắc chắn `D:\Test_tool` đã bỏ.
 
