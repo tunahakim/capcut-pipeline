@@ -5,15 +5,25 @@ tools/docs_patch.py -- va tai lieu va ma nguon theo dac ta JSON, sau chot an toa
 
   python tools/docs_patch.py --spec <file.json>           # chay thu, KHONG ghi
   python tools/docs_patch.py --spec <file.json> --apply    # ghi that
-  python tools/docs_patch.py --selftest                    # tu kiem bon ca
+  python tools/docs_patch.py --selftest                    # tu kiem bay ca
 
-Sau thao tac: replace, delete, insert_after, insert_before, append, create.
+Bay thao tac: replace, replace_between, delete, insert_after, insert_before, append,
+create. Op replace_between nhan hai sentinel start va end, moi cai phai khop dung 1
+lan, end phai nam sau start va khong chong len start, vung bi thay GOM CA hai
+sentinel, va dac ta phai khai truoc expect_bytes la so byte du kien bi thay -- lech
+qua tol_bytes thi dung, vi do la dau hieu sentinel cuoi bat vao cho xa hon du tinh.
+tol_bytes mac dinh la max(200, expect_bytes // 5).
+
 Sau chot: BOM bao loi va CRLF lan LF thi dung; moi anchor phai khop dung 1 lan va
 kiem het moi file roi moi ghi; so byte sap ghi voi tran nhap tu tools/docs_audit.py;
 file .py thi compile() truoc khi ghi; kiem lai sau khi ghi; tu choi cay git ban tru
 khi co --allow-dirty. Chot thu bay: moi token dang duong dan trong noi dung SAP GHI
 duoc phan loai bang resolve() cua tools/docs_audit.py -- SAI CHO, MISSING va TRUNG
 TEN thi dung, ten tran khong co thu muc thi CANH BAO kem duong dan day du.
+
+Khi spec co sua chinh tools/docs_audit.py thi BUDGET, PER_FILE_BUDGET va ca resolve()
+deu nhap tu ban DA VA TRONG BO NHO, nen mot luot vua them entry PLANNED vua nhac file
+moi khong con bi chan oan.
 
 Ma thoat: 0 xong; 1 sai tham so hay spec khong doc duoc; 2 kiem TRUOC that bai nen
 CHUA GHI FILE NAO; 3 da ghi nhung kiem SAU that bai, chay git restore ngay.
@@ -35,30 +45,43 @@ except Exception:
     pass
 
 REPO = da.REPO
-OPS = ("replace", "delete", "insert_after", "insert_before", "append", "create")
+AUDIT_REL = "tools/docs_audit.py"
+NS_NAMES = ("resolve", "strip_fences", "norm", "TOKEN_RE",
+            "BUDGET", "PER_FILE_BUDGET", "NO_SCAN")
+OPS = ("replace", "replace_between", "delete", "insert_after", "insert_before",
+       "append", "create")
 NEED = {"replace": ("old", "new"), "delete": ("old",),
+        "replace_between": ("start", "end", "new", "expect_bytes"),
         "insert_after": ("anchor", "new"), "insert_before": ("anchor", "new"),
         "append": ("new",), "create": ("new",)}
 
 
-def budgets_from_text(text):
-    """Doc BUDGET va PER_FILE_BUDGET tu ban docs_audit.py da va TRONG BO NHO."""
+def audit_ns_default():
+    """Bang luat lay tu ban tools/docs_audit.py dang nam tren dia."""
+    return dict((k, getattr(da, k)) for k in NS_NAMES)
+
+
+def audit_from_text(text):
+    """Bang luat lay tu ban tools/docs_audit.py DA VA, con trong bo nho."""
     ns = {"__name__": "docs_audit_patched"}
     exec(compile(text, "docs_audit(patched)", "exec"), ns)
-    return ns["BUDGET"], ns["PER_FILE_BUDGET"]
+    missing = [k for k in NS_NAMES if k not in ns]
+    if missing:
+        raise KeyError("thieu ten: %s" % ", ".join(missing))
+    return dict((k, ns[k]) for k in NS_NAMES)
 
 
-def scan_new_text(text, src, index, byname):
+def scan_new_text(text, src, index, byname, ns):
     """Phan loai token duong dan trong noi dung sap ghi. Phan phan xu dung resolve()."""
     out = []
-    for lineno, line in da.strip_fences(text):
-        for m in da.TOKEN_RE.finditer(line):
+    for lineno, line in ns["strip_fences"](text):
+        for m in ns["TOKEN_RE"].finditer(line):
             a, b = m.start(), m.end()
             if (line[a - 1] if a > 0 else " ") in ":\\/":
                 continue
             if "http" in line[max(0, a - 12):a]:
                 continue
-            st, tgt = da.resolve(m.group(0), src, index, byname)
+            st, tgt = ns["resolve"](m.group(0), src, index, byname)
             if st in ("SAI CHO", "MISSING", "MULTI", "OK-BASENAME"):
                 out.append((lineno, m.group(0), st, tgt))
     return out
@@ -110,6 +133,38 @@ def apply_edits(rel, edits, errs):
             checks.append(("in", name, e["new"]))
             print("  ANCHOR %-22s append %d byte" % (name, len(e["new"].encode("utf-8"))))
             continue
+        if op == "replace_between":
+            s_str, e_str = e["start"], e["end"]
+            ns_, ne = body.count(s_str), body.count(e_str)
+            print("  ANCHOR %-22s start khop=%d end khop=%d" % (name, ns_, ne))
+            if ns_ != 1 or ne != 1:
+                errs.append("[%s] KHONG KHOP replace_between '%s': start khop %d, "
+                            "end khop %d, ca hai phai dung 1" % (rel, name, ns_, ne))
+                continue
+            i = body.index(s_str)
+            j = body.index(e_str)
+            if j < i + len(s_str):
+                errs.append("[%s] replace_between '%s': sentinel cuoi nam TRUOC hoac "
+                            "chong len sentinel dau" % (rel, name))
+                continue
+            region = body[i:j + len(e_str)]
+            got = len(region.encode("utf-8"))
+            want = int(e["expect_bytes"])
+            tol = int(e.get("tol_bytes", max(200, want // 5)))
+            print("  VUNG THAY %-20s du kien=%d thuc=%d bien do=%d"
+                  % (name, want, got, tol))
+            if abs(got - want) > tol:
+                errs.append("[%s] replace_between '%s': vung bi thay %d byte, du kien "
+                            "%d, lech %d vuot bien do %d"
+                            % (rel, name, got, want, abs(got - want), tol))
+                continue
+            if not e["new"]:
+                errs.append("[%s] replace_between '%s': khoa 'new' rong, op nay khong "
+                            "dung de xoa" % (rel, name))
+                continue
+            body = body[:i] + e["new"] + body[j + len(e_str):]
+            checks.append(("one", name, e["new"]))
+            continue
         key = "old" if op in ("replace", "delete") else "anchor"
         src_s = e[key]
         n = body.count(src_s)
@@ -158,6 +213,13 @@ def run_spec(spec_path, apply, allow_dirty):
             if k not in e:
                 print("LOI: edit '%s' op %s thieu khoa '%s'" % (e["name"], e["op"], k))
                 return 1
+        if e["op"] == "replace_between":
+            for k in ("expect_bytes", "tol_bytes"):
+                if k in e and (isinstance(e[k], bool) or not isinstance(e[k], int)
+                               or e[k] < 0):
+                    print("LOI: edit '%s' khoa '%s' phai la so nguyen khong am"
+                          % (e["name"], k))
+                    return 1
         rel = Path(e["file"]).as_posix()
         if rel not in groups:
             groups[rel] = []
@@ -179,11 +241,27 @@ def run_spec(spec_path, apply, allow_dirty):
         if r is None:
             continue
         body, nl, checks = r
+        plan.append((rel, body, nl, checks))
+
+    ns, src_label = audit_ns_default(), "ban tren dia"
+    for rel, body, nl, checks in plan:
+        if rel == AUDIT_REL:
+            try:
+                ns = audit_from_text(body)
+                src_label = "ban DA VA trong bo nho"
+            except Exception as exc:
+                errs.append("[%s] khong nap duoc ban da va: %s: %s"
+                            % (rel, type(exc).__name__, exc))
+    print("")
+    print("nguon luat (BUDGET, PLANNED, resolve): %s" % src_label)
+    print("")
+
+    for rel, body, nl, checks in plan:
         for e in groups[rel]:
             if "new" not in e:
                 continue
-            for lineno, tok, st, tgt in scan_new_text(e["new"], rel, index, byname):
-                if da.norm(tok) in allow:
+            for lineno, tok, st, tgt in scan_new_text(e["new"], rel, index, byname, ns):
+                if ns["norm"](tok) in allow:
                     print("  MIEN TRU %s (khai trong allow_paths)" % tok)
                     continue
                 if st == "OK-BASENAME":
@@ -200,11 +278,8 @@ def run_spec(spec_path, apply, allow_dirty):
                                 "khai vao PLANNED cua tools/docs_audit.py"
                                 % (rel, e["name"], tok))
         nbyte = len(body.replace("\n", nl).encode("utf-8"))
-        if rel.lower().endswith(".md") and not rel.startswith(da.NO_SCAN):
-            bud, per = da.BUDGET, da.PER_FILE_BUDGET
-            if rel == "tools/docs_audit.py":
-                bud, per = budgets_from_text(body)
-            cap = per.get(rel, bud)
+        if rel.lower().endswith(".md") and not rel.startswith(ns["NO_SCAN"]):
+            cap = ns["PER_FILE_BUDGET"].get(rel, ns["BUDGET"])
             if nbyte > cap:
                 errs.append("[%s] VUOT TRAN %d byte > tran %d byte" % (rel, nbyte, cap))
         if rel.lower().endswith(".py"):
@@ -213,8 +288,7 @@ def run_spec(spec_path, apply, allow_dirty):
             except SyntaxError as e:
                 errs.append("[%s] LOI compile dong %s: %s" % (rel, e.lineno, e.msg))
         old = (REPO / rel).stat().st_size if (REPO / rel).is_file() else 0
-        print("  byte: %d -> %d" % (old, nbyte))
-        plan.append((rel, body, nl, checks))
+        print("FILE %s byte: %d -> %d" % (rel, old, nbyte))
 
     print("")
     for w in warns:
@@ -275,19 +349,20 @@ def selftest():
     day = datetime.datetime.now().strftime("%Y%m%d")
 
     todo = (REPO / "docs" / "TODO.md").read_text(encoding="utf-8").replace("\r\n", "\n")
-    anchor = None
-    for ln in todo.split("\n"):
-        if ln.startswith("## ") and todo.count(ln) == 1:
-            anchor = ln
-            break
-    if anchor is None:
-        print("LOI selftest: khong tim duoc heading duy nhat trong docs/TODO.md")
+    heads = [ln for ln in todo.split("\n")
+             if ln.startswith("## ") and todo.count(ln) == 1]
+    if len(heads) < 2:
+        print("LOI selftest: docs/TODO.md khong co du hai heading '## ' duy nhat")
         return 1
+    h1, h2 = heads[0], heads[1]
+    i, j = todo.index(h1), todo.index(h2)
+    region = len(todo[i:j + len(h2)].encode("utf-8"))
+    mid = h1 + "\n\nnoi dung thu cua selftest, khong nhac file nao.\n\n" + h2
 
     cases = []
     cases.append(("duong-dry-run", 0, "KIEM TRUOC: SACH", {"edits": [
         {"name": "duong", "file": "docs/TODO.md", "op": "replace",
-         "old": anchor, "new": anchor}]}))
+         "old": h1, "new": h1}]}))
     cases.append(("am-anchor-0", 2, "KHONG KHOP", {"edits": [
         {"name": "khongco", "file": "docs/TODO.md", "op": "replace",
          "old": "ANCHOR KHONG TON TAI 20260804 xyz", "new": "abc"}]}))
@@ -297,6 +372,15 @@ def selftest():
     cases.append(("duong-dan-thieu-tien-to", 2, "SAI CHO", {"edits": [
         {"name": "saicho", "file": "docs/STATE.md", "op": "append",
          "new": "\nDoc core/shotlist.py de biet them.\n"}]}))
+    cases.append(("between-duong", 0, "KIEM TRUOC: SACH", {"edits": [
+        {"name": "between", "file": "docs/TODO.md", "op": "replace_between",
+         "start": h1, "end": h2, "new": mid, "expect_bytes": region}]}))
+    cases.append(("between-end-khop-nhieu", 2, "ca hai phai dung 1", {"edits": [
+        {"name": "endnhieu", "file": "docs/TODO.md", "op": "replace_between",
+         "start": h1, "end": "\n\n", "new": mid, "expect_bytes": region}]}))
+    cases.append(("between-lech-byte", 2, "vuot bien do", {"edits": [
+        {"name": "lechbyte", "file": "docs/TODO.md", "op": "replace_between",
+         "start": h1, "end": h2, "new": mid, "expect_bytes": 50}]}))
 
     rows = []
     for name, want, marker, spec in cases:
@@ -310,14 +394,15 @@ def selftest():
 
     print("")
     print("=== SELFTEST docs_patch ===")
-    print("%-26s %5s %5s %-18s %s" % ("CA", "MONG", "THAT", "NHAN MONG DOI", "CO NHAN"))
-    print("%-26s %5s %5s %-18s %s" % ("-" * 26, "-----", "-----", "-" * 18, "-------"))
+    print("vung giua hai heading dau cua docs/TODO.md: %d byte" % region)
+    print("%-26s %5s %5s %-20s %s" % ("CA", "MONG", "THAT", "NHAN MONG DOI", "CO NHAN"))
+    print("%-26s %5s %5s %-20s %s" % ("-" * 26, "-----", "-----", "-" * 20, "-------"))
     bad = 0
     for name, want, got, marker, hit in rows:
         okc = (want == got) and hit
         if not okc:
             bad += 1
-        print("%-26s %5d %5d %-18s %s  %s"
+        print("%-26s %5d %5d %-20s %s  %s"
               % (name, want, got, marker, "co" if hit else "KHONG",
                  "OK" if okc else "THAT BAI"))
     print("")
