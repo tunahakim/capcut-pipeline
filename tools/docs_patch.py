@@ -63,7 +63,8 @@ def audit_ns_default():
 
 def audit_from_text(text):
     """Bang luat lay tu ban tools/docs_audit.py DA VA, con trong bo nho."""
-    ns = {"__name__": "docs_audit_patched"}
+    ns = {"__name__": "docs_audit_patched",
+          "__file__": str(REPO / AUDIT_REL)}
     exec(compile(text, "docs_audit(patched)", "exec"), ns)
     missing = [k for k in NS_NAMES if k not in ns]
     if missing:
