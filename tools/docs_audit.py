@@ -19,6 +19,12 @@ Nam loai do khong tinh la loi. Loi gom FILE THIEU, TRUNG TEN, MUC THIEU, SAI CHO
 VUOT TRAN va PLANNED DA CHET; SAI CHO nghia la file co that nhung nam khac duong dan
 ma tai lieu ghi, con PLANNED DA CHET nghia la entry trong PLANNED tro toi file nay da
 ton tai nen phai xoa khoi PLANNED.
+
+Van newline. Repo co ca file CRLF va file LF, nen mot script va ghi ky tu xuong dong
+kieu LF vao file dang CRLF se lam file do LAN hai kieu, va luc do tools/docs_patch.py
+cung tools/rlog_index.py dung lai. Quet va chuan hoa bang tools/nl_audit.py. Tool nay
+KHONG kiem newline va KHONG kiem ma hoa, nen mot file UTF-16LE nhu reference/describe.json
+van lot qua sach.
 [KIEM: du lieu that]
 """
 import os, re, sys, json, argparse, datetime
@@ -38,6 +44,12 @@ BUDGET = 26 * 1024
 # la anh chup va danh sach, phien nao tro ly cung doc nguoi chung tu dau phien.
 # Nhom rong hon BUDGET -- thuoc tang DAN o docs/ai-reading-channel.md muc 5, nguoi
 # dung dan thang vao hoi thoai nen khong dinh nguong cat 10000 token cua crawler.
+# Nhom nhat ky trong thu muc research-log KHONG co tran rieng, va tran 26 KB voi nhom
+# do la nguong FETCH mot luot cua crawler chu KHONG phai nguong chong phinh: nhat ky la
+# thi qua khu chi ghi them nen dai ngan tuy khoi luong viec cua phien. File lon nhat
+# hien 8455 byte, tuc 32 phan tram tran. Vuot tran thi TACH THEO CHU DE thanh hai file
+# cung ngay, dung cat chu -- cat chu trong nhat ky la pha bang chung. Xem
+# docs/ai-reading-channel.md.
 PER_FILE_BUDGET = {
     "docs/STATE.md":    15 * 1024,  # chong phinh: anh chup thi hien tai, sua bang ghi de
     "docs/TODO.md":     25 * 1024,  # noi 04/08/2026: chua dac ta docs_patch.py; cham 25 KB thi tach file
@@ -58,7 +70,7 @@ IGNORE = {"file.py", "__init__.py", "capcut_post.py", "scan_paths.py",
           "scripts/pack_vendor.py", "x.mp4", "operations.jsonl"}
 # file da len ke hoach nhung chua viet -- bao rieng, khong tinh la loi
 PLANNED = {"docs/scripts-archive.md", "tools/docs_size.py", "tools/probe_drafts.py",
-           "pipeline/__main__.py", "tools/scaffold_make.py", "tools/rlog_index.py"}
+           "pipeline/__main__.py", "tools/scaffold_make.py"}
 # duong dan co y nam NGOAI repo: thu muc lab CAPCUT_LAB, noi de script dung mot lan
 EXTERNAL_PREFIX = ("data/",)
 # file da tung ton tai roi bi xoa; tai lieu nhac lai lich su, khong phai lien ket hong
