@@ -15,6 +15,49 @@ import shots_crosscheck as sc
 BASE = ["idx", "image", "start_s", "dur_s", "transition", "blur"]
 KB = ["kb_s0", "kb_s1"]
 
+# CSV nay chi giu: track video dau tien, canvas va muc blur, so transition, keyframe scale.
+# Moi thu khac trong draft deu khong di vao CSV. Hai danh sach duoi khai tuong minh cai gi
+# duoc coi la mat da biet (GHI CHU) va cai gi phai bao dong (CANH BAO); bucket khong nam
+# trong hai danh sach thi mac dinh la CANH BAO, de tinh nang moi cua CapCut khong lot im lang.
+MAT_STRUCT = ("canvases", "loudnesses", "material_colors", "placeholder_infos",
+              "sound_channel_mappings", "speeds", "videos", "vocal_separations",
+              "transitions")
+MAT_NOTE = ("audios", "material_animations")
+
+
+def losses(dc):
+    """Tra ve (canh_bao, ghi_chu): thu bi mat khi dump draft ra CSV."""
+    warn, note = [], []
+    tracks = dc.get("tracks") or []
+    for i, t in enumerate(tracks):
+        if i == 0:
+            continue
+        ty = str(t.get("type"))
+        n = len(t.get("segments") or [])
+        if ty == "audio":
+            note.append("track %d type=audio, %d segment: khong thuoc bang shot" % (i, n))
+        elif ty == "video":
+            warn.append("track %d type=video, %d segment: track video phu, CSV chi doc track dau tien" % (i, n))
+        else:
+            warn.append("track %d type=%s, %d segment: MAT HAN khoi CSV" % (i, ty, n))
+    mats = dc.get("materials") or {}
+    for k in sorted(mats.keys()):
+        v = mats.get(k)
+        if not isinstance(v, list) or not v:
+            continue
+        if k in MAT_STRUCT:
+            continue
+        ten = []
+        for e in v[:4]:
+            if isinstance(e, dict):
+                ten.append(str(e.get("name") or e.get("type") or "?"))
+        mo = (" -- " + ", ".join(ten)) if ten else ""
+        if k in MAT_NOTE:
+            note.append("materials.%s co %d muc: khong thuoc bang shot%s" % (k, len(v), mo))
+        else:
+            warn.append("materials.%s co %d muc: MAT HAN khoi CSV%s" % (k, len(v), mo))
+    return warn, note
+
 
 def lvl(blur):
     for k, v in sc.LEVELS.items():
@@ -109,6 +152,15 @@ def main():
     print("segments        : %d" % len(rows))
     print("thieu keyframe  : %d segment" % nokb)
     print("cot ghi         : %s" % ", ".join(cols))
+    lost_w, lost_n = losses(dc)
+    for m in lost_n:
+        print("GHI CHU : %s" % m)
+    for m in lost_w:
+        print("CANH BAO: %s" % m)
+    if lost_w:
+        print("=> %d muc tren KHONG co trong CSV. Dung ban dump nay de dung lai project la mat chung." % len(lost_w))
+    else:
+        print("mat mat         : khong co muc nao phai canh bao")
     if not has_kb:
         print("=> KHONG ghi cot kb; crosscheck se ra ma thoat 2 kem dong thieu cot, dung nhu thiet ke")
     for m in warn:
