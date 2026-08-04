@@ -146,11 +146,17 @@ def resolve(tok, src, index, byname):
     return "MISSING", ""
 
 
-def scan():
+def build_index():
+    """Dung index duong dan repo va bang tra ten tran. Dung chung voi tools/docs_patch.py."""
     index = set(walk_repo())
     byname = {}
     for p in index:
         byname.setdefault(Path(p).name, []).append(p)
+    return index, byname
+
+
+def scan():
+    index, byname = build_index()
 
     md_files = [p for p in index if p.lower().endswith(".md")]
     sizes = {p: (REPO / p).stat().st_size for p in md_files}
