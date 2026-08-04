@@ -164,6 +164,7 @@ def run_spec(spec_path, apply, allow_dirty):
             order.append(rel)
         groups[rel].append(e)
 
+    allow = set(spec.get("allow_paths") or [])
     index, byname = da.build_index()
     for rel in order:
         index.add(rel)
@@ -182,6 +183,9 @@ def run_spec(spec_path, apply, allow_dirty):
             if "new" not in e:
                 continue
             for lineno, tok, st, tgt in scan_new_text(e["new"], rel, index, byname):
+                if da.norm(tok) in allow:
+                    print("  MIEN TRU %s (khai trong allow_paths)" % tok)
+                    continue
                 if st == "OK-BASENAME":
                     warns.append("[%s/%s] CANH BAO ten tran '%s' -- nen viet '%s'"
                                  % (rel, e["name"], tok, tgt))
