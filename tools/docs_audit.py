@@ -58,7 +58,7 @@ IGNORE = {"file.py", "__init__.py", "capcut_post.py", "scan_paths.py",
           "scripts/pack_vendor.py", "x.mp4", "operations.jsonl"}
 # file da len ke hoach nhung chua viet -- bao rieng, khong tinh la loi
 PLANNED = {"docs/scripts-archive.md", "tools/docs_size.py", "tools/probe_drafts.py",
-           "pipeline/__main__.py", "tools/scaffold_make.py"}
+           "pipeline/__main__.py", "tools/scaffold_make.py", "tools/rlog_index.py"}
 # duong dan co y nam NGOAI repo: thu muc lab CAPCUT_LAB, noi de script dung mot lan
 EXTERNAL_PREFIX = ("data/",)
 # file da tung ton tai roi bi xoa; tai lieu nhac lai lich su, khong phai lien ket hong

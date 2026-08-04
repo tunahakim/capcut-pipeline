@@ -60,6 +60,8 @@ Lớp cấu hình và bộ đọc bảng shot, đo 04/08/2026. `pipeline/config.
 
 Thư mục `data\scaffold\` trên máy lab có đúng hai khuôn `testV3_CLEAN` và `v2oracle_CLEAN`, **không có** `scaffold_CLEAN`. Cache hiệu ứng thật là `%LOCALAPPDATA%\CapCut\User Data\Cache\effect` và tồn tại; tên `Cache_effect` ở mục 4 là bản sao trong `vendor\`, hai thứ khác nhau. `data\Test_tool_v3\shots.csv` có đúng ba cột `file, start, end` và 8 dòng.
 
+Lớp vá tài liệu, đo 04/08/2026. `tools/docs_patch.py` nhập sáu sự thật từ `tools/docs_audit.py` gồm `resolve()`, `build_index()`, `strip_fences()`, `TOKEN_RE`, `BUDGET` và `PER_FILE_BUDGET`, không có bản thứ hai nào; selftest **4 trên 4** ca đạt cả mã thoát lẫn nhãn, mã thoát 3 **chưa kiểm chứng**. Lượt vá thật đầu tiên năm anchor trên hai file `.py`, khớp 1 cả năm, `KIEM SAU` OK cả năm. Phân bố nhãn tham chiếu trên 842 ref: `OK` 540, `OK-BASENAME` **281**, `NGOAI` 11, `PLANNED` 7, `LUUTRU` 2, `LICHSU` 1; `OK-BASENAME` **không** tính là vấn đề nên tên file viết trần đang lọt sạch, nhiều nhất ở `scripts.md` 51 và `failures.md` 21. `PLANNED` còn **5** entry sau khi xoá ba entry đã chết, và `docs_audit.py` nay tự bắt entry chết bằng nhãn `PLANNED DA CHET`. `tools/read_src.py` 109 dòng chỉ import năm module chuẩn, **không** dùng lại gì của `docs_audit.py` và cũng không cần, vì nó phải giữ khối rào mã còn audit phải bỏ.
+
 ## 5. Việc đang dở và nợ kỹ thuật
 
 Không liệt kê ở đây. Danh sách đầy đủ, có ưu tiên và có tiêu chí hoàn thành, nằm ở `TODO.md`. Giữ hai bản song song thì chắc chắn sẽ lệch nhau.
