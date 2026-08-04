@@ -1,4 +1,4 @@
-"""Doc ma nguon theo nguong ba bac: tu chon in tron hay trich dong roi ghi UTF-8 va mo Notepad."""
+"""Doc ma nguon theo nguong ba bac: tu chon in tron hay trich dong roi ghi UTF-8 va mo Notepad. Mac dinh KHONG in so dong; --grep tu bat lai, --linenum bat tay."""
 
 import argparse
 import datetime
@@ -18,6 +18,8 @@ def main():
     ap.add_argument("--ctx", type=int, default=3)
     ap.add_argument("--head", type=int, default=25)
     ap.add_argument("--full", action="store_true")
+    ap.add_argument("--linenum", action="store_true",
+                    help="in kem so dong o che do in tron (mac dinh khong in)")
     a = ap.parse_args()
 
     p = a.path if os.path.isabs(a.path) else os.path.join(ROOT, a.path.replace("/", os.sep))
@@ -60,18 +62,25 @@ def main():
         if not trich:
             ly_do = ly_do + " -> in tron"
 
-    out = []
-    out.append("FILE   : " + p)
-    out.append("DONG   : " + str(total) + " | BYTE: " + str(len(data))
-               + " | trong repo: " + ("co" if in_repo else "khong"))
-    out.append("GREP   : " + (", ".join(a.grep) if a.grep else "(khong)"))
-    out.append("NHANH  : " + ("TRICH" if trich else "IN TRON") + " -- " + ly_do)
-    out.append("=" * 60)
+    so_dong = bool(a.grep) or a.linenum
+    h_file = "FILE   : " + p
+    h_dong = ("DONG   : " + str(total) + " | BYTE: " + str(len(data))
+              + " | trong repo: " + ("co" if in_repo else "khong"))
+    h_grep = "GREP   : " + (", ".join(a.grep) if a.grep else "(khong)")
+    h_nhanh = ("NHANH  : " + ("TRICH" if trich else "IN TRON") + " -- " + ly_do
+               + " | so dong: " + ("co" if so_dong else "khong"))
+
+    def render(idx):
+        if so_dong:
+            return str(idx + 1).rjust(5) + "  " + lines[idx]
+        return lines[idx]
+
+    out = [h_file, h_dong, h_grep, h_nhanh, "=" * 60]
     if trich:
         i = 0
         while i < total:
             if i in keep:
-                out.append(str(i + 1).rjust(5) + "  " + lines[i])
+                out.append(render(i))
                 i += 1
             else:
                 j = i
@@ -81,16 +90,16 @@ def main():
                            + str(i + 1) + "-" + str(j) + ") ...")
                 i = j
     else:
-        for i, ln in enumerate(lines):
-            out.append(str(i + 1).rjust(5) + "  " + ln)
+        for i in range(total):
+            out.append(render(i))
 
     stamp = datetime.datetime.now().strftime("%Y%m%d")
     name = "tmp_" + stamp + "_read_" + os.path.basename(p).replace(".", "_") + ".txt"
     dst = os.path.join(LAB, "tmp", name)
     with open(dst, "w", encoding="utf-8", newline=NL) as f:
         f.write(NL.join(out))
-    print(out[1])
-    print(out[3])
+    print(h_dong)
+    print(h_nhanh)
     print("DA GHI : " + dst)
     subprocess.Popen(["notepad.exe", dst])
     return 0
