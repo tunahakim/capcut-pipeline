@@ -3,6 +3,7 @@ Doc nguoc draft_content.json ra shots.csv voi cot giong bang shot dau vao: idx, 
 Vao: bat buoc --project la ten project trong thu muc draft cua CapCut hoac duong dan day du, va --out la duong dan file CSV ra; khong tu do.
 Ma thoat 0 khi da ghi hoac file ra da co va giong het; 2 khi file ra da co va khac, khi do KHONG ghi de tru phi them --force; 1 khi sai tham so hoac thieu file.
 Vi du: python tools/shots_dump.py --project testV3 --out D:/IT/capcut-lab/data/tmp/shots_testV3.csv
+[KIEM: bo test]
 """
 
 import csv, io, sys

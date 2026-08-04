@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""check_sync.py <project-dir> <ten-snapshot> - kiem tra 4 file dong bo + chup timing."""
+"""check_sync.py <project-dir> <ten-snapshot> - kiem tra 4 file dong bo + chup timing. [KIEM: du lieu that]"""
 import json, pathlib, sys
 import os
 

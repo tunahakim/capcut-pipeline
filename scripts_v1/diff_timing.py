@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""diff_timing.py <snap-truoc> <snap-sau>"""
+"""diff_timing.py <snap-truoc> <snap-sau> [KIEM: du lieu that]"""
 import json, pathlib, sys
 import os
 

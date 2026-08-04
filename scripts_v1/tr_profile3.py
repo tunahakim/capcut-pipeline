@@ -3,6 +3,7 @@
 tr_profile3.py <video.mp4>
 Doc LIEN TUC ca cua so bang MOT lenh ffmpeg -> het trung khung do tua.
 Nguong lay tu 3 cua so NEN do ben trong shot (chi co Ken Burns).
+[KIEM: chua]
 """
 import subprocess, pathlib, sys
 

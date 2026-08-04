@@ -2,6 +2,7 @@
 Nối lặp một file audio ngắn thành file dài dùng cho bài tải, bằng concat demuxer với -c copy nên không mã hoá lại.
 Vào: file audio nguồn. Ra: file audio đích, file concat_list.txt cạnh nó, và bộ số làm việc cho bộ sinh shot.
 Đo độ dài hai lần, container bằng ffprobe và giải mã thật bằng ffmpeg -f null, lấy giá trị lớn hơn làm audio_ms, cộng đuôi cố ý 2000 ms, rồi bắt tổng lên lưới 100 ms.
+[KIEM: du lieu that]
 """
 
 import math, re, subprocess, sys

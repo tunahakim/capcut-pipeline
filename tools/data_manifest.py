@@ -6,6 +6,7 @@ Vào: chế độ quét bắt buộc --scan --machine --data --vendor --out; ch�
 Mã thoát 0 khi sạch; 2 khi quét gặp file đọc không được nên bản kê bị thủng, hoặc khi so thấy lệch ở phần được phán xử, hoặc khi một trong hai bản kê có lỗ; 1 khi sai tham số, thiếu thư mục, hoặc bản kê hỏng.
 Loại trừ cố định: data/tmp, data/archive, mọi thư mục tên __pycache__ và .git.
 Ví dụ: python tools/data_manifest.py --scan --machine lab --data D:/IT/capcut-lab/data --vendor D:/IT/capcut-lab/vendor --out manifests/lab.json
+[KIEM: mot lan]
 """
 import argparse, fnmatch, hashlib, json, os, sys, time, datetime
 

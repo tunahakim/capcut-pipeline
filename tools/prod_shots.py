@@ -8,6 +8,7 @@ Thay the tools/bench_shots.py. Khac biet chinh:
   - hinh hoc tinh theo TUNG anh (KX, KY), chap nhan moi kich thuoc va moi ti le
   - ghi luon hai cot kx, ky vao shots.csv de lop keyframe dung dung con so do
   - cot blur sinh theo luat hinh hoc, khong rai ngau nhien
+[KIEM: du lieu that]
 """
 import argparse, csv, math, random, re, subprocess, sys
 from pathlib import Path

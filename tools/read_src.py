@@ -1,4 +1,4 @@
-"""Doc ma nguon theo nguong ba bac: tu chon in tron hay trich dong roi ghi UTF-8 va mo Notepad. Mac dinh KHONG in so dong; --grep tu bat lai, --linenum bat tay."""
+"""Doc ma nguon theo nguong ba bac: tu chon in tron hay trich dong roi ghi UTF-8 va mo Notepad. Mac dinh KHONG in so dong; --grep tu bat lai, --linenum bat tay. [KIEM: bo test]"""
 
 import argparse
 import datetime

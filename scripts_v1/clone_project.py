@@ -3,6 +3,7 @@ Tạo project CapCut mới bằng cách nhân bản scaffold: sinh GUID mới ch
 Vào: thư mục scaffold sạch. Ra: thư mục project mới trong drafts, kèm báo cáo main_timeline_id, đối chiếu draft_name với tên thư mục, số file còn sót tên cũ.
 Từ chối chạy nếu thư mục đích đã tồn tại; mọi nội dung JSON đều được kiểm hợp lệ trước khi ghi đè.
 Đặt luôn draft_fold_path bằng đường dẫn tuyệt đối của thư mục project mới, gộp từ tools/fix_fold_path.py ngày 01/08/2026, nên sau khi clone không còn bước tay nào; báo cáo cuối in giá trị đã ghi kèm cờ KHOP.
+[KIEM: du lieu that]
 """
 
 import json, pathlib, re, shutil, sys, time, uuid

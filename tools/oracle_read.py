@@ -2,6 +2,7 @@
 Đọc bản LONG Timelines/<id>/draft_content.json và in toàn cảnh một project để làm phép thử oracle: bảng timing, check_flag, clip, uniform_scale, extra_material_refs phân loại theo bucket, common_keyframes, và ba bucket transitions, material_animations, canvases.
 Vào: thư mục project. Ra: in console và bản dump đầy đủ ở <CAPCUT_LAB>/oracle_dump.json.
 Cột delta chỉ hiện khi có --baseline: giá trị v3 lấy mốc cứng 8 shot của bộ test v3, hoặc trỏ tới file JSON chứa danh sách [[start, duration], ...] tính bằng giây. Không truyền --baseline thì bảng timing in trần, không có cột delta, vì mốc của project này không áp được cho project khác.
+[KIEM: bo test]
 """
 
 import json, pathlib, sys

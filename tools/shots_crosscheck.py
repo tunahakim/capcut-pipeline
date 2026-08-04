@@ -3,6 +3,7 @@
 Vào: bắt buộc --project là tên project trong thư mục draft của CapCut hoặc đường dẫn đầy đủ tới thư mục project, và --csv là đường dẫn đầy đủ tới bảng shot; không còn cơ chế tự dò. Ra: chỉ in console.
 Mã thoát 0 khi cả năm trường sạch; 2 khi chạy xong nhưng có lệch, hoặc số dòng không khớp số segment, hoặc thiếu cặp cột kb_s0 và kb_s1 nên trường thứ năm không được kiểm; 1 khi sai tham số hoặc thiếu file.
 Ví dụ: python tools/shots_crosscheck.py --project prod60 --csv D:/IT/capcut-lab/data/prod60/shots.csv
+[KIEM: chua]
 """
 
 import argparse, csv, json, os, sys

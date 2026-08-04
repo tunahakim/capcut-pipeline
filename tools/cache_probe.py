@@ -5,6 +5,7 @@ cache_probe.py - chot 2 cau hoi ve Cache/effect:
   2. md5 trong enums.json co khop md5 CapCut thuc dung khong
      -> neu KHONG thi ket luan "CapCut resolve theo md5" o VIII.5 phai sua
 Chi doc, khong sua gi.
+[KIEM: bo test]
 """
 import json, os, pathlib, re, subprocess, sys, time
 

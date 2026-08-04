@@ -2,6 +2,7 @@
 Đối chiếu JSON với pixel thật của bản export, tức bằng chứng mức 5: với mỗi shot, nội suy scale tại giữa shot từ keyframe KFTypeScaleX, dự đoán tỉ lệ diện tích viền, trích một khung xám bằng ffmpeg rồi đếm tỉ lệ pixel tối ở hai ngưỡng 6 và 20 để kết luận BLUR, BLACK hay AMBIG.
 Vào: draft của project và file MP4. Ra: bảng tổng hợp theo mức blur, danh sách shot mâu thuẫn giữa JSON và pixel, và CSV <CAPCUT_LAB>/perf/frame_audit_<project>.csv.
 Chỉ kết luận khi viền dự đoán chiếm trên 2 phần trăm khung hình, dưới ngưỡng đó ghi AMBIG.
+[KIEM: bo test]
 """
 
 import argparse, csv, json, os, subprocess, sys

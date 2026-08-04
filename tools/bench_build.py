@@ -3,6 +3,7 @@
 bench_build.py <project-dir> <shots.csv> <assets-dir>
 Khau CLI cua project benchmark. CHAY TRUOC bench_kb.py.
 Sau script nay TUYET DOI khong chay them lenh ghi nao cua CLI.
+[KIEM: chua]
 """
 import csv, json, os, pathlib, subprocess, sys, time
 

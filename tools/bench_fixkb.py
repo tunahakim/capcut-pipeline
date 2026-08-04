@@ -4,6 +4,7 @@ bench_fixkb.py <shots.csv>
 Kep bon cot kb_x/kb_y ve trong gioi han le, TINH TREN GIA TRI DA LAM TRON.
 Ly do ton tai: sinh so trong bo nho thi hop le, nhung "%.6f" co the lam tron
 LEN va day gia tri vuot mep. Chi cot kb_* bi sua; cac cot khac giu nguyen.
+[KIEM: chua]
 """
 import csv, math, pathlib, shutil, sys
 

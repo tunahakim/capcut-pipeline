@@ -14,6 +14,7 @@ QUY TAC THOI GIAN - doc ky truoc khi sua:
 
 Cach dung:
   python tools/bench_shots.py --src <thu-muc-anh> --assets <thu-muc-copy> --out <shots.csv>
+[KIEM: mot lan]
 """
 import argparse, csv, pathlib, random, shutil, sys
 

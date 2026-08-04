@@ -2,6 +2,7 @@
 Chẩn đoán lớp canvas của một hoặc nhiều project chỉ định trên dòng lệnh, đọc cả draft_content.json gốc lẫn mọi bản trong Timelines.
 Vào: một hoặc nhiều tên project trong thư mục draft của CapCut. Ra: in console và ghi <CAPCUT_LAB>/perf/bgblur_diag_<các-tên-project-nối-bằng-gạch-dưới>.txt.
 Thống kê số canvas theo type, vị trí ref canvas_blur trong extra_material_refs, phân bố check_flag, các mức blur, dải scale, và tám shot blur mạnh nhất kèm mốc thời gian. Chỉ đọc, không sửa gì.
+[KIEM: bo test]
 """
 
 import argparse, json, os, sys

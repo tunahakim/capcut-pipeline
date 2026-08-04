@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""fx_audit.py <project-dir> - kiem ke tai nguyen moi transition/effect/filter."""
+"""fx_audit.py <project-dir> - kiem ke tai nguyen moi transition/effect/filter. [KIEM: du lieu that]"""
 import json, pathlib, sys
 
 CACHE = pathlib.Path.home() / "AppData/Local/CapCut/User Data/Cache/effect"

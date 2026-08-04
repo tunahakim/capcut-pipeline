@@ -8,6 +8,7 @@ co san hai cot do. Moi logic keyframe, bit 4096 va
 ghi du 4 file deu do kb_apply.py lo, giu nguyen duong di da kiem chung.
 
 SAU SCRIPT NAY TUYET DOI KHONG CHAY THEM LENH GHI NAO CUA CLI.
+[KIEM: chua]
 """
 import contextlib, csv, importlib.util, io, os, pathlib, sys, time
 

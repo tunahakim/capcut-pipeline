@@ -4,6 +4,7 @@ grab_frames.py <video.mp4> [out-dir]
 Trich khung hinh tai cac moc kiem chung, kem md5 va mau trung binh RGB.
   - md5 trung nhau  -> hai khung GIONG HET (dung de phat hien cat cung)
   - RGB trung binh  -> so sanh khach quan thay vi nhin bang mat
+[KIEM: chua]
 """
 import subprocess, pathlib, sys, os, hashlib
 

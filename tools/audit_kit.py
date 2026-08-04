@@ -7,6 +7,7 @@ Tra loi:
   2. script nao con ghi cung duong dan (doi chieu tuyen bo o muc II.1)
   3. vendor kit: dung luong that, so file, so muc cache
   4. bytes tren moi segment cua draft_content.json  <-- so quyet dinh kien truc
+[KIEM: chua]
 """
 import hashlib, json, os, pathlib, re, sys
 

@@ -8,8 +8,9 @@ tools/scripts_index.py -- kiem ke script va sinh bang mo ta cho docs/scripts.md.
 
 Mo ta lay tu docstring dau file, do la nguon su that duy nhat; bang chi la ban sinh ra.
 Console in ASCII khong dau, file ghi UTF-8 khong BOM.
+[KIEM: du lieu that]
 """
-import ast, sys, unicodedata
+import ast, re, sys, unicodedata
 from pathlib import Path
 
 ROOT  = Path(__file__).resolve().parents[1]
@@ -50,22 +51,37 @@ def doc_of(p):
             break
     return "\n".join(out) or None
 
+KIEM_OK = ("du lieu that", "bo test", "mot lan", "chua")
+KIEM_RE = re.compile(r"\[KIEM:\s*([^\]]*)\]")
+QUY_UOC = ("Cot KIEM la muc kiem chung, khai bang hau to `[KIEM: ...]` dat o cuoi docstring dau file; script nao khong khai thi bang hien `chua`. Bon gia tri hop le: `du lieu that` da chay tren du lieu san xuat that, `bo test` da chay tren bo 8 shot hoac fixture, `mot lan` moi chay dung mot lan chua lap lai, `chua` chua ai chay hoac khong co bang chung. Gia tri la hien kem dau hoi. Bang nay sinh tu dong bang `python tools/scripts_index.py --write`, dung sua tay."
+           + "\n\n")
+
 def cell(doc):
     if not doc:
-        return "**THIEU DOCSTRING**"
+        return ("chua", "**THIEU DOCSTRING**")
+    lab = "chua"
+    m = KIEM_RE.search(doc)
+    if m:
+        lab = m.group(1).strip() or "chua"
+        doc = KIEM_RE.sub("", doc)
+    if lab not in KIEM_OK:
+        lab = lab + " (?)"
     ls = [x.strip() for x in doc.strip().splitlines() if x.strip()]
+    if not ls:
+        return (lab, "**THIEU MO TA**")
     s = "`" + ls[0] + "`"
     if len(ls) > 1:
         s += " " + " ".join(ls[1:])
-    return s.replace("|", "\\|")
+    return (lab, s.replace("|", "\\|"))
 
 def table(paths, with_desc):
-    rows = ["| File | KB | Mô tả |", "|---|---|---|"] if with_desc else ["| File | KB |", "|---|---|"]
+    rows = ["| File | KB | KIEM | Mô tả |", "|---|---|---|---|"] if with_desc else ["| File | KB |", "|---|---|"]
     for p in paths:
         rel = str(p.relative_to(ROOT)).replace("\\", "/")
         kb = "%.1f" % (p.stat().st_size / 1024.0)
         if with_desc:
-            rows.append("| `%s` | %s | %s |" % (rel, kb, cell(doc_of(p))))
+            lab, desc = cell(doc_of(p))
+            rows.append("| `%s` | %s | %s | %s |" % (rel, kb, lab, desc))
         else:
             rows.append("| `%s` | %s |" % (rel, kb))
     return "\n".join(rows)
@@ -92,7 +108,15 @@ for p in nodoc:
 if not DOC.exists():
     sys.exit("Khong thay %s" % DOC)
 cur = DOC.read_text(encoding="utf-8")
-new = splice(splice(cur, "live", table(live, True)), "arch", table(arch, False))
+new = splice(splice(cur, "live", QUY_UOC + table(live, True)), "arch", table(arch, False))
+tally = {}
+for _p in live:
+    _lab = cell(doc_of(_p))[0]
+    tally[_lab] = tally.get(_lab, 0) + 1
+print("")
+print("=== NHAN KIEM ===")
+for _k in sorted(tally):
+    print("  %-18s %d" % (_k, tally[_k]))
 print("")
 print("=== BANG ===")
 print("khop voi ma nguon" if new == cur else "da cu so voi ma nguon")

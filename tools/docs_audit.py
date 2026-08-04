@@ -17,6 +17,7 @@ LUUTRU la file da chuyen vao
 _deprecated/ sau khi cau van duoc viet, ma nhat ky chi ghi them nen khong sua lai.
 Nam loai do khong tinh la loi. Loi gom FILE THIEU, TRUNG TEN, MUC THIEU va SAI CHO;
 SAI CHO nghia la file co that nhung nam khac duong dan ma tai lieu ghi.
+[KIEM: du lieu that]
 """
 import os, re, sys, json, argparse, datetime
 from pathlib import Path

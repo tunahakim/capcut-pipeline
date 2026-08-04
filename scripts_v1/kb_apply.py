@@ -8,6 +8,7 @@ Xem tai lieu muc X.8. He toa do: muc VIII.6.
   Rang buoc khong ho mep:  |x| <= 1-KX*s    |y| <= 1-KY*s
   KX va KY tinh theo TUNG anh, cong thuc o docs/reference.md muc 3.1
 Cach dung:  python kb_apply.py <project-dir>
+[KIEM: chua]
 """
 import json, pathlib, shutil, sys, uuid
 

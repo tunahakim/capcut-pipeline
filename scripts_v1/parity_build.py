@@ -6,6 +6,7 @@ Dung tron bo 8 shot bang capcut-cli, dung cho probe parity tren may moi.
 Tu doc ID segment nen khong phai chep tay. Dung ngay khi co lenh loi.
 
 Sau script nay:  python kb_apply.py <project>  ->  check_sync.py  ->  mo CapCut
+[KIEM: du lieu that]
 """
 import json, os, pathlib, subprocess, sys
 

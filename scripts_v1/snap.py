@@ -3,6 +3,7 @@
 snap.py <project-dir> <ten-snapshot>
 LUON doc tu file LONG (Timelines/<id>/) = nguon su that.
 Ghi ra <LAB>/snapshots/<ten>.json (rut gon) + <ten>_full.json (nguyen ban)
+[KIEM: chua]
 """
 import json, os, pathlib, sys
 

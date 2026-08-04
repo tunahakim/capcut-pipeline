@@ -12,6 +12,7 @@ lan cho cung mot ket qua.
 path_mode:
   "cache" -> path = Cache/effect/<rid>/<md5>
   "empty" -> path = ""   (thu xem CapCut co tu tai ve khong, giong ca transition)
+[KIEM: chua]
 """
 import json, pathlib, shutil, sys, uuid
 

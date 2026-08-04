@@ -3,6 +3,7 @@
 preflight.py - kiem tra moi truong truoc khi refactor. CHI DOC, khong sua gi.
 Chay:  python preflight.py          (day du, co tinh dung luong thu muc)
        python preflight.py --fast   (bo qua tinh dung luong, nhanh hon)
+[KIEM: chua]
 """
 import os, sys, shutil, subprocess, pathlib, platform
 

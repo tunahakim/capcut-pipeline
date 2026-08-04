@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""strip_filters.py <project-dir> - go sach lop filter, giu nguyen moi thu khac."""
+"""strip_filters.py <project-dir> - go sach lop filter, giu nguyen moi thu khac. [KIEM: chua]"""
 import json, pathlib, shutil, sys
 
 PROJ = pathlib.Path(sys.argv[1])

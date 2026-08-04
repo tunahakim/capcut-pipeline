@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""find_ph.py <project-dir> - dinh vi moi chuoi ##_material_placeholder trong cay JSON."""
+"""find_ph.py <project-dir> - dinh vi moi chuoi ##_material_placeholder trong cay JSON. [KIEM: chua]"""
 import json, pathlib, sys
 
 PROJ = pathlib.Path(sys.argv[1])

@@ -2,6 +2,7 @@
 Chọn mẫu shot của một project chỉ định để kiểm thị giác canvas blur, theo quy tắc in ground truth ra trước rồi mới nhìn ở failures.md mục 1.
 Vào: tên project trong thư mục draft, tuỳ chọn thêm file MP4 đã export. Ra: bảng shot kèm mức blur, scale nhỏ nhất và lớn nhất, mốc giữa shot, bề rộng viền dự đoán; nếu có MP4 thì trích khung PNG tại giữa mỗi shot ra <CAPCUT_LAB>/perf/bgblur_frames_<tên-project>.
 Mẫu gồm một cặp đối chứng blur mạnh cạnh canvas_color, một shot blur mức 4, một shot blur mức 1, một shot canvas_color âm tính và một shot blur mức giữa. Thiếu vai nào thì in cảnh báo kèm danh sách chứ không im lặng.
+[KIEM: bo test]
 """
 
 import argparse, json, os, subprocess, sys

@@ -19,6 +19,7 @@ List duoc coi la mot la, so nguyen khoi chu khong di vao trong.
 
 Ma thoat: 0 sach hoac da ghi, 1 khong chay duoc, 2 co lech nhom BAT BUOC.
 Luu y argparse cung tra 2 khi thieu tham so bat buoc -- trung so, khac nghia.
+[KIEM: chua]
 """
 import argparse, datetime, json, pathlib, platform, sys
 

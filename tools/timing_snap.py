@@ -2,6 +2,7 @@
 Chụp và so sánh timing của mọi track trong project, thay cho cặp scripts_v1/check_sync.py và scripts_v1/diff_timing.py.
 Vào: project ở chế độ snap, hai file snapshot ở chế độ diff. Ra: file JSON gồm duration và danh sách start, duration của từng segment, hoặc bảng lệch tính bằng mili giây kèm lệch start lớn nhất.
 Đọc bản LONG trước, chỉ quay về bản gốc khi bản LONG không có segment nào.
+[KIEM: du lieu that]
 """
 
 import json, pathlib, sys

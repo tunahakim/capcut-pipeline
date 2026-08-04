@@ -1,4 +1,4 @@
-"""Doi chieu working copy voi blob GitHub theo tung thu muc; bao thieu file va lech byte."""
+"""Doi chieu working copy voi blob GitHub theo tung thu muc; bao thieu file va lech byte. [KIEM: du lieu that]"""
 
 import argparse
 import json
