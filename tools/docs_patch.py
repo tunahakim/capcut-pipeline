@@ -367,9 +367,13 @@ def selftest():
     cases.append(("am-anchor-0", 2, "KHONG KHOP", {"edits": [
         {"name": "khongco", "file": "docs/TODO.md", "op": "replace",
          "old": "ANCHOR KHONG TON TAI 20260804 xyz", "new": "abc"}]}))
+    state_rel = "docs/STATE.md"
+    state_now = (REPO / state_rel).stat().st_size
+    state_cap = da.PER_FILE_BUDGET.get(state_rel, da.BUDGET)
+    pad = max(1000, state_cap - state_now + 1000)
     cases.append(("vuot-tran", 2, "VUOT TRAN", {"edits": [
-        {"name": "phinh", "file": "docs/STATE.md", "op": "append",
-         "new": "\n" + ("x" * 3000)}]}))
+        {"name": "phinh", "file": state_rel, "op": "append",
+         "new": "\n" + ("x" * pad)}]}))
     cases.append(("duong-dan-thieu-tien-to", 2, "SAI CHO", {"edits": [
         {"name": "saicho", "file": "docs/STATE.md", "op": "append",
          "new": "\nDoc core/shotlist.py de biet them.\n"}]}))
@@ -396,6 +400,8 @@ def selftest():
     print("")
     print("=== SELFTEST docs_patch ===")
     print("vung giua hai heading dau cua docs/TODO.md: %d byte" % region)
+    print("ca vuot-tran: docs/STATE.md %d byte, tran %d byte, chen them %d byte"
+          % (state_now, state_cap, pad))
     print("%-26s %5s %5s %-20s %s" % ("CA", "MONG", "THAT", "NHAN MONG DOI", "CO NHAN"))
     print("%-26s %5s %5s %-20s %s" % ("-" * 26, "-----", "-----", "-" * 20, "-------"))
     bad = 0
