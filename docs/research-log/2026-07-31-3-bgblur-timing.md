@@ -1,5 +1,7 @@
 # Nhật ký nghiên cứu 31/07/2026 (tối) — Đóng ca `bg-blur`, chốt luật timing theo audio
 
+**Tóm tắt:** Đóng ca lỗi im lặng thứ bảy: `bg-blur` không hỏng, quan sát ban đầu sai. Chốt luật bắt lưới 0,1 giây theo ranh giới tuyệt đối, mốc cuối dùng ceil, cộng đuôi cố ý
+
 ## Kết quả chính
 
 Ca "lỗi im lặng thứ bảy" khép lại: `bg-blur` **không hỏng**, quan sát ban đầu sai. Chi tiết đầy đủ ở `failures.md` mục 2.8. Tóm tắt số liệu: 153 `canvas_blur` và 147 `canvas_color` trên 300 segment, mỗi segment đúng một ref, không canvas mồ côi, `check_flag` khớp một-đối-một, file gốc và file lồng trùng nhau ở 2.499.852 byte, đối chiếu 300 dòng CSV với JSON cho 0 lệch trên năm trường.

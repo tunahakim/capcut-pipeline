@@ -1,5 +1,7 @@
 # Nhật ký phiên 03/08/2026 (1) — nghiệm thu hai script blur, oracle khoá Pro trên transition Up, và chốt hướng đóng gói
 
+**Tóm tắt:** Nghiệm thu `bgblur_diag.py` và `bgblur_frames.py` trên bốn project; `blur` hằng 0,75 nên máy lab không có mẫu đa mức, bộ chọn mẫu suy giảm im lặng; vị trí ref canvas_blur không cố định. Oracle khoá Pro đóng dứt điểm bằng chính hộp thoại Pro materials của CapCut trên transition `Up` 6724227090872275463: cờ `is_vip` của enums vô dụng cho bản quốc tế, enums không phủ danh mục GUI, tra theo tên là bẫy, và `md5` trong enums chính là tên file cache. Chốt hướng đóng gói ba tầng steps–CLI–TUI, cài editable, ghim phiên bản, module log dùng chung
+
 Máy lab. Có mở CapCut, có thử export nhưng bị CapCut chặn nên **không có MP4**. Phiên trước là `2026-08-02-4-shots-dump-va-oracle.md`.
 
 ## Bước 1 — `../../tools/bgblur_diag.py` và `../../tools/bgblur_frames.py` đạt, `frame_audit.py` vẫn treo

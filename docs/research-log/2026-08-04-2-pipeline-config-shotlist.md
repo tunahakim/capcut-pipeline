@@ -1,5 +1,7 @@
 # 2026-08-04-2 — lớp cấu hình và bộ đọc shotlist
 
+**Tóm tắt:** Dựng lớp cấu hình `pipeline/config.py` theo lược đồ số 1 và bộ đọc bảng shot `pipeline/core/shotlist.py` năm cột TSV, cả hai nghiệm thu hai chiều bằng đối chứng dương và đối chứng âm; chốt hợp đồng kiến trúc bốn tầng ở `../architecture.md`
+
 ## Bối cảnh
 
 Phiên trước đã đóng phần tài liệu. Phiên này bắt đầu Ưu tiên 1: đóng gói thành ứng dụng dùng được. Máy render vẫn không truy cập được nên mọi việc cần `prod60` bị chặn.

@@ -1,5 +1,7 @@
 # Nhật ký phiên 02/08/2026 (4) — v4_mold thành công cụ diff, đóng phần enums của khoá Pro, và shots_dump
 
+**Tóm tắt:** Vá v4_mold thành công cụ diff ba nhóm trường, đóng phần enums của mục khoá Pro, viết shots_dump và kiểm khứ hồi sạch
+
 Máy lab. Có đọc project bằng script, không mở CapCut, không export. Phiên trước là `2026-08-02-3-filter-gui-vip.md`.
 
 ## Bước 1 — vá `../../tools/v4_mold.py`

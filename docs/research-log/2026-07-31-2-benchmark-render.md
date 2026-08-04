@@ -1,5 +1,7 @@
 # Nhật ký phiên 31/07/2026 (chiều) — benchmark máy render, dựng và export 60 phút
 
+**Tóm tắt:** Benchmark máy render: dựng 300 shot đủ hiệu ứng, lệch 0,0 ms, export 60 phút thành công
+
 **Mục tiêu:** dựng một project 60 phút đủ hiệu ứng rồi export thật, để quyết định máy i5-10400F cộng GTX 1080 có đủ làm máy render chính thức không.
 
 **Dựng.** Bốn script mới trong `tools/`: `bench_shots.py` sinh `shots.csv` 300 shot với mọi mốc là bội số 0,1 giây và tổng đúng 3600,0 giây; `bench_build.py` chạy khâu CLI; `bench_kb.py` chạy lớp Python; `bench_fixkb.py` chữa lỗi làm tròn. `bench_kb.py` **không viết lại bộ sinh keyframe** mà nạp `scripts_v1/kb_apply.py` rồi thay biến `PLAN` bằng dữ liệu đọc từ CSV — cách này tránh được nguy cơ lệch schema keyframe và nên giữ làm mẫu.

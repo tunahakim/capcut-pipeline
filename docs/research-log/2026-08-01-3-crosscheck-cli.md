@@ -1,5 +1,7 @@
 # Nhật ký phiên 01/08/2026 (3) — giao diện tường minh cho `shots_crosscheck` và gộp `fix_fold_path`
 
+**Tóm tắt:** `shots_crosscheck.py` bắt buộc `--project` và `--csv`, bỏ tự dò, thêm đầu báo cáo và hợp đồng mã thoát, bịt lỗi im lặng cột `kb`; tự kiểm ba bộ trên `testV3` khớp dự đoán; gộp `fix_fold_path.py` vào `clone_project.py`
+
 Máy lab. Không dựng project sản xuất, không export. Hai phiên trước trong cùng ngày nằm ở nhật ký (1) và (2).
 
 ## Vì sao phải sửa `tools/shots_crosscheck.py`

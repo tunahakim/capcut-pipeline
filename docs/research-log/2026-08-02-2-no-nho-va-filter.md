@@ -1,5 +1,7 @@
 # Nhật ký phiên 02/08/2026 (2) — dọn nợ nhỏ và đo cờ VIP của filter
 
+**Tóm tắt:** Trả năm món nợ nhỏ thuần code: `oracle_read.py` bỏ mặc định `D:\Test_tool` và chỉ in cột delta khi có `--baseline`; `bgblur_diag.py` nhận nhiều project, `bgblur_frames.py` và `frame_audit.py` chuyển sang `--project` cùng `--mp4`, báo cáo gắn tên project; `docs_audit.py` bỏ điều kiện cứng loại trừ README; dời `scan_paths.py`. TODO từ 95 xuống 83,6 phần trăm trần. Đo cờ `is_vip` của 468 filter JianYing: 300 VIP, 168 free. Sáu dương tính giả CRLF chứ không phải ba. Chốt hai kỹ thuật làm việc: trích dòng thay vì đọc trọn file, và vá file bằng script kiểm-khớp-trước-ghi-sau
+
 Máy lab. Không mở CapCut, không chạy lệnh dựng nào, không export. Phiên trước là `2026-08-02-1-data-manifest.md`.
 
 ## Năm món nợ nhỏ đã trả

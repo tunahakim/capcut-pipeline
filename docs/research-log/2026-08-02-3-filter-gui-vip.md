@@ -1,5 +1,7 @@
 # Nhật ký phiên 02/08/2026 (3) — filter thả tay từ GUI, và cờ VIP của JianYing hoá ra không dùng được
 
+**Tóm tắt:** Ba luật làm việc mới vào mục 8 của START-HERE: sinh file mới bằng script, ngưỡng 4 KB giữa fetch trọn và trích dòng, đặt tên `tmp_` cho file dùng một lần. Dựng `fxprobe01` từ scaffold rỗng cộng ba ảnh test rồi thả tay hai filter từ GUI, gỡ chặn khuôn filter. Đo được: filter trong GUI CapCut quốc tế là namespace khác hẳn 468 mục JianYing, `resource_id` không trùng và cờ `is_vip` không dự đoán được vương miện, nên mục kiểm khoá Pro mất đối chứng dương và chuyển sang trạng thái chặn vì phương pháp. Filter nằm ở bucket `materials.effects` chứ không phải `filters`. Bảy dương tính giả CRLF chứ không phải sáu
+
 Máy lab. Có mở CapCut, không export. Phiên trước là `2026-08-02-2-no-nho-va-filter.md`.
 
 ## Ba luật làm việc mới, đã vào mục 8 của START-HERE

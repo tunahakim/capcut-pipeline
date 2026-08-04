@@ -1,5 +1,7 @@
 # 04/08/2026 phiên 1 — nhãn KIEM, cảnh báo mất mát của shots_dump, rút gọn README
 
+**Tóm tắt:** Đóng nốt phần tài liệu: `read_src.py` bỏ số dòng mặc định thêm `--linenum`; nhãn `[KIEM: ...]` cho 43 script thành cột riêng của `scripts.md` kèm quy ước in tại chỗ, phân bố 12 that / 8 test / 2 mot lan / 21 chua; `shots_dump.py` cảnh báo hai mức thứ bị mất khi dump ra CSV, nghiệm thu 3/3 trên `fxprobe01`, `testV3`, `testV4`; `README.md` rút từ 10536 còn 6208 byte, năm mảnh chỉ có ở đó chuyển thành mục 7 của `ai-reading-channel.md`; thêm `tools/rlog_index_trim.py` chống phình mục lục; xoá 42 file rác và project `fxlab01`. Đo được: mở project bằng GUI làm `draft_content.json` đổi 33 byte dù không sửa gì
+
 Phiên làm việc trên máy lab, không chạm máy render, không export. Mở đầu bằng nhận xét của người dùng rằng cả năm phiên ngày 03/08 đều không có tiến triển về tự động hoá; đối chiếu `INDEX.md` xác nhận đúng: bốn trên năm phiên là công cụ để đọc tài liệu và đo chính kênh đọc đó. Trợ lý đề xuất chuyển thẳng sang Ưu tiên 1, người dùng chọn dứt điểm phần tài liệu trước rồi mới phát triển tiếp, nên phiên này đóng nốt các món tài liệu còn treo.
 
 ## Việc đã làm

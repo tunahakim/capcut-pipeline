@@ -1,5 +1,7 @@
 # Nhat ky phien 03/08/2026 (2) — nghiem thu `frame_audit.py`, dong oracle khoa Pro bang phep go, va luat trich file moi
 
+**Tóm tắt:** Nghiệm thu `frame_audit.py` đạt 3/3 dự đoán chốt trước trên `v2oracle`, mâu thuẫn JSON với pixel 0/8. Đóng đinh oracle khoá Pro bằng phép gỡ: xoá transition 6724227090872275463 thì CapCut cho export thẳng; xoá transition trong GUI không dịch timeline một micro giây nào trên cả 8 shot. Vá `bgblur_frames.py` báo độ phủ mẫu, 3/6 vai trên `v2oracle` và 1/6 trên `testV4`. `shots_dump.py` không giữ hiệu ứng thả tay, mất sạch hai filter của `fxprobe01`. Thay ngưỡng trích file 4 KB bằng ngưỡng ba bậc theo số dòng
+
 May lab. Co mo CapCut, co export that, **co MP4**. Phien truoc la `2026-08-03-1-bgblur-va-oracle-pro.md`.
 
 ## Buoc 1 — `../../tools/frame_audit.py` nghiem thu dat, 3 tren 3
