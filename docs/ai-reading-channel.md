@@ -52,3 +52,15 @@ Bốn file cửa vào `README.md`, `START-HERE.md`, `STATE.md`, `TODO.md` vẫn 
 ## 6. Đường thứ ba, bỏ qua toàn bộ vấn đề này
 
 Agent chạy trực tiếp trên máy và đọc file từ ổ đĩa thì không dính trần lẫn cắt. Việc phẫu thuật tài liệu hàng loạt hợp với loại đó hơn. Trần vẫn giữ để kênh đọc qua GitHub không hỏng.
+
+## 7. Đối chiếu byte và trần đo bằng công cụ
+
+`python tools/repo_bytecheck.py` tự gọi GitHub contents API theo từng thư mục, đối chiếu với file trên đĩa, so `HEAD` cục bộ với `main` trên GitHub để bắt trường hợp quên pull, rồi in đúng năm dòng. Đó là lý do không ai nên gọi contents API bằng công cụ fetch: phản hồi JSON tốn chừng một KB cho mỗi file mà gần hết là URL không ai dùng, và bản thân nó cũng bị cắt như mọi thứ khác. Số byte của blob chỉ nên tồn tại bên trong script chạy trên máy.
+
+Phép đối chiếu byte có **trần chi phí một lượt**: chạy đúng một lần, sạch thì đi tiếp ngay. Khớp tuyệt đối hoặc giải thích được bằng ký tự CR thì im lặng đi tiếp; lệch nhỏ mà không giải thích được thì báo đúng một dòng rồi vẫn làm việc tiếp; chỉ dừng hẳn khi thiếu file trên đĩa hoặc lệch đủ lớn để nghi mất đoạn. Đừng đuổi theo lệch một byte, vì có hai ca dương tính giả đã biết. `reference/describe.json` chứa đúng một ký tự CR nằm trong nội dung nên phép trừ CR báo lệch mà file vẫn nguyên vẹn. Và `tools/docs_audit.py` đếm byte trên đĩa có tính CR, nên với file CRLF nó báo lớn hơn blob đúng bằng số dòng; lệch về phía cảnh báo sớm nên vô hại.
+
+Chế độ markdown của công cụ fetch **chuẩn hoá lại định dạng**, nên tuyệt đối không dùng kết quả fetch để so byte. Muốn so byte thì dùng `repo_bytecheck.py` chạy trên đĩa.
+
+Trần kích thước kiểm bằng `python tools/docs_audit.py`, và từ 03/08/2026 lệnh đó **báo lỗi** khi có file vượt trần chứ không chỉ in nhãn, nên `--baseline` không còn chốt được một mốc chuẩn bẩn. Muốn cho một file vượt trần thì thêm trần riêng tường minh cho nó vào `PER_FILE_BUDGET` kèm lý do, để việc vượt trần là quyết định có ghi lại.
+
+Về cỡ tài liệu: đừng tách quá nhỏ, vì nhiều file vụn khó kiểm soát hơn vài file vừa. Nhắm 10 đến 20 KB mỗi file, chỉ tách khi vượt trần.
