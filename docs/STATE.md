@@ -1,6 +1,6 @@
 # STATE — trạng thái dự án
 
-**Cập nhật 03/08/2026.** File này là **ảnh chụp thì hiện tại**: cái gì đang đúng ngay bây giờ, máy nào có gì, số đo hiện hành là bao nhiêu, đã kiểm chứng tới mức nào. Không có ngày tháng trong thân bài, không có chữ "đã làm", không có việc phải làm. Cách sửa file này là **ghi đè**, không phải thêm vào — đó là cơ chế chống phình, vì một ảnh chụp không dài ra theo thời gian. Trần kích thước là **15 KB**. Việc phải làm nằm ở `TODO.md`, diễn biến và số liệu lịch sử nằm ở `research-log/INDEX.md`, thứ không đổi theo phiên nằm ở `START-HERE.md`.
+**Cập nhật 04/08/2026.** File này là **ảnh chụp thì hiện tại**: cái gì đang đúng ngay bây giờ, máy nào có gì, số đo hiện hành là bao nhiêu, đã kiểm chứng tới mức nào. Không có ngày tháng trong thân bài, không có chữ "đã làm", không có việc phải làm. Cách sửa file này là **ghi đè**, không phải thêm vào — đó là cơ chế chống phình, vì một ảnh chụp không dài ra theo thời gian. Trần kích thước là **15 KB**. Việc phải làm nằm ở `TODO.md`, diễn biến và số liệu lịch sử nằm ở `research-log/INDEX.md`, thứ không đổi theo phiên nằm ở `START-HERE.md`.
 
 ## 1. Tóm tắt một câu
 
@@ -36,7 +36,7 @@ Cache hiệu ứng: mở project 8 shot có 7 transition và 1 effect làm cache
 
 Bản kê hai nhánh ngoài repo, đo ngày 02/08/2026 bằng `tools/data_manifest.py` trên máy lab: `data\` có 144 file 299,7 MB sau khi loại `tmp\` và `archive\`; `vendor\` khối canonical 9 mục 922,1 MB và khối extra 109 mục 39,4 MB; riêng `vendor\Cache_effect` gộp thành một mục rollup 14653 file 424842366 byte. File `manifests/lab.json` nặng 45260 byte. Quét đủ 1261,3 MB kèm hash SHA256 toàn bộ mất khoảng 125 giây khi cache hệ điều hành lạnh và khoảng 20 giây khi cache nóng. Máy render chưa có bản kê.
 
-Catalogue filter JianYing: 468 mục, 300 khoá VIP, 168 free, không mục nào thiếu cờ `is_vip`. Cờ đó **không dự đoán được** khoá Pro trong GUI CapCut bản quốc tế, và `resource_id` của hai namespace không trùng nhau; số đo ở `reference-catalog.md`. Thư mục draft trên máy lab có 14 mục: `.recycle_bin` cộng 13 project. `Test_A_v2` không có thư mục `Timelines\`; `fxlab01`, `testB_CLEAN` và `Test_A_v2` rỗng. Chỉ **`fxprobe01`** có material `type=filter`, hai mục thả tay từ GUI ngày 02/08/2026, nằm trong bucket `materials.effects` trên một track `type=filter` — **không** phải bucket tên `filters`. `bench300` và `parity01` không tồn tại trên máy lab.
+Catalogue filter JianYing: 468 mục, 300 khoá VIP, 168 free, không mục nào thiếu cờ `is_vip`. Cờ đó **không dự đoán được** khoá Pro trong GUI CapCut bản quốc tế, và `resource_id` của hai namespace không trùng nhau; số đo ở `reference-catalog.md`. Thư mục draft trên máy lab có 13 mục: `.recycle_bin` cộng 12 project, sau khi xoá `fxlab01` ngày 04/08/2026. `Test_A_v2` không có thư mục `Timelines\`; `testB_CLEAN` và `Test_A_v2` rỗng. Chỉ **`fxprobe01`** có material `type=filter`, hai mục thả tay từ GUI ngày 02/08/2026, nằm trong bucket `materials.effects` trên một track `type=filter` — **không** phải bucket tên `filters`. `bench300` và `parity01` không tồn tại trên máy lab.
 
 Cờ VIP ở namespace CapCut mặc định, đo 02/08/2026: scene-effect **0 VIP trên 345**, image-intro **0 trên 43**, image-outro **0 trên 23**, image-combo **0 trên 108**. Khoá `is_vip` có mặt trên mọi mục nhưng hằng `false`, và khoá `member` là tên thành viên enum chứ không phải cờ khoá Pro. Quan sát GUI cùng ngày: tab Animation mục Out có rất nhiều mục, đa số đeo dấu Pro kim cương tím, nên **enums không phải catalogue của GUI** và cờ đó không dùng được cho bản quốc tế. Cùng bốn loại ở namespace JianYing thì cờ có phân bố thật: 297/912, 58/95, 54/72, 16/123.
 
@@ -46,7 +46,15 @@ Canvas blur trên bốn project `testV3`, `testV4`, `v2oracle`, `testB`, đo 03/
 
 Cơ chế ghi vết, đếm 03/08/2026 trên 40 file `.py` của `tools/` và `scripts_v1/`: **0 file dùng `logging`**, 38 khối `try`, 39 `except`, 1 `raise`, 62 chỗ `sys.exit`, 0 chỗ `traceback`. Có xử lý lỗi nhưng không ghi vết ra file.
 
-Kênh đọc tài liệu qua GitHub, đo 03/08/2026: `repo_bytecheck.py` cho 134 blob, khớp 134, lệch 0, thiếu 0. Trần công cụ fetch là **10000 token mỗi lượt gọi**, không phải byte: 22296 và 24798 byte tiếng Việt về trọn, 32393 byte JSON bị cắt ở 10544 token. Trần tài liệu nay ba lớp; chi tiết ở `ai-reading-channel.md`.
+Kênh đọc tài liệu qua GitHub, đo 03/08/2026: `repo_bytecheck.py` cho 134 blob, khớp 134, lệch 0, thiếu 0. Trần công cụ fetch là **10000 token mỗi lượt gọi**, không phải byte: 22296 và 24798 byte tiếng Việt về trọn, 32393 byte JSON bị cắt ở 10544 token. Trần tài liệu nay ba lớp; chi tiết ở `ai-reading-channel.md`. Xác nhận thêm 04/08/2026, trọn một phiên từ đầu tới cuối: nội dung người dùng dán thẳng vào hội thoại giữ nguyên văn suốt phiên, trong khi kết quả `crawler` mất khúc giữa chỉ sau một lượt và tự khai số ký tự đã bỏ. Đúng với Claude Opus 5 trên genspark.ai.
+
+Bảng script, đo 04/08/2026: 43 script đang dùng, 26 script lưu trữ, 0 script thiếu docstring. Nhãn mức kiểm chứng khai bằng hậu tố `[KIEM: ...]` trong docstring và hiện thành cột riêng của `scripts.md`: 12 `du lieu that`, 8 `bo test`, 2 `mot lan`, 21 `chua`. Hai mươi mốt nhãn `chua` là do trợ lý không tìm được bằng chứng trong `STATE.md`, không phải bằng chứng rằng script chưa chạy. `scripts.md` nặng 25095 byte, 61 phần trăm trần riêng 40 KB.
+
+`shots_dump.py` nay cảnh báo hai mức khi dump draft ra CSV: `CANH BAO` cho thứ mất hẳn, `GHI CHU` cho thứ đã biết là không thuộc bảng shot, và bucket materials lạ mặc định rơi vào `CANH BAO`. Nghiệm thu 04/08/2026 đạt 3 trên 3 dự đoán chốt trước: `fxprobe01` hai dòng cảnh báo, `testV3` không dòng nào, `testV4` hai dòng.
+
+Mở một project bằng GUI CapCut là **ghi lại `draft_content.json`** kể cả khi không sửa gì: `fxprobe01` đi từ 27423 lên 27456 byte, tăng 33 byte, chỉ vì được mở ra xem; `testV3` và `testV4` không mở nên không đổi byte nào. Đo 04/08/2026.
+
+`README.md` rút từ 10536 xuống 6208 byte sau khi chuyển cơ chế fetch sang `ai-reading-channel.md`, nay chỉ còn luật áp dụng ngay lần fetch đầu. `INDEX.md` có 23 dòng phiên, dưới ngưỡng 30 nên `tools/rlog_index_trim.py` báo chưa cần cắt; cơ chế đã nghiệm thu bằng ngưỡng giả 5, tính đúng 18 dòng phải đẩy và không ghi gì khi chạy thử.
 
 ## 5. Việc đang dở và nợ kỹ thuật
 

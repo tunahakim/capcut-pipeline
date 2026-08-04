@@ -64,3 +64,9 @@ Chế độ markdown của công cụ fetch **chuẩn hoá lại định dạng*
 Trần kích thước kiểm bằng `python tools/docs_audit.py`, và từ 03/08/2026 lệnh đó **báo lỗi** khi có file vượt trần chứ không chỉ in nhãn, nên `--baseline` không còn chốt được một mốc chuẩn bẩn. Muốn cho một file vượt trần thì thêm trần riêng tường minh cho nó vào `PER_FILE_BUDGET` kèm lý do, để việc vượt trần là quyết định có ghi lại.
 
 Về cỡ tài liệu: đừng tách quá nhỏ, vì nhiều file vụn khó kiểm soát hơn vài file vừa. Nhắm 10 đến 20 KB mỗi file, chỉ tách khi vượt trần.
+
+## 8. Xác nhận 04/08/2026 — kênh dán giữ nguyên văn trọn phiên
+
+Phép thử canary ở mục 4 chạy thêm một lần nữa, lần này ở quy mô cả phiên thay vì bốn lượt. Người dùng dán `tools/read_src.py` ở lượt thứ hai và `README.md` ở lượt gần cuối; tới cuối phiên trợ lý vẫn còn nguyên văn cả hai, xác nhận được bằng cách đối chiếu chúng với bản trên đĩa. Cùng phiên đó, kết quả `crawler` khi fetch `docs/research-log/INDEX.md` mất khúc giữa ngay sau một lượt và tự khai số ký tự đã bỏ.
+
+Kết luận giữ nguyên như mục 3 và nay đã đo hai lần: **nội dung người dùng dán thẳng thì không bị cắt, kết quả công cụ fetch thì bị.** Đúng với Claude Opus 5 trên genspark.ai, công cụ `crawler`. Đổi mô hình hoặc đổi giao diện web thì phải đo lại.
