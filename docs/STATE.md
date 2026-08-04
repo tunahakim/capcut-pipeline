@@ -56,6 +56,10 @@ Mở một project bằng GUI CapCut là **ghi lại `draft_content.json`** kể
 
 `README.md` rút từ 10536 xuống 6208 byte sau khi chuyển cơ chế fetch sang `ai-reading-channel.md`, nay chỉ còn luật áp dụng ngay lần fetch đầu. `INDEX.md` có 23 dòng phiên, dưới ngưỡng 30 nên `tools/rlog_index_trim.py` báo chưa cần cắt; cơ chế đã nghiệm thu bằng ngưỡng giả 5, tính đúng 18 dòng phải đẩy và không ghi gì khi chạy thử.
 
+Lớp cấu hình và bộ đọc bảng shot, đo 04/08/2026. `pipeline/config.py` theo lược đồ số **1**: đối chứng âm trên `config.example.json` cho đúng **5** dòng `LOI` in một lượt và mã thoát 2; đối chứng dương trên `config.json` thật của máy lab cho `HOP LE`, **0** cảnh báo, mã thoát 0. `pipeline/core/shotlist.py` đọc bảng năm cột: đối chứng dương trên bộ 8 shot cho `HOP LE` và **0** cảnh báo, tám mốc bắt lưới 100 ms ra 0, 19700, 34700, 48900, 72700, 92000, 106700, 132700 ms, shot cuối đóng bằng tổng 168800 ms cho 36100 ms, ngắn nhất 14,2 giây dài nhất 36,1 giây; đối chứng âm trên bảng sai sáu kiểu cho **6** dòng `LOI` và mã thoát 2, ít hơn dự đoán 10 vì `load()` chỉ kiểm ảnh và transition khi cấu trúc đã sạch.
+
+Thư mục `data\scaffold\` trên máy lab có đúng hai khuôn `testV3_CLEAN` và `v2oracle_CLEAN`, **không có** `scaffold_CLEAN`. Cache hiệu ứng thật là `%LOCALAPPDATA%\CapCut\User Data\Cache\effect` và tồn tại; tên `Cache_effect` ở mục 4 là bản sao trong `vendor\`, hai thứ khác nhau. `data\Test_tool_v3\shots.csv` có đúng ba cột `file, start, end` và 8 dòng.
+
 ## 5. Việc đang dở và nợ kỹ thuật
 
 Không liệt kê ở đây. Danh sách đầy đủ, có ưu tiên và có tiêu chí hoàn thành, nằm ở `TODO.md`. Giữ hai bản song song thì chắc chắn sẽ lệch nhau.
