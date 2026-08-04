@@ -18,7 +18,7 @@ H1, khong sua than bai, va tu doi chieu so byte voi tran nhap tu tools/docs_audi
 
 Luu y thu tu: tieu chi "xoa tay mot dong roi chay tool thi dong do hien lai" chi dat
 duoc SAU khi chay --backfill, vi truoc do nguon duy nhat cua o tom tat chinh la bang.
-[KIEM: chua]
+[KIEM: du lieu that]
 """
 import argparse
 import re

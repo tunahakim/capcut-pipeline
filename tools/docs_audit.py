@@ -51,7 +51,9 @@ BUDGET = 26 * 1024
 # cung ngay, dung cat chu -- cat chu trong nhat ky la pha bang chung. Xem
 # docs/ai-reading-channel.md.
 PER_FILE_BUDGET = {
-    "docs/STATE.md":    15 * 1024,  # chong phinh: anh chup thi hien tai, sua bang ghi de
+    "docs/STATE.md":    25 * 1024,  # noi 04/08/2026 tu 15 KB: van la chong phinh, nhung 15 KB
+                                    # cham tran dung luc ket phien khi khong con ngu canh de rut gon,
+                                    # tuc luat tu no gay ra kieu hong no dinh chan. Rut gon la viec rieng.
     "docs/TODO.md":     25 * 1024,  # noi 04/08/2026: chua dac ta docs_patch.py; cham 25 KB thi tach file
     "docs/scripts.md":  40 * 1024,  # tang DAN: sinh tu dong, dai theo so script
     "docs/reference.md": 40 * 1024, # tang DAN: so tra, day len theo kien thuc da do

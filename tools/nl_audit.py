@@ -16,7 +16,7 @@ file nua, vi vay phai quet ca luot. --fix chi cham file LAN, va chuan hoa ve kie
 chiem da so trong chinh file do chu khong ap mot kieu chung cho ca repo.
 
 Ma thoat: 0 sach; 2 con file LAN hoac file co BOM; 3 da ghi nhung kiem lai that bai.
-[KIEM: chua]
+[KIEM: du lieu that]
 """
 import argparse
 import sys
