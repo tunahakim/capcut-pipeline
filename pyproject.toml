@@ -1,0 +1,13 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "capcut-pipeline"
+version = "0.1.0"
+description = "Dung video documentary bang CapCut Desktop 9.1.0 va capcut-cli 0.15.0"
+requires-python = ">=3.13"
+dependencies = []
+
+[tool.setuptools]
+packages = ["pipeline", "pipeline.core", "pipeline.capcut", "pipeline.steps"]

@@ -1,11 +1,21 @@
 {
-  "_doc": "Chep file nay thanh config.json roi sua. config.json bi gitignore.",
-  "paths": {
-    "data_root": "D:/IT/CapCut/data",
-    "vendor_root": "D:/IT/CapCut/vendor",
+  "schema": 1,
+  "_doc": "Chep file nay thanh config.json roi sua. config.json bi gitignore. Moi duong dan chap nhan bien moi truong kieu %LOCALAPPDATA%.",
+  "project": {
+    "name": "ep07",
     "drafts_dir": "%LOCALAPPDATA%/CapCut/User Data/Projects/com.lveditor.draft",
+    "scaffold": "D:/IT/capcut-lab/data/scaffold/scaffold_CLEAN"
+  },
+  "inputs": {
+    "shotlist": "D:/IT/capcut-lab/data/ep07/ep07.shotlist.tsv",
+    "images_dir": "D:/IT/capcut-lab/data/ep07/images",
+    "narration": "D:/IT/capcut-lab/data/ep07/narration.mp3",
+    "srt": "D:/IT/capcut-lab/data/ep07/narration.srt"
+  },
+  "paths": {
+    "data_root": "D:/IT/capcut-lab/data",
+    "vendor_root": "D:/IT/capcut-lab/vendor",
     "cache_dir": "%LOCALAPPDATA%/CapCut/User Data/Cache/effect",
-    "scaffold": "D:/IT/CapCut/data/scaffold/testV3_CLEAN",
     "ffmpeg": "ffmpeg",
     "ffprobe": "ffprobe",
     "capcut_cli": "capcut"
@@ -15,10 +25,10 @@
     "height": 1080,
     "fps": 30
   },
-  "source_image": {
-    "width": 1376,
-    "height": 768,
-    "normalize_to_canvas": false
+  "timing": {
+    "grid_ms": 100,
+    "tail_ms": 2000,
+    "min_shot_warn_s": 2.0
   },
   "kenburns": {
     "seed": 20260730,
