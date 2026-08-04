@@ -35,8 +35,7 @@ except Exception:
     pass
 
 REPO = da.REPO
-OPS = ("replace", "delete", insert_after_marker := "insert_after",
-       "insert_before", "append", "create")
+OPS = ("replace", "delete", "insert_after", "insert_before", "append", "create")
 NEED = {"replace": ("old", "new"), "delete": ("old",),
         "insert_after": ("anchor", "new"), "insert_before": ("anchor", "new"),
         "append": ("new",), "create": ("new",)}
@@ -215,9 +214,7 @@ def run_spec(spec_path, apply, allow_dirty):
 
     print("")
     for w in warns:
-        print("CANH BAO %s" % w[w.index("]") + 2:] if w.startswith("[") else w)
-    for w in warns:
-        pass
+        print("CANH BAO %s" % w)
     if errs:
         print("=== LOI (%d) -- KHONG SUA FILE NAO ===" % len(errs))
         for x in errs:

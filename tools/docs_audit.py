@@ -15,8 +15,10 @@ hoach nhung chua viet. NGOAI la duong dan co y tro ra ngoai repo, vi du script d
 mot lan trong CAPCUT_LAB. LICHSU la file da xoa ma tai lieu nhac lai nhu qua khu.
 LUUTRU la file da chuyen vao
 _deprecated/ sau khi cau van duoc viet, ma nhat ky chi ghi them nen khong sua lai.
-Nam loai do khong tinh la loi. Loi gom FILE THIEU, TRUNG TEN, MUC THIEU va SAI CHO;
-SAI CHO nghia la file co that nhung nam khac duong dan ma tai lieu ghi.
+Nam loai do khong tinh la loi. Loi gom FILE THIEU, TRUNG TEN, MUC THIEU, SAI CHO,
+VUOT TRAN va PLANNED DA CHET; SAI CHO nghia la file co that nhung nam khac duong dan
+ma tai lieu ghi, con PLANNED DA CHET nghia la entry trong PLANNED tro toi file nay da
+ton tai nen phai xoa khoi PLANNED.
 [KIEM: du lieu that]
 """
 import os, re, sys, json, argparse, datetime
@@ -55,9 +57,8 @@ VALIDATE_EXT   = {".md", ".py"}
 IGNORE = {"file.py", "__init__.py", "capcut_post.py", "scan_paths.py",
           "scripts/pack_vendor.py", "x.mp4", "operations.jsonl"}
 # file da len ke hoach nhung chua viet -- bao rieng, khong tinh la loi
-PLANNED = {"docs/scripts-archive.md", "tools/shots_dump.py", "tools/data_manifest.py",
-           "tools/docs_size.py", "tools/probe_drafts.py",
-           "pipeline/__main__.py", "tools/docs_patch.py", "tools/scaffold_make.py"}
+PLANNED = {"docs/scripts-archive.md", "tools/docs_size.py", "tools/probe_drafts.py",
+           "pipeline/__main__.py", "tools/scaffold_make.py"}
 # duong dan co y nam NGOAI repo: thu muc lab CAPCUT_LAB, noi de script dung mot lan
 EXTERNAL_PREFIX = ("data/",)
 # file da tung ton tai roi bi xoa; tai lieu nhac lai lich su, khong phai lien ket hong
@@ -208,6 +209,11 @@ def scan():
         if s > cap:
             problems.append(("VUOT TRAN", p, 0, p,
                              "%d byte > tran %d byte" % (s, cap)))
+
+    for pl in sorted(PLANNED):
+        if pl in index:
+            problems.append(("PLANNED DA CHET", pl, 0, pl,
+                             "file da ton tai, xoa khoi PLANNED"))
 
     referenced = {r["target"] for r in refs if r["target"]}
     orphans = [p for p in md_files
