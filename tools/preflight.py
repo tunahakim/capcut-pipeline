@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
-"""
-preflight.py - kiem tra moi truong truoc khi refactor. CHI DOC, khong sua gi.
-Chay:  python preflight.py          (day du, co tinh dung luong thu muc)
-       python preflight.py --fast   (bo qua tinh dung luong, nhanh hon)
+"""preflight.py - kiểm tra môi trường trước khi refactor, chỉ đọc và không sửa gì.
+Hai cách chạy: không tham số thì kiểm đầy đủ và có tính dung lượng thư mục, còn --fast thì bỏ qua phần tính dung lượng nên nhanh hơn.
+Ghi chú: lệnh doctor trong docs/TODO.md sẽ thay hẳn script này, vì doctor đọc file khai phiên bản ghim rồi đối chiếu thứ đang cài và từ chối chạy khi lệch.
 [KIEM: chua]
 """
 import os, sys, shutil, subprocess, pathlib, platform

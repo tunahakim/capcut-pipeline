@@ -1,13 +1,6 @@
 #!/usr/bin/env python3
-"""
-prod_shots.py - sinh shots.csv cho project san xuat that, timing khoa theo file audio.
-Thay the tools/bench_shots.py. Khac biet chinh:
-  - tong thoi luong lay tu ffprobe file audio, khong phai so tron tu bia
-  - moc luu bang SO NGUYEN mili giay, luoi 100 ms, khong dung so thuc
-  - kiem bien SAU khi lam tron, khong phai truoc
-  - hinh hoc tinh theo TUNG anh (KX, KY), chap nhan moi kich thuoc va moi ti le
-  - ghi luon hai cot kx, ky vao shots.csv de lop keyframe dung dung con so do
-  - cot blur sinh theo luat hinh hoc, khong rai ngau nhien
+"""prod_shots.py - sinh shots.csv cho project sản xuất thật, timing khoá cứng theo file audio narration.
+Thay thế tools/bench_shots.py, với sáu khác biệt chính: tổng thời lượng lấy từ ffprobe trên file audio chứ không phải số tròn bịa ra, mốc lưu bằng SỐ NGUYÊN mili giây trên lưới 100 ms chứ không dùng số thực, kiểm biên SAU khi làm tròn chứ không phải trước, hình học tính theo TỪNG ảnh bằng hai hệ số KX và KY nên nhận mọi kích thước cùng mọi tỉ lệ, ghi luôn hai cột kx với ky vào bảng để lớp keyframe dùng đúng con số đó, và cột blur sinh theo luật hình học chứ không rải ngẫu nhiên.
 [KIEM: du lieu that]
 """
 import argparse, csv, math, random, re, subprocess, sys

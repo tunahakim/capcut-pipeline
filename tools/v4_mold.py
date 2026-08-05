@@ -1,24 +1,10 @@
 #!/usr/bin/env python3
-r"""
-v4_mold.py --project <project-dir> [--out <mold.json>] [--pick <ten|rid>]
-           [--write] [--dump] [--capcut-version X]
-
-Boc khuon material "filter" do CHINH CAPCUT ghi ra (phep thu oracle), luu thanh
-file khuon de Python dap lai. MAC DINH CHI DIFF, khong ghi de; muon ghi de phai
-them --write.
-
-Khuon co bon khoi: _meta, track, segment, material. Khi diff, _meta bi bo qua
-hoan toan, phan con lai chia lam ba nhom:
-  BAT BUOC     lech la bao do va ma thoat 2. Mot key co ben nay thieu ben kia
-               LUON tinh la BAT BUOC, ke ca key dinh danh, vi do la troi schema.
-  MAY/PROJECT  material.path va segment.target_timerange.duration.
-  DINH DANH    id, material_id, effect_id, resource_id, third_resource_id,
-               name, category_id, category_name, request_id, md5.
-
-List duoc coi la mot la, so nguyen khoi chu khong di vao trong.
-
-Ma thoat: 0 sach hoac da ghi, 1 khong chay duoc, 2 co lech nhom BAT BUOC.
-Luu y argparse cung tra 2 khi thieu tham so bat buoc -- trung so, khac nghia.
+r"""v4_mold.py - bóc khuôn material filter do CHÍNH CAPCUT ghi ra, tức một phép thử oracle, rồi lưu thành file khuôn để lớp Python đắp lại.
+MẶC ĐỊNH CHỈ DIFF và không ghi đè, muốn ghi đè phải thêm --write.
+Khuôn có bốn khối là _meta, track, segment và material. Khi diff thì _meta bị bỏ qua hoàn toàn, phần còn lại chia làm ba nhóm: nhóm BẮT BUỘC hễ lệch là báo đỏ và mã thoát 2, và một khoá có bên này thiếu bên kia LUÔN tính là bắt buộc kể cả khoá định danh vì đó là trôi lược đồ; nhóm MÁY hoặc PROJECT gồm material.path cùng segment.target_timerange.duration; nhóm ĐỊNH DANH gồm id, material_id, effect_id, resource_id, third_resource_id, name, category_id, category_name, request_id và md5.
+List được coi là một lá, so nguyên khối chứ không đi vào trong.
+Vào: --project thư mục project, tuỳ chọn --out đường dẫn khuôn, --pick chọn theo tên hoặc resource_id, --dump in ra, --capcut-version đổi phiên bản.
+Mã thoát: 0 sạch hoặc đã ghi, 1 không chạy được, 2 có lệch ở nhóm BẮT BUỘC; lưu ý argparse cũng trả 2 khi thiếu tham số bắt buộc nên trùng số nhưng khác nghĩa.
 [KIEM: chua]
 """
 import argparse, datetime, json, pathlib, platform, sys

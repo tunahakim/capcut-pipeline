@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""rlog_index_trim.py -- giu bang trong docs/research-log/INDEX.md o toi da N phien gan nhat, phan cu hon day sang INDEX-archive.md.
-Mac dinh CHAY THU khong ghi gi; them --apply de ghi. --limit doi nguong, mac dinh 30.
-Vi du: python tools/rlog_index_trim.py --limit 30 --apply
+"""rlog_index_trim.py - giữ bảng trong docs/research-log/INDEX.md ở tối đa N phiên gần nhất, phần cũ hơn đẩy sang docs/research-log/INDEX-archive.md.
+Mặc định CHẠY THỬ và không ghi gì, thêm --apply để ghi thật; --limit đổi ngưỡng và mặc định là 30.
+Ví dụ: python tools/rlog_index_trim.py --limit 30 --apply
 [KIEM: bo test]
 """
 import argparse, os, sys

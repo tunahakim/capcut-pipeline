@@ -1,4 +1,9 @@
-"""Doc ma nguon theo nguong ba bac: tu chon in tron hay trich dong roi ghi UTF-8 va mo Notepad. Mac dinh KHONG in so dong; --grep tu bat lai, --linenum bat tay. [KIEM: bo test]"""
+"""read_src.py - đọc mã nguồn theo ngưỡng ba bậc: tự chọn giữa in trọn và trích dòng, rồi ghi kết quả ra file UTF-8 trong thư mục tmp và mở Notepad.
+Ngưỡng nằm trong mã của công cụ chứ không nằm ở người, và đo bằng số dòng chứ không bằng byte, vì thứ quyết định giá trị của việc trích là bao nhiêu dòng loại được chứ không phải file nặng bao nhiêu.
+Công cụ in rõ đã chọn nhánh nào cùng vì sao, và in mỗi khoảng bị bỏ qua kèm số dòng đã bỏ; dấu khoảng bị bỏ qua là phần quan trọng nhất vì nó ngăn việc kết luận nhầm rằng một đoạn mã không tồn tại.
+Mặc định KHÔNG in số dòng, --grep tự bật lại, --linenum bật tay.
+[KIEM: bo test]
+"""
 
 import argparse
 import datetime

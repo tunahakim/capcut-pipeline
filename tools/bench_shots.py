@@ -1,19 +1,8 @@
 #!/usr/bin/env python3
-"""
-bench_shots.py - sinh shots.csv cho project benchmark va nhan ban anh nguon.
-
-Muc dich: dac ta mot project ~60 phut du hieu ung de do suc may render.
-Day la ban sinh shots.csv dau tien cua du an; luoc do cot o day la HOP DONG
-dau vao tam thoi cho pipeline/ va la dich cho tools/shots_dump.py doc nguoc.
-
-QUY TAC THOI GIAN - doc ky truoc khi sua:
-  30 fps -> 1 frame = 33333.333... us, KHONG tron mili giay.
-  capcut-cli nhan tham so giay voi 3 chu so thap phan.
-  => Moc an toan = BOI SO CUA 0.1 GIAY = 3 frame = 100000 us chan.
-  Moi moc sinh ra o day deu la boi so cua 0.1 giay. Don vi noi bo la "phan muoi giay".
-
-Cach dung:
-  python tools/bench_shots.py --src <thu-muc-anh> --assets <thu-muc-copy> --out <shots.csv>
+"""bench_shots.py - sinh shots.csv cho project benchmark và nhân bản ảnh nguồn, nhằm đặc tả một project dài chừng sáu mươi phút đủ hiệu ứng để đo sức máy render.
+Đây là bản sinh shots.csv đầu tiên của dự án, nên lược đồ cột ở đây là hợp đồng đầu vào tạm thời cho pipeline và là đích để tools/shots_dump.py đọc ngược.
+Quy tắc thời gian, đọc kỹ trước khi sửa: ở 30 fps một frame là 33333,333 micro giây nên không tròn mili giây, còn capcut-cli chỉ nhận tham số giây với ba chữ số thập phân, vì vậy mốc an toàn là bội số của 0,1 giây tức đúng 3 frame và đúng 100000 micro giây; mọi mốc sinh ra ở đây đều là bội số của 0,1 giây và đơn vị nội bộ là phần mười giây.
+Vào: --src thư mục ảnh, --assets thư mục sao chép ra, --out đường dẫn shots.csv.
 [KIEM: mot lan]
 """
 import argparse, csv, pathlib, random, shutil, sys

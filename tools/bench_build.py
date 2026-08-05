@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
-"""
-bench_build.py <project-dir> <shots.csv> <assets-dir>
-Khau CLI cua project benchmark. CHAY TRUOC bench_kb.py.
-Sau script nay TUYET DOI khong chay them lenh ghi nao cua CLI.
+"""bench_build.py - khâu gọi capcut-cli của project benchmark, chạy TRƯỚC tools/bench_kb.py.
+Sau script này TUYỆT ĐỐI không chạy thêm lệnh ghi nào của CLI, vì lớp Python sẽ ghi cả bốn file còn CLI không biết thư mục Timelines tồn tại.
+Vào: đường dẫn project, file shots.csv và thư mục ảnh, cả ba là tham số vị trí.
 [KIEM: chua]
 """
 import csv, json, os, pathlib, subprocess, sys, time

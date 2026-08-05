@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
-"""
-bench_fixkb.py <shots.csv>
-Kep bon cot kb_x/kb_y ve trong gioi han le, TINH TREN GIA TRI DA LAM TRON.
-Ly do ton tai: sinh so trong bo nho thi hop le, nhung "%.6f" co the lam tron
-LEN va day gia tri vuot mep. Chi cot kb_* bi sua; cac cot khac giu nguyen.
+"""bench_fixkb.py - kẹp bốn cột kb_x và kb_y của shots.csv về trong giới hạn lề, tính TRÊN GIÁ TRỊ ĐÃ LÀM TRÒN.
+Lý do tồn tại: một giá trị sinh trong bộ nhớ thì hợp lệ, nhưng định dạng sáu chữ số thập phân có thể làm tròn LÊN và đẩy nó vượt mép canvas, nên phải làm tròn rồi mới kiểm và kẹp chứ không kiểm trước.
+Chỉ các cột kb_ bị sửa, mọi cột khác giữ nguyên nguyên văn.
 [KIEM: chua]
 """
 import csv, math, pathlib, shutil, sys

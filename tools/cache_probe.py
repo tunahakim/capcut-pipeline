@@ -1,10 +1,7 @@
 #!/usr/bin/env python3
-"""
-cache_probe.py - chot 2 cau hoi ve Cache/effect:
-  1. ten md5 la FILE hay THU MUC  -> quyet dinh cach viet lai fx_audit.py
-  2. md5 trong enums.json co khop md5 CapCut thuc dung khong
-     -> neu KHONG thi ket luan "CapCut resolve theo md5" o VIII.5 phai sua
-Chi doc, khong sua gi.
+"""cache_probe.py - chốt hai câu hỏi về thư mục cache hiệu ứng của CapCut, chỉ đọc và không sửa gì.
+Câu một: tên md5 là FILE hay THƯ MỤC, vì câu trả lời quyết định cách viết lại scripts_v1/fx_audit.py.
+Câu hai: md5 trong enums có khớp md5 mà CapCut thực dùng hay không, vì nếu không thì kết luận CapCut resolve tài nguyên theo md5 ở mục VIII.5 phải sửa.
 [KIEM: bo test]
 """
 import json, os, pathlib, re, subprocess, sys, time

@@ -1,13 +1,7 @@
 #!/usr/bin/env python3
-"""
-bench_kb.py <project-dir> <shots.csv>
-Lop Python cua project benchmark. CHAY SAU bench_build.py.
-Khong viet lai bo sinh keyframe: nap scripts_v1/kb_apply.py roi thay PLAN
-bang tham so Ken Burns doc tu shots.csv, va nap GEO tu hai cot kx, ky khi CSV
-co san hai cot do. Moi logic keyframe, bit 4096 va
-ghi du 4 file deu do kb_apply.py lo, giu nguyen duong di da kiem chung.
-
-SAU SCRIPT NAY TUYET DOI KHONG CHAY THEM LENH GHI NAO CUA CLI.
+"""bench_kb.py - lớp Python sinh keyframe của project benchmark, chạy SAU tools/bench_build.py.
+Không viết lại bộ sinh keyframe: nạp scripts_v1/kb_apply.py rồi thay PLAN bằng tham số Ken Burns đọc từ shots.csv, và nạp GEO từ hai cột kx với ky khi bảng có sẵn hai cột đó, nhờ vậy mọi logic keyframe cùng bit 4096 và việc ghi đủ bốn file đều do kb_apply.py lo theo đường đã kiểm chứng.
+SAU SCRIPT NÀY TUYỆT ĐỐI KHÔNG CHẠY THÊM LỆNH GHI NÀO CỦA CLI.
 [KIEM: chua]
 """
 import contextlib, csv, importlib.util, io, os, pathlib, sys, time

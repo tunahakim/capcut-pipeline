@@ -1,21 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-r"""
-tools/nl_audit.py -- quet ky tu xuong dong cua moi file van ban trong repo, bat file
-LAN CRLF voi LF va file co BOM, va chuan hoa duoc bang --fix.
-
-  python tools/nl_audit.py                 # quet, khong ghi gi
-  python tools/nl_audit.py --all            # in ca file sach
-  python tools/nl_audit.py --fix            # chay thu che do chuan hoa
-  python tools/nl_audit.py --fix --apply    # ghi that, ve newline chiem da so tung file
-
-Ly do ton tai: moi tool va tai lieu trong repo deu theo khuon "do file dang dung CRLF
-hay LF roi doi khuon so khop cho khop", nen mot file LAN hai kieu se lam tools/docs_patch.py
-va tools/rlog_index.py dung lai. Chet o file dau tien thi khong ai biet con bao nhieu
-file nua, vi vay phai quet ca luot. --fix chi cham file LAN, va chuan hoa ve kieu
-chiem da so trong chinh file do chu khong ap mot kieu chung cho ca repo.
-
-Ma thoat: 0 sach; 2 con file LAN hoac file co BOM; 3 da ghi nhung kiem lai that bai.
+r"""nl_audit.py - quét ký tự xuống dòng của mọi file văn bản trong repo, bắt file LẪN CRLF với LF cùng file có BOM, và chuẩn hoá được bằng --fix.
+Bốn cách chạy: không tham số thì chỉ quét và không ghi gì, --all in cả file sạch, --fix chạy thử chế độ chuẩn hoá, --fix --apply ghi thật về kiểu xuống dòng chiếm đa số trong từng file.
+Lý do tồn tại: mọi tool và tài liệu trong repo đều theo khuôn đo file đang dùng CRLF hay LF rồi đổi khuôn so khớp cho khớp, nên một file lẫn hai kiểu sẽ làm tools/docs_patch.py cùng tools/rlog_index.py dừng lại; chết ở file đầu tiên thì không ai biết còn bao nhiêu file nữa, vì vậy phải quét cả lượt.
+--fix chỉ chạm file lẫn, và chuẩn hoá về kiểu chiếm đa số trong chính file đó chứ không áp một kiểu chung cho cả repo.
+Mã thoát: 0 sạch, 2 còn file lẫn hoặc file có BOM, 3 đã ghi nhưng kiểm lại thất bại.
 [KIEM: du lieu that]
 """
 import argparse

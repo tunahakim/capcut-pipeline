@@ -1,4 +1,7 @@
-"""Do duong di cua chu co dau qua console va qua pipe, doi chieu bang codepoint. [KIEM: bo test]"""
+"""enc_probe.py - đo đường đi của chữ có dấu qua console và qua pipe rồi đối chiếu bằng codepoint, để biết khâu nào làm hỏng mã hoá.
+Kết luận đã đo được ngày 04/08/2026 và ghi ở mục 8 của docs/START-HERE.md: in thẳng ra console thì sạch dù code page là 437 vì Python ghi bằng WriteConsoleW, còn khi stdout bị pipe thì Python tụt về mã hoá theo locale và chết bằng UnicodeEncodeError ở chữ có dấu đầu tiên.
+[KIEM: bo test]
+"""
 import argparse
 import locale
 import os

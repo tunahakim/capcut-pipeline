@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""filt_enum.py - xem catalogue filter ca hai namespace + tra ID da biet + kiem cache. [KIEM: chua]"""
+"""filt_enum.py - xem catalogue filter của cả hai namespace CapCut và JianYing, tra một resource_id đã biết, và kiểm xem tài nguyên có mặt trong thư mục cache hay chưa.
+Lưu ý đã kiểm chứng bằng oracle: cờ is_vip trong catalogue KHÔNG dự đoán được khoá Pro của CapCut bản quốc tế, và resource_id của hai namespace không trùng nhau nên tra theo tên là bẫy.
+[KIEM: chua]
+"""
 import subprocess, json, pathlib
 import sys
 

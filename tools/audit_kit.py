@@ -1,12 +1,7 @@
 #!/usr/bin/env python3
-r"""
-audit_kit.py - kiem ke thuc trang dia, doi chieu voi Phu luc B cua tai lieu.
-Chi DOC, khong sua gi. Ghi bao cao ra <LAB>\perf\audit_kit.txt
-Tra loi:
-  1. script nao co that tren dia, script nao thieu, script nao thua
-  2. script nao con ghi cung duong dan (doi chieu tuyen bo o muc II.1)
-  3. vendor kit: dung luong that, so file, so muc cache
-  4. bytes tren moi segment cua draft_content.json  <-- so quyet dinh kien truc
+r"""audit_kit.py - kiểm kê thực trạng trên đĩa rồi đối chiếu với Phụ lục B của tài liệu, chỉ đọc và không sửa gì.
+Trả lời bốn câu: script nào có thật trên đĩa cùng script nào thiếu hoặc thừa, script nào còn ghi cứng đường dẫn so với tuyên bố ở mục II.1, bộ vendor có dung lượng thật cùng số file và số mục cache là bao nhiêu, và số byte trên mỗi segment của draft_content.json vì đó là con số quyết định kiến trúc.
+Ra: báo cáo văn bản ghi vào thư mục perf của biến CAPCUT_LAB.
 [KIEM: chua]
 """
 import hashlib, json, os, pathlib, re, sys

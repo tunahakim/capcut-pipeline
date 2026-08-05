@@ -1,8 +1,8 @@
-"""shots_dump.py
-Doc nguoc draft_content.json ra shots.csv voi cot giong bang shot dau vao: idx, image, start_s, dur_s, transition, blur, them kb_s0 va kb_s1 khi moi segment deu co keyframe KFTypeScaleX. Dung chung ham voi shots_crosscheck.py (mat_index, main_track, kf_scales, LEVELS) nen ban dump dua nguoc vao crosscheck phai sach.
-Vao: bat buoc --project la ten project trong thu muc draft cua CapCut hoac duong dan day du, va --out la duong dan file CSV ra; khong tu do.
-Ma thoat 0 khi da ghi hoac file ra da co va giong het; 2 khi file ra da co va khac, khi do KHONG ghi de tru phi them --force; 1 khi sai tham so hoac thieu file.
-Vi du: python tools/shots_dump.py --project testV3 --out D:/IT/capcut-lab/data/tmp/shots_testV3.csv
+"""shots_dump.py - đọc ngược draft_content.json ra shots.csv với cột giống bảng shot đầu vào, gồm idx, image, start_s, dur_s, transition, blur, thêm kb_s0 và kb_s1 khi mọi segment đều có keyframe KFTypeScaleX.
+Dùng chung hàm với tools/shots_crosscheck.py là mat_index, main_track, kf_scales và LEVELS, nên bản dump đưa ngược vào crosscheck phải sạch.
+Cảnh báo hai mức khi có thứ không thuộc bảng shot: CANH BAO cho thứ mất hẳn và cho bucket materials lạ, GHI CHU cho thứ đã biết là không thuộc bảng; script này KHÔNG giữ được hiệu ứng thả tay từ GUI.
+Vào: bắt buộc --project là tên project trong thư mục draft của CapCut hoặc đường dẫn đầy đủ, và --out là đường dẫn file CSV ra, không tự đoán.
+Mã thoát 0 khi đã ghi hoặc file ra đã có và giống hệt; 2 khi file ra đã có và khác, khi đó KHÔNG ghi đè trừ phi thêm --force; 1 khi sai tham số hoặc thiếu file.
 [KIEM: bo test]
 """
 
