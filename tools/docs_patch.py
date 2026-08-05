@@ -464,7 +464,8 @@ def run_spec(spec_path, apply, allow_dirty):
 
     if not allow_dirty:
         r = subprocess.run(["git", "status", "--porcelain"], cwd=str(REPO),
-                           capture_output=True, text=True)
+                           capture_output=True, text=True,
+                           encoding="utf-8", errors="replace")
         if r.returncode != 0:
             print("LOI: khong chay duoc git status")
             return 2
@@ -594,7 +595,8 @@ def selftest():
                       encoding="utf-8", newline="\n")
         r = subprocess.run([sys.executable, str(Path(__file__).resolve()),
                             "--spec", str(sp)] + extra.get(name, []),
-                           capture_output=True, text=True)
+                           capture_output=True, text=True,
+                           encoding="utf-8", errors="replace")
         hit = marker in (r.stdout or "")
         rows.append((name, want, r.returncode, marker, hit))
 
