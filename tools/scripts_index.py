@@ -3,15 +3,26 @@
 r"""
 tools/scripts_index.py -- kiem ke script va sinh bang mo ta cho docs/scripts.md.
 
-  python tools/scripts_index.py           # bao cao, khong ghi gi
-  python tools/scripts_index.py --write   # ghi lai hai vung giua moc trong docs/scripts.md
+  python tools/scripts_index.py                  # bao cao, khong ghi gi
+  python tools/scripts_index.py --brief          # moi script mot dong, dung dau phien
+  python tools/scripts_index.py --find <tu khoa> # tra nguoc tu viec sang cong cu
+  python tools/scripts_index.py --write          # ghi lai hai vung giua moc trong docs/scripts.md
 
 Mo ta lay tu docstring dau file, do la nguon su that duy nhat; bang chi la ban sinh ra.
-Console in ASCII khong dau, file ghi UTF-8 khong BOM.
+File ghi UTF-8 khong BOM. Che do --brief in ca hop do nghe trong khoang 5 KB, dat o
+loat kiem dau phien de tro ly BIET la co cong cu gi truoc khi ngoi viet cai moi; luat
+cu "doc docs/scripts.md khi can" khong kich hoat duoc, vi khong ai di tra danh muc de
+tim thu ma minh khong biet la co. Che do --find tra nguoc tren ten file cong docstring,
+bo dau va khong phan biet hoa thuong, ma thoat 2 khi khong tim thay gi.
 [KIEM: du lieu that]
 """
 import ast, re, sys, unicodedata
 from pathlib import Path
+
+try:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
 
 ROOT  = Path(__file__).resolve().parents[1]
 LIVE  = ("scripts_v1", "tools")
@@ -21,6 +32,10 @@ DOC   = ROOT / "docs" / "scripts.md"
 MARK  = {"live": ("<!-- scripts_index:begin:live -->", "<!-- scripts_index:end:live -->"),
          "arch": ("<!-- scripts_index:begin:arch -->", "<!-- scripts_index:end:arch -->")}
 WRITE = "--write" in sys.argv
+BRIEF = "--brief" in sys.argv
+FIND = (sys.argv[sys.argv.index("--find") + 1]
+        if "--find" in sys.argv and len(sys.argv) > sys.argv.index("--find") + 1
+        else None)
 
 def scan(dirs):
     out = []
@@ -96,6 +111,52 @@ def splice(text, key, block):
 live = scan(LIVE)
 arch = scan(ARCH)
 nodoc = [p for p in live if not doc_of(p)]
+
+def no_accent(s):
+    return "".join(c for c in unicodedata.normalize("NFD", s)
+                   if unicodedata.category(c) != "Mn").lower()
+
+def brief_desc(p, width=76):
+    doc = doc_of(p)
+    lab = cell(doc)[0]
+    if not doc:
+        return lab, "THIEU DOCSTRING"
+    ls = [x.strip() for x in KIEM_RE.sub("", doc).strip().splitlines() if x.strip()]
+    if not ls:
+        return lab, "THIEU MO TA"
+    s = ls[0]
+    for sep in (" -- ", " - "):
+        if sep in s:
+            s = s.split(sep, 1)[1]
+            break
+    else:
+        if len(ls) > 1 and ("<" in s or no_accent(s).startswith(no_accent(p.stem))):
+            s = ls[1]
+    s = " ".join(s.split())
+    return lab, (s[:width] + "..." if len(s) > width else s)
+
+def print_rows(paths):
+    for p in paths:
+        rel = str(p.relative_to(ROOT)).replace("\\", "/")
+        lab, d = brief_desc(p)
+        print("%-32s %-13s %s" % (rel, lab, d))
+
+if FIND:
+    q = no_accent(FIND)
+    hits = [p for p in live + arch
+            if q in no_accent(str(p.relative_to(ROOT)))
+            or q in no_accent(doc_of(p) or "")]
+    print("=== TIM '%s': %d ket qua ===" % (FIND, len(hits)))
+    print_rows(hits)
+    sys.exit(0 if hits else 2)
+
+if BRIEF:
+    print("=== HOP DO NGHE: %d script dang dung ===" % len(live))
+    print_rows(live)
+    print("")
+    print("Tra nguoc: python tools/scripts_index.py --find <tu khoa>. "
+          "Mo ta day du o docs/scripts.md.")
+    sys.exit(0)
 
 print("=== TONG QUAN ===")
 print("script dang dung : %d" % len(live))
