@@ -31,6 +31,7 @@ WINDOWS = [
 
 
 def frames(center):
+    # enc: nhi phan
     r = subprocess.run(["ffmpeg", "-v", "error", "-ss", "%.4f" % (center - SPAN / 2),
                         "-i", str(VID), "-t", "%.4f" % SPAN,
                         "-vf", "scale=%d:%d" % (GRID, GRID),

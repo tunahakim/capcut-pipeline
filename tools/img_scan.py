@@ -22,7 +22,7 @@ EXTS = {".jpg", ".jpeg", ".png"}
 def dims(p):
     r = subprocess.run(["ffprobe", "-v", "error", "-select_streams", "v:0",
                         "-show_entries", "stream=width,height",
-                        "-of", "csv=p=0:s=x", str(p)], capture_output=True, text=True)
+                        "-of", "csv=p=0:s=x", str(p)], capture_output=True, text=True, encoding="utf-8", errors="replace")
     t = r.stdout.strip().split("\n")[0].strip()
     if "x" not in t:
         return None, None

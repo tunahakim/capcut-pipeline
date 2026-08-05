@@ -14,6 +14,7 @@ except Exception:
     pass
 
 def run(a):
+    # enc: tu decode
     p = subprocess.run(a, shell=True, capture_output=True)
     t = p.stdout.decode("utf-8", errors="replace").strip()
     if not t:

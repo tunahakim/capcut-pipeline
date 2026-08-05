@@ -12,6 +12,7 @@ try:
 except Exception:
     pass
 
+# enc: tu decode
 p = subprocess.run("capcut describe", shell=True, capture_output=True)
 d = json.loads(p.stdout.decode("utf-8", errors="replace"))
 cs = d["commands"] if isinstance(d, dict) and "commands" in d else d

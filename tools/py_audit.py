@@ -10,6 +10,7 @@ tools/py_audit.py -- rà mọi file Python trong repo cho khớp luật mã hoá
 Ba chiều của luật mã hoá, đo được ngày 04 và 05 tháng 8 năm 2026 và ghi ở mục 8 của docs/START-HERE.md: chiều ghi ra là mọi script có thể in tiếng Việt phải gọi sys.stdout.reconfigure sang UTF-8 ngay sau phần import, chiều đọc file là mọi open cùng read_text và write_text phải khai encoding tường minh, và chiều thứ ba là mọi lệnh subprocess có bắt output của tiến trình con phải khai encoding utf-8 vì nếu không Python decode theo locale rồi ném UnicodeDecodeError trong thread đọc, khiến kết quả về rỗng mà tiến trình con vẫn chạy đúng.
 Hai phép kiểm docstring: docstring đầu file phải có ít nhất một ký tự có dấu, vì bảng tra viết không dấu thì người đọc không hiểu nổi và chế độ --find của tools/scripts_index.py mất một nửa giá trị; và docstring không được hard wrap, tức mỗi ý là một dòng dài chứ không ngắt dòng theo độ rộng cột.
 Mã thoát 0 khi sạch và 2 khi còn LOI; nhóm CANH BAO không làm đổi mã thoát vì phép đoán hard wrap có thể nhầm với danh sách gạch đầu dòng.
+Chiều thứ ba nhận hai nhãn pragma khai tường minh, viết ở cuối chính dòng gọi hoặc ở dòng ngay trên nó: `# enc: nhi phan` cho lệnh nhận dữ liệu nhị phân như pixel thô rgb24 của ffmpeg, nơi khai encoding sẽ bật chế độ văn bản và phá phép đo; và `# enc: tu decode` cho lệnh bắt bytes rồi tự gọi .decode với mã hoá tường minh, tức đã miễn nhiễm với locale ngay tại chỗ decode. Hai nhãn đó không tính là LOI mà chỉ được đếm ở khối tổng quan, còn nhãn lạ thì vẫn là LOI để không ai khai bừa một chuỗi cho linter im.
 [KIEM: chua]
 """
 import argparse
@@ -29,6 +30,8 @@ except Exception:
 REPO = da.REPO
 DOC_OPEN = ("read_text", "write_text")
 SP_CALL = ("run", "Popen", "check_output", "call", "check_call")
+PRAGMA = ("nhi phan", "tu decode")
+KHAI = {}
 
 
 def co_dau(s):
@@ -59,6 +62,19 @@ def la_true(node):
     return isinstance(node, ast.Constant) and node.value is True
 
 
+def nhan_enc(dong_src, lineno):
+    """Đọc nhãn pragma khai mã hoá ở cuối dòng chứa lệnh gọi hoặc ở dòng ngay trên nó, trả về nhãn đã cắt gọn hoặc None khi lệnh gọi không khai gì."""
+    ung = []
+    if 1 <= lineno <= len(dong_src):
+        ung.append(dong_src[lineno - 1])
+    if lineno >= 2:
+        ung.append(dong_src[lineno - 2])
+    for d in ung:
+        if "# enc:" in d:
+            return d.split("# enc:", 1)[1].strip()
+    return None
+
+
 def quet_file(rel):
     """Quét một file Python và trả về cặp danh sách lỗi và danh sách cảnh báo, mỗi mục là chuỗi mô tả kèm số dòng."""
     p = REPO / rel
@@ -72,6 +88,7 @@ def quet_file(rel):
         return ["loi cu phap dong %s: %s" % (exc.lineno, exc.msg)], []
 
     loi, canh = [], []
+    dong_src = src.split("\n")
     co_reconfigure = "stdout.reconfigure" in src
     co_in = False
 
@@ -92,8 +109,15 @@ def quet_file(rel):
             bat = (la_true(kw(n, "capture_output")) or kw(n, "stdout") is not None
                    or duoi == "check_output")
             if bat and kw(n, "encoding") is None:
-                loi.append("dong %d: %s bat output nhung thieu encoding"
-                           % (n.lineno, ten))
+                nhan = nhan_enc(dong_src, n.lineno)
+                if nhan is None:
+                    loi.append("dong %d: %s bat output nhung thieu encoding"
+                               % (n.lineno, ten))
+                elif nhan in PRAGMA:
+                    KHAI[nhan] = KHAI.get(nhan, 0) + 1
+                else:
+                    loi.append("dong %d: pragma enc khong hop le: %s"
+                               % (n.lineno, nhan))
 
     if co_in and not co_reconfigure:
         loi.append("co lenh print nhung khong goi sys.stdout.reconfigure")
@@ -155,6 +179,8 @@ def main():
     print("file co van de: %d" % n_ban)
     print("LOI           : %d" % n_loi)
     print("CANH BAO      : %d" % n_canh)
+    for nhan in PRAGMA:
+        print("khai enc %-10s: %d" % (nhan, KHAI.get(nhan, 0)))
     return 2 if n_loi else 0
 
 

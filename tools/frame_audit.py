@@ -89,6 +89,7 @@ def bar_frac(w, h, s):
 def grab(t):
     cmd = ["ffmpeg", "-hide_banner", "-loglevel", "error", "-ss", "%.3f" % t,
            "-i", MP4, "-frames:v", "1", "-f", "rawvideo", "-pix_fmt", "gray", "-"]
+    # enc: nhi phan
     p = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     d = p.stdout
     if len(d) < NPIX:

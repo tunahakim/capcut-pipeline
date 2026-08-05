@@ -20,6 +20,7 @@ BLOCK, WARN = [], []
 
 def run(cmd, timeout=30):
     try:
+        # enc: tu decode
         p = subprocess.run(cmd, shell=True, capture_output=True, timeout=timeout)
         out = (p.stdout + b"\n" + p.stderr).decode("utf-8", errors="replace").strip()
         return p.returncode, out

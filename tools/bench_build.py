@@ -24,6 +24,7 @@ T = {}
 
 
 def sh(cmd):
+    # enc: tu decode
     p = subprocess.run(cmd, shell=True, capture_output=True)
     if p.returncode != 0:
         print("\nLOI:", cmd)

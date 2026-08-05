@@ -40,6 +40,7 @@ for i in range(N):
     img = imgs[i % len(imgs)]
     cmd = 'capcut add-video "%s" "%s" "%ss" "%ss" -q' % (PROJ, img, n(i * DUR), n(DUR))
     a = time.perf_counter()
+    # enc: tu decode
     p = subprocess.run(cmd, shell=True, capture_output=True)
     b = time.perf_counter()
     if p.returncode != 0:

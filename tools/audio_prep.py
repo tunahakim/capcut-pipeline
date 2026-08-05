@@ -21,7 +21,7 @@ GRID_MS = 100
 
 def probe_container(p):
     r = subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration",
-                        "-of", "default=nw=1:nk=1", str(p)], capture_output=True, text=True)
+                        "-of", "default=nw=1:nk=1", str(p)], capture_output=True, text=True, encoding="utf-8", errors="replace")
     try:
         return float(r.stdout.strip())
     except ValueError:
@@ -29,7 +29,7 @@ def probe_container(p):
 
 def probe_decoded(p):
     r = subprocess.run(["ffmpeg", "-hide_banner", "-i", str(p), "-f", "null", "-"],
-                       capture_output=True, text=True)
+                       capture_output=True, text=True, encoding="utf-8", errors="replace")
     m = re.findall(r"time=(\d+):(\d+):(\d+\.\d+)", r.stderr)
     if not m:
         return None

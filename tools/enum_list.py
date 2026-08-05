@@ -13,6 +13,7 @@ except Exception:
     pass
 
 def run(args):
+    # enc: tu decode
     p = subprocess.run(args, shell=True, capture_output=True)
     txt = p.stdout.decode('utf-8', errors='replace').strip()
     if not txt:

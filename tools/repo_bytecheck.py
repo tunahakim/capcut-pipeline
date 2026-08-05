@@ -44,7 +44,7 @@ def walk(path, blobs, stat):
 def local_head():
     try:
         r = subprocess.run(["git", "-C", ROOT, "rev-parse", "HEAD"],
-                           capture_output=True, text=True, timeout=30)
+                           capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=30)
         return r.stdout.strip() if r.returncode == 0 else "?"
     except Exception:
         return "?"

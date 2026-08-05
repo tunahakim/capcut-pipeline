@@ -65,6 +65,7 @@ say("")
 say("=" * 78)
 say("2. md5 TRONG ENUMS  vs  md5 CAPCUT THUC DUNG")
 say("=" * 78)
+# enc: tu decode
 p = subprocess.run("capcut enums --transitions", shell=True, capture_output=True)
 enum = {}
 try:
@@ -73,6 +74,7 @@ try:
             enum[str(x["resource_id"])] = x
 except Exception as e:
     say("  khong doc duoc enums: %s" % e)
+# enc: tu decode
 p = subprocess.run("capcut enums --scene-effects", shell=True, capture_output=True)
 try:
     for x in json.loads(p.stdout.decode("utf-8", "replace")):

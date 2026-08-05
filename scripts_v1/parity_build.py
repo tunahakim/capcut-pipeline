@@ -32,6 +32,7 @@ TRANS = ["dissolve", "black-fade", "blur", "gradient-wipe",
 
 
 def sh(cmd, quiet=False):
+    # enc: tu decode
     p = subprocess.run(cmd, shell=True, capture_output=True)
     out = p.stdout.decode("utf-8", errors="replace").strip()
     err = p.stderr.decode("utf-8", errors="replace").strip()

@@ -47,6 +47,7 @@ MARKS = [
 ]
 
 print("=== THONG TIN FILE ===")
+# enc: tu decode
 p = subprocess.run(["ffprobe", "-v", "error", "-select_streams", "v:0",
                     "-show_entries", "stream=width,height,r_frame_rate,nb_frames,codec_name",
                     "-show_entries", "format=duration,size,bit_rate",
@@ -57,6 +58,7 @@ print("  file: %s  (%.1f MB)" % (VID.name, VID.stat().st_size / 1048576))
 
 def avg_rgb(t):
     """Mau trung binh toan khung: thu nho ve 1x1 pixel."""
+    # enc: nhi phan
     r = subprocess.run(["ffmpeg", "-v", "error", "-ss", "%.3f" % t, "-i", str(VID),
                         "-frames:v", "1", "-vf", "scale=1:1", "-f", "rawvideo",
                         "-pix_fmt", "rgb24", "-"], capture_output=True)
@@ -68,6 +70,7 @@ print("\n=== TRICH KHUNG ===")
 rows = []
 for t, name in MARKS:
     out = OUT / (name + ".png")
+    # enc: tu decode
     r = subprocess.run(["ffmpeg", "-y", "-v", "error", "-ss", "%.3f" % t,
                         "-i", str(VID), "-frames:v", "1", str(out)], capture_output=True)
     if not (out.exists() and out.stat().st_size > 0):

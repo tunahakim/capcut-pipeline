@@ -12,6 +12,7 @@ CACHE = pathlib.Path.home() / "AppData/Local/CapCut/User Data/Cache/effect"
 
 
 def run(cmd):
+    # enc: tu decode
     p = subprocess.run(cmd, shell=True, capture_output=True)
     t = p.stdout.decode("utf-8", errors="replace").strip()
     if not t:
