@@ -8,15 +8,15 @@ tools/scripts_index.py -- kiem ke script va sinh bang mo ta cho docs/scripts.md.
   python tools/scripts_index.py --find <tu khoa> # tra nguoc tu viec sang cong cu
   python tools/scripts_index.py --write          # ghi lai hai vung giua moc trong docs/scripts.md
 
-Mo ta lay tu docstring dau file, do la nguon su that duy nhat; bang chi la ban sinh ra.
-File ghi UTF-8 khong BOM. Che do --brief in ca hop do nghe trong khoang 5 KB, dat o
-loat kiem dau phien de tro ly BIET la co cong cu gi truoc khi ngoi viet cai moi; luat
-cu "doc docs/scripts.md khi can" khong kich hoat duoc, vi khong ai di tra danh muc de
-tim thu ma minh khong biet la co. Che do --find tra nguoc tren ten file cong docstring,
-bo dau va khong phan biet hoa thuong, ma thoat 2 khi khong tim thay gi.
+Mô tả lấy từ docstring đầu file, đó là nguồn sự thật duy nhất; bảng chỉ là bản sinh ra.
+File ghi UTF-8 không BOM. Chế độ --brief in cả hộp đồ nghề trong khoảng 5 KB, đặt ở
+loạt kiểm đầu phiên để trợ lý BIẾT là có công cụ gì trước khi ngồi viết cái mới; luật
+cũ bảo đọc danh mục khi cần thì không kích hoạt được, vì không ai đi tra danh mục để
+tìm thứ mà mình không biết là có. Chế độ --find tra ngược trên tên file cộng docstring,
+bỏ dấu và không phân biệt hoa thường, mã thoát 2 khi không tìm thấy gì.
 [KIEM: du lieu that]
 """
-import ast, re, sys, unicodedata
+import ast, re, sys, unicodedata, warnings
 from pathlib import Path
 
 try:
@@ -52,7 +52,9 @@ def doc_of(p):
     txt = p.read_text(encoding="utf-8", errors="replace")
     if p.suffix.lower() == ".py":
         try:
-            return ast.get_docstring(ast.parse(txt))
+            with warnings.catch_warnings():
+                warnings.simplefilter("ignore", SyntaxWarning)
+                return ast.get_docstring(ast.parse(txt))
         except SyntaxError:
             return None
     out = []

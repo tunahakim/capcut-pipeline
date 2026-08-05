@@ -1,0 +1,5 @@
+{
+  "_doc": "Khai mien tru tran kich thuoc tai lieu, CO THOI HAN. Mỗi mục là một lần cố ý cho phép một file vượt trần khai trong PER_FILE_BUDGET của tools/docs_audit.py, kèm lý do và ngày hết hạn. Trước hạn thì tools/docs_audit.py chỉ in khối MIEN TRU TRAN kèm lý do và vẫn thoát 0, nên phiên vẫn đóng được. Qua hạn thì tính là vấn đề thật và mã thoát khác 0, tức món nợ rút gọn tự quay lại đòi. Rút gọn xong file nào thì XOÁ HẲN mục của file đó khỏi đây, đừng để lại, vì người sau sẽ hiểu nhầm là trần đã được nới vĩnh viễn. Cơ chế đọc file này CHƯA ĐƯỢC CÀI trong tools/docs_audit.py tính tới ngày 05/08/2026; đặc tả đầy đủ nằm ở docs/TODO.md.",
+  "schema": 1,
+  "waivers": []
+}
