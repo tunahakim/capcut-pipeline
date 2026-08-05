@@ -1,6 +1,7 @@
 # 03/08/2026 phiên 3 — tối ưu kênh đọc tài liệu của trợ lý
 
 **Tóm tắt:** Cắt chi phí ngữ cảnh khâu đọc tài liệu. Chế độ đọc thô chặn 10000 byte và khai báo sai kích thước file, chỉ chế độ markdown lấy trọn; loại `?plain=1`, jsdelivr, githack. Viết `tools/repo_bytecheck.py` và `tools/read_src.py`; luật so byte đổi thành disk hoặc disk-CR bằng blob, dương tính giả CRLF thứ tám. Thứ tự đọc đầu phiên rút còn bốn file, đọc muộn thay vì nạp sẵn; thêm luật công cụ tái sử dụng phải nằm trong repo và luật chống cứng nhắc
+**Phiên:** 15:26 tối
 
 Phiên này không chạm CapCut. Mục tiêu duy nhất: cắt chi phí ngữ cảnh của khâu "AI đọc tài liệu và tự kiểm đã đọc đủ chưa", vốn ngốn gần hết ngữ cảnh đầu phiên mà không sinh ra kết quả nào.
 

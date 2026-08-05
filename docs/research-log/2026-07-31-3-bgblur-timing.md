@@ -1,6 +1,7 @@
 # Nhật ký nghiên cứu 31/07/2026 (tối) — Đóng ca `bg-blur`, chốt luật timing theo audio
 
 **Tóm tắt:** Đóng ca lỗi im lặng thứ bảy: `bg-blur` không hỏng, quan sát ban đầu sai. Chốt luật bắt lưới 0,1 giây theo ranh giới tuyệt đối, mốc cuối dùng ceil, cộng đuôi cố ý
+**Phiên:** 23:37 tối
 
 ## Kết quả chính
 

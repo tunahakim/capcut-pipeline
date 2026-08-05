@@ -1,6 +1,7 @@
 # Nhật ký phiên 31/07/2026 (chiều) — benchmark máy render, dựng và export 60 phút
 
 **Tóm tắt:** Benchmark máy render: dựng 300 shot đủ hiệu ứng, lệch 0,0 ms, export 60 phút thành công
+**Phiên:** chiều
 
 **Mục tiêu:** dựng một project 60 phút đủ hiệu ứng rồi export thật, để quyết định máy i5-10400F cộng GTX 1080 có đủ làm máy render chính thức không.
 

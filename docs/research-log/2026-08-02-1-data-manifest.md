@@ -1,6 +1,7 @@
 # Nhật ký phiên 02/08/2026 (1) — `data_manifest.py` và bản kê máy lab
 
 **Tóm tắt:** Viết `data_manifest.py` kiểm kê `data\` và `vendor\`, vendor chia hai khối canonical và extra; sinh `manifests/lab.json`; tự kiểm đủ ba mã thoát bằng đối chứng dương, đối chứng âm và ca thiếu file; đo lại thời gian hash khi cache lạnh và cache nóng; xoá Ưu tiên 1 khỏi `../TODO.md`
+**Phiên:** 01:32 khuya
 
 Máy lab. Không mở CapCut, không chạy lệnh CLI, không dựng project nào. Phiên trước là `2026-08-01-4-readme-cua-vao.md`.
 

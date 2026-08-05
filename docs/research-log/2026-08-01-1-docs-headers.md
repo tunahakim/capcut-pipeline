@@ -1,6 +1,7 @@
 # Nhật ký phiên 01/08/2026 (1) — docstring cho toàn bộ script, bảng `scripts.md` tự sinh
 
 **Tóm tắt:** Docstring cho 15 script còn thiếu, chốt luật mô tả sinh tự động từ docstring, `scripts.md` tự sinh bằng `tools/scripts_index.py --write`, dời `split_research_log.py` vào kho lưu trữ, viết `artifacts/README.md`
+**Phiên:** 11:49 sáng
 
 Làm hoàn toàn trên máy lab. Không mở CapCut, không dựng project, không export. Ổ C còn 11,75 GB lúc bắt đầu và phiên này không đụng tới thư mục draft.
 

@@ -1,6 +1,7 @@
 # 03/08/2026, phiên tối 2 — đo cơ chế cắt ngữ cảnh, siết `--baseline`
 
 **Tóm tắt:** Đo cơ chế cắt ngữ cảnh của trợ lý: nội dung người dùng dán thẳng **không** bị cắt, chỉ kết quả công cụ fetch mới bị và chỉ ở lượt đã cũ; canary ba mốc sống sót bốn lượt với ba lần fetch xen giữa. Ghi được bộ ngữ cảnh genspark.ai + Claude Opus 5 + công cụ `crawler`, tách thành `../ai-reading-channel.md`. Trần 26 KB đổi lý do từ giới hạn fetch sang chống phình. `docs_audit.py` đưa vượt trần vào khối `VAN DE`, `--baseline` từ chối ghi khi còn vấn đề, mã thoát 2, thêm `--brief`; nghiệm thu hai chiều, mốc chuẩn không đổi dấu thời gian. Đính chính mục khoá Pro: đối chứng dương đã bị xoá cùng phép gỡ nên tiêu chí xong chưa chạy được
+**Phiên:** 17:44 tối 2
 
 Phiên này gần như không chạm vào CapCut. Nó trả lời một câu hỏi hạ tầng đã âm thầm làm chậm mọi phiên trước, và bịt một lỗi đã gây hỏng hai lần trong ngày.
 

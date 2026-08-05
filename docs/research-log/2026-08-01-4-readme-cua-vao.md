@@ -1,6 +1,7 @@
 # Nhật ký phiên 01/08/2026 (4) — README thành cửa vào, và đo quy mô `data\` cùng `vendor\`
 
 **Tóm tắt:** README viết lại thành cửa vào, đưa vào bản đồ và thứ tự đọc của START-HERE, thêm luật khai báo lỗ hổng đọc; ghi nhận hai lớp cắt nội dung của công cụ fetch; đo quy mô `data\` và `vendor\` trên máy lab chuẩn bị cho `tools/data_manifest.py`
+**Phiên:** khuya
 
 Máy lab. Không dựng project, không export, không chạy lệnh CLI nào. Ba phiên trước trong cùng ngày ở nhật ký (1), (2) và (3).
 
