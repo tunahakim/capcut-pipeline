@@ -20,6 +20,9 @@ VUOT TRAN va PLANNED DA CHET; SAI CHO nghia la file co that nhung nam khac duong
 ma tai lieu ghi, con PLANNED DA CHET nghia la entry trong PLANNED tro toi file nay da
 ton tai nen phai xoa khoi PLANNED.
 
+Miễn trừ trần có thời hạn. Trần khai trong PER_FILE_BUDGET là con số cứng, còn docs/budget-waivers.json chỉ hoãn một lần vượt trần cụ thể tới một ngày hết hạn chứ không nới trần: còn hạn thì file hiện ở khối MIEN TRU TRAN kèm đủ số byte thừa và mã thoát vẫn 0, quá hạn thì thành VAN DE thật, và khi file đã tụt xuống dưới trần mà mục miễn trừ vẫn còn thì tool báo MIEN TRU THUA để người dùng xoá mục đi.
+Hàm cap_for(rel, size) là nguồn sự thật duy nhất về trần, dùng chung cho tool này và tools/docs_patch.py, nên hai tool không thể phán xử lệch nhau; biến môi trường DOCS_WAIVERS trỏ tool sang một bảng miễn trừ khác và chỉ dùng cho phép tự kiểm.
+
 Van newline. Repo co ca file CRLF va file LF, nen mot script va ghi ky tu xuong dong
 kieu LF vao file dang CRLF se lam file do LAN hai kieu, va luc do tools/docs_patch.py
 cung tools/rlog_index.py dung lai. Quet va chuan hoa bang tools/nl_audit.py. Tool nay
@@ -170,6 +173,65 @@ def build_index():
     return index, byname
 
 
+WAIVER_FILE = "docs/budget-waivers.json"
+_WAIVER_CACHE = None
+
+
+def load_waivers():
+    """Đọc bảng miễn trừ trần từ docs/budget-waivers.json, hoặc từ đường dẫn khai trong biến môi trường DOCS_WAIVERS khi cần thử nghiệm, rồi trả về cặp (bảng, lỗi) với bảng là dict đường dẫn tương đối trỏ tới mục miễn trừ."""
+    global _WAIVER_CACHE
+    if _WAIVER_CACHE is not None:
+        return _WAIVER_CACHE
+    p = Path(os.environ.get("DOCS_WAIVERS") or (REPO / WAIVER_FILE))
+    bang, loi = {}, []
+    if not p.is_file():
+        _WAIVER_CACHE = (bang, loi)
+        return _WAIVER_CACHE
+    try:
+        d = json.loads(p.read_text(encoding="utf-8"))
+    except Exception as exc:
+        loi.append("khong doc duoc bang mien tru: %s" % exc)
+        _WAIVER_CACHE = (bang, loi)
+        return _WAIVER_CACHE
+    if d.get("schema") != 1:
+        loi.append("bang mien tru khai schema %r, tool nay chi hieu schema 1"
+                   % d.get("schema"))
+    for i, w in enumerate(d.get("waivers") or []):
+        thieu = [k for k in ("file", "ly_do", "ngay_cap", "het_han") if not w.get(k)]
+        if thieu:
+            loi.append("muc mien tru thu %d thieu khoa: %s" % (i + 1, ", ".join(thieu)))
+            continue
+        rel = Path(w["file"]).as_posix()
+        if rel in bang:
+            loi.append("muc mien tru thu %d trung file %s" % (i + 1, rel))
+            continue
+        try:
+            datetime.date.fromisoformat(w["het_han"])
+        except ValueError:
+            loi.append("muc mien tru cho %s co het_han %r khong dung dang YYYY-MM-DD"
+                       % (rel, w["het_han"]))
+            continue
+        bang[rel] = w
+    _WAIVER_CACHE = (bang, loi)
+    return _WAIVER_CACHE
+
+
+def cap_for(rel, size=None, hom_nay=None):
+    """Nguồn sự thật duy nhất về trần kích thước của một file tài liệu, trả về bộ ba (trần, trạng thái miễn trừ, mục miễn trừ) để tool này và tools/docs_patch.py không bao giờ phán xử lệch nhau."""
+    rel = Path(rel).as_posix()
+    cap = PER_FILE_BUDGET.get(rel, BUDGET)
+    bang, _loi = load_waivers()
+    w = bang.get(rel)
+    if w is None:
+        return cap, "KHONG CO", None
+    hom_nay = hom_nay or datetime.date.today()
+    if datetime.date.fromisoformat(w["het_han"]) < hom_nay:
+        return cap, "QUA HAN", w
+    if size is not None and size <= cap:
+        return cap, "THUA", w
+    return cap, "CON HAN", w
+
+
 def scan():
     index, byname = build_index()
 
@@ -216,13 +278,34 @@ def scan():
                 problems.append(("MUC THIEU", r["src"], r["line"],
                                  r["token"] + " muc " + r["muc"], r["target"]))
 
+    waived = []
+    bang_mt, loi_mt = load_waivers()
+    for msg in loi_mt:
+        problems.append(("MIEN TRU HONG", WAIVER_FILE, 0, WAIVER_FILE, msg))
     for p, s in sorted(sizes.items()):
         if p.startswith(NO_SCAN):
             continue
-        cap = PER_FILE_BUDGET.get(p, BUDGET)
-        if s > cap:
+        cap, tt, w = cap_for(p, s)
+        if tt == "THUA":
+            problems.append(("MIEN TRU THUA", p, 0, p,
+                             "%d byte da xuong duoi tran %d byte, MIEN TRU THUA, "
+                             "xoa muc nay di khoi %s" % (s, cap, WAIVER_FILE)))
+            continue
+        if s <= cap:
+            continue
+        if tt == "CON HAN":
+            waived.append((p, s, cap, w["het_han"], w["ly_do"]))
+        elif tt == "QUA HAN":
+            problems.append(("VUOT TRAN", p, 0, p,
+                             "%d byte > tran %d byte, MIEN TRU HET HAN ngay %s"
+                             % (s, cap, w["het_han"])))
+        else:
             problems.append(("VUOT TRAN", p, 0, p,
                              "%d byte > tran %d byte" % (s, cap)))
+    for rel_mt in sorted(bang_mt):
+        if rel_mt not in sizes:
+            problems.append(("MIEN TRU HONG", WAIVER_FILE, 0, rel_mt,
+                             "khong co file .md nao ten nay trong repo"))
 
     for pl in sorted(PLANNED):
         if pl in index:
@@ -234,7 +317,7 @@ def scan():
                if p not in referenced and not p.startswith(NO_SCAN)]
 
     return {"sizes": sizes, "refs": refs, "problems": problems, "planned": planned,
-            "ngoai": ngoai, "romans": romans, "orphans": orphans,
+            "ngoai": ngoai, "romans": romans, "orphans": orphans, "waived": waived,
             "when": datetime.datetime.now().isoformat(timespec="seconds")}
 
 
@@ -249,13 +332,19 @@ def report(d, brief=False):
                 p.startswith(NO_SCAN) or s <= cap0 * 0.70):
             an += 1
             continue
-        cap = PER_FILE_BUDGET.get(p, BUDGET)
+        cap, tt_mt, w_mt = cap_for(p, s)
         if p.startswith(NO_SCAN):
             tag = "mien tru (legacy)"
         else:
             tag = ("VUOT %d%%" if s > cap else "ok %d%%") % round(s * 100.0 / cap)
             if p in PER_FILE_BUDGET:
                 tag += " (tran rieng %d KB)" % (cap // 1024)
+            if tt_mt == "CON HAN":
+                tag += " -- MIEN TRU toi %s" % w_mt["het_han"]
+            elif tt_mt == "QUA HAN":
+                tag += " -- mien tru HET HAN %s" % w_mt["het_han"]
+            elif tt_mt == "THUA":
+                tag += " -- MIEN TRU THUA, xoa muc di"
         print("%-48s %8d %7.1f  %s" % (p, s, s / 1024.0, tag))
 
     print("")
@@ -269,6 +358,13 @@ def report(d, brief=False):
     print("tro toi file KE HOACH chua viet: %d" % len(d["planned"]))
     print("NGOAI repo, LICH SU, LUU TRU   : %d" % len(d.get("ngoai", [])))
 
+    wv = d.get("waived") or []
+    if wv:
+        print("")
+        print("=== MIEN TRU TRAN (%d) ===" % len(wv))
+        for p, s, cap, han, ly_do in wv:
+            print("  %s  %d byte > tran %d byte, mien tru toi %s" % (p, s, cap, han))
+            print("      ly do: %s" % ly_do)
     print("")
     print("=== VAN DE (%d) ===" % len(d["problems"]))
     if not d["problems"]:

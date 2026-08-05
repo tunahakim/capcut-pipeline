@@ -36,6 +36,8 @@ Khi spec co sua chinh tools/docs_audit.py thi BUDGET, PER_FILE_BUDGET va ca reso
 deu nhap tu ban DA VA TRONG BO NHO, nen mot luot vua them entry PLANNED vua nhac file
 moi khong con bi chan oan.
 
+Trần kích thước không đọc thẳng từ PER_FILE_BUDGET nữa mà hỏi cap_for() của tools/docs_audit.py, nên một file đang có miễn trừ còn hạn trong docs/budget-waivers.json thì vẫn ghi được và chỉ nhận một dòng CANH BAO, còn miễn trừ đã hết hạn thì chặn ghi như mọi lần vượt trần khác.
+
 Ma thoat: 0 xong; 1 sai tham so hay spec khong doc duoc; 2 kiem TRUOC that bai nen
 CHUA GHI FILE NAO; 3 da ghi nhung kiem SAU that bai -- tool KHONG tu hoi phuc, no chi
 in ten file de nguoi dung tu chay git restore.
@@ -44,6 +46,7 @@ in ten file de nguoi dung tu chay git restore.
 import argparse
 import datetime
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -59,7 +62,7 @@ except Exception:
 REPO = da.REPO
 AUDIT_REL = "tools/docs_audit.py"
 NS_NAMES = ("resolve", "strip_fences", "norm", "TOKEN_RE",
-            "BUDGET", "PER_FILE_BUDGET", "NO_SCAN")
+            "BUDGET", "PER_FILE_BUDGET", "NO_SCAN", "cap_for", "WAIVER_FILE")
 OPS = ("replace", "replace_between", "delete", "delete_block", "insert_after",
        "insert_before", "append", "create")
 NEED = {"replace": ("old", "new"), "delete": ("old",), "delete_block": ("anchor",),
@@ -463,8 +466,19 @@ def run_spec(spec_path, apply, allow_dirty):
                                 % (rel, e["name"], tok))
         nbyte = len(body.replace("\n", nl).encode("utf-8"))
         if rel.lower().endswith(".md") and not rel.startswith(ns["NO_SCAN"]):
-            cap = ns["PER_FILE_BUDGET"].get(rel, ns["BUDGET"])
-            if nbyte > cap:
+            cap, tt_mt, w_mt = ns["cap_for"](rel, nbyte)
+            if nbyte <= cap:
+                pass
+            elif tt_mt == "CON HAN":
+                warns.append("[%s] VUOT TRAN %d byte > tran %d byte, nhung %s cho mien "
+                             "tru toi %s: %s"
+                             % (rel, nbyte, cap, ns["WAIVER_FILE"], w_mt["het_han"],
+                                w_mt["ly_do"]))
+            elif tt_mt == "QUA HAN":
+                errs.append("[%s] VUOT TRAN %d byte > tran %d byte, MIEN TRU HET HAN "
+                            "ngay %s -- rut gon tai lieu, hoac gia han co y trong %s"
+                            % (rel, nbyte, cap, w_mt["het_han"], ns["WAIVER_FILE"]))
+            else:
                 errs.append("[%s] VUOT TRAN %d byte > tran %d byte" % (rel, nbyte, cap))
         if rel.lower().endswith(".py"):
             try:
@@ -671,6 +685,29 @@ def selftest():
     cases.append(("probe-di-voi-apply", 1, "khong di cung --apply", {"edits": [
         {"name": "probeapply", "file": "docs/TODO.md", "op": "replace",
          "old": h1, "new": h1}]}))
+    def bang_mt(ten, muc):
+        p = tmp / ("tmp_" + day + "_selftest_wv_" + ten + ".json")
+        p.write_text(json.dumps({"schema": 1, "waivers": muc},
+                                ensure_ascii=False, indent=1),
+                     encoding="utf-8", newline="\n")
+        return str(p)
+
+    wv_rong = bang_mt("rong", [])
+    wv_con = bang_mt("con", [{"file": state_rel, "ngay_cap": "2026-01-01",
+                              "het_han": "2099-12-31",
+                              "ly_do": "ca tu kiem, mien tru con han"}])
+    wv_het = bang_mt("het", [{"file": state_rel, "ngay_cap": "2019-01-01",
+                              "het_han": "2020-01-01",
+                              "ly_do": "ca tu kiem, mien tru da het han"}])
+    cases.append(("mien-tru-con-han", 0, "cho mien tru toi", {"edits": [
+        {"name": "mientrucon", "file": state_rel, "op": "append",
+         "new": "\n" + ("x" * pad)}]}))
+    cases.append(("mien-tru-het-han", 2, "MIEN TRU HET HAN", {"edits": [
+        {"name": "mientruhet", "file": state_rel, "op": "append",
+         "new": "\n" + ("x" * pad)}]}))
+    envs = {"vuot-tran": {"DOCS_WAIVERS": wv_rong},
+            "mien-tru-con-han": {"DOCS_WAIVERS": wv_con},
+            "mien-tru-het-han": {"DOCS_WAIVERS": wv_het}}
     extra = {"probe-duong": ["--probe"], "probe-am": ["--probe"],
              "probe-bom": ["--probe"], "probe-op-la": ["--probe"],
              "probe-di-voi-apply": ["--probe", "--apply"],
@@ -685,10 +722,13 @@ def selftest():
             sp = tmp / ("tmp_" + day + "_selftest_" + name + ".json")
             sp.write_text(json.dumps(spec, ensure_ascii=False, indent=1),
                           encoding="utf-8", newline="\n")
+            moi = dict(os.environ)
+            moi.pop("DOCS_WAIVERS", None)
+            moi.update(envs.get(name, {}))
             r = subprocess.run([sys.executable, str(Path(__file__).resolve()),
                                 "--spec", str(sp)] + extra.get(name, []),
                                capture_output=True, text=True,
-                               encoding="utf-8", errors="replace")
+                               encoding="utf-8", errors="replace", env=moi)
             hit = marker in (r.stdout or "")
             rows.append((name, want, r.returncode, marker, hit))
         ok_vung, a_probe, a_apply = so_hai_duong(tmp, day, h1, h2)

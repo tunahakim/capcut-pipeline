@@ -1,5 +1,12 @@
 {
-  "_doc": "Khai mien tru tran kich thuoc tai lieu, CO THOI HAN. Mỗi mục là một lần cố ý cho phép một file vượt trần khai trong PER_FILE_BUDGET của tools/docs_audit.py, kèm lý do và ngày hết hạn. Trước hạn thì tools/docs_audit.py chỉ in khối MIEN TRU TRAN kèm lý do và vẫn thoát 0, nên phiên vẫn đóng được. Qua hạn thì tính là vấn đề thật và mã thoát khác 0, tức món nợ rút gọn tự quay lại đòi. Rút gọn xong file nào thì XOÁ HẲN mục của file đó khỏi đây, đừng để lại, vì người sau sẽ hiểu nhầm là trần đã được nới vĩnh viễn. Cơ chế đọc file này CHƯA ĐƯỢC CÀI trong tools/docs_audit.py tính tới ngày 05/08/2026; đặc tả đầy đủ nằm ở docs/TODO.md.",
+  "_doc": "Khai mien tru tran kich thuoc tai lieu, CO THOI HAN. Mỗi mục là một lần cố ý cho phép một file vượt trần khai trong PER_FILE_BUDGET của tools/docs_audit.py, kèm lý do và ngày hết hạn. Trước hạn thì tools/docs_audit.py chỉ in khối MIEN TRU TRAN kèm lý do và vẫn thoát 0, nên phiên vẫn đóng được. Qua hạn thì tính là vấn đề thật và mã thoát khác 0, tức món nợ rút gọn tự quay lại đòi. Rút gọn xong file nào thì XOÁ HẲN mục của file đó khỏi đây, đừng để lại, vì người sau sẽ hiểu nhầm là trần đã được nới vĩnh viễn. Cơ chế đọc file này là hàm cap_for() của tools/docs_audit.py, và tools/docs_patch.py gọi đúng hàm đó chứ không tự đọc lại trần, nên hai tool không thể lệch nhau. Miễn trừ KHÔNG nới trần, nó chỉ hoãn: file vẫn hiện đủ số byte thừa ở khối MIEN TRU TRAN. Biến môi trường DOCS_WAIVERS trỏ sang một bảng khác và chỉ dùng cho phép tự kiểm.",
   "schema": 1,
-  "waivers": []
+  "waivers": [
+  {
+   "file": "docs/START-HERE.md",
+   "ly_do": "File ở 27194 byte trên trần 26624 sau khi thêm luật gộp bước vào mục 8. Hướng rút gọn đã chốt: chuyển mọi số đo còn sót sang docs/STATE.md, bỏ ba ngưỡng của tools/read_src.py vì chính câu văn đó nói ngưỡng nằm trong mã, bỏ bản sao thứ ba của PER_FILE_BUDGET.",
+   "ngay_cap": "2026-08-05",
+   "het_han": "2026-08-12"
+  }
+ ]
 }
