@@ -118,12 +118,18 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("file", nargs="?")
     ap.add_argument("--brief", action="store_true")
+    ap.add_argument("--exclude", action="append", metavar="TIEN-TO",
+                    help="bỏ qua mọi file có đường dẫn bắt đầu bằng tiền tố này, lặp lại được; mặc định là _deprecated/")
+    ap.add_argument("--tat-ca", action="store_true", dest="tat_ca",
+                    help="quét cả thư mục vốn bị loại trừ mặc định")
     a = ap.parse_args()
+    bo = [] if a.tat_ca else (a.exclude or ["_deprecated/"])
 
     if a.file:
         ds = [Path(a.file).as_posix()]
     else:
-        ds = [f for f in da.walk_repo() if f.endswith(".py")]
+        ds = [f for f in da.walk_repo()
+              if f.endswith(".py") and not any(f.startswith(x) for x in bo)]
 
     n_loi, n_canh, n_ban = 0, 0, 0
     for rel in ds:
@@ -145,6 +151,7 @@ def main():
     print("")
     print("=== TONG QUAN ===")
     print("file .py quet : %d" % len(ds))
+    print("loai tru      : %s" % (", ".join(bo) if bo else "khong"))
     print("file co van de: %d" % n_ban)
     print("LOI           : %d" % n_loi)
     print("CANH BAO      : %d" % n_canh)
