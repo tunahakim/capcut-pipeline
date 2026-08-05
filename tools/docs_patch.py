@@ -16,8 +16,9 @@ Co --fill-bytes thi --probe tu ghi expect_bytes do duoc nguoc vao spec. Doan dai
 khoang muoi dong tro len bat buoc dung replace_between voi hai neo ngan va duy nhat,
 khong dung replace voi nguyen van doan cu, vi khi do chinh doan dai la cai neo.
 
-Bay thao tac: replace, replace_between, delete, insert_after, insert_before, append,
-create. Op replace_between nhan hai sentinel start va end, moi cai phai khop dung 1
+Tam thao tac: replace, replace_between, delete, delete_block, insert_after,
+insert_before, append, create. Op delete_block nhan anchor la dong dau khoi roi xoa
+tu dau dong do den dong trong ke tiep. Op replace_between nhan hai sentinel start va end, moi cai phai khop dung 1
 lan, end phai nam sau start va khong chong len start, vung bi thay GOM CA hai
 sentinel, va dac ta phai khai truoc expect_bytes la so byte du kien bi thay -- lech
 qua tol_bytes thi dung, vi do la dau hieu sentinel cuoi bat vao cho xa hon du tinh.
@@ -35,7 +36,8 @@ deu nhap tu ban DA VA TRONG BO NHO, nen mot luot vua them entry PLANNED vua nhac
 moi khong con bi chan oan.
 
 Ma thoat: 0 xong; 1 sai tham so hay spec khong doc duoc; 2 kiem TRUOC that bai nen
-CHUA GHI FILE NAO; 3 da ghi nhung kiem SAU that bai, chay git restore ngay.
+CHUA GHI FILE NAO; 3 da ghi nhung kiem SAU that bai -- tool KHONG tu hoi phuc, no chi
+in ten file de nguoi dung tu chay git restore.
 [KIEM: bo test]
 """
 import argparse
@@ -57,9 +59,9 @@ REPO = da.REPO
 AUDIT_REL = "tools/docs_audit.py"
 NS_NAMES = ("resolve", "strip_fences", "norm", "TOKEN_RE",
             "BUDGET", "PER_FILE_BUDGET", "NO_SCAN")
-OPS = ("replace", "replace_between", "delete", "insert_after", "insert_before",
-       "append", "create")
-NEED = {"replace": ("old", "new"), "delete": ("old",),
+OPS = ("replace", "replace_between", "delete", "delete_block", "insert_after",
+       "insert_before", "append", "create")
+NEED = {"replace": ("old", "new"), "delete": ("old",), "delete_block": ("anchor",),
         "replace_between": ("start", "end", "new", "expect_bytes"),
         "insert_after": ("anchor", "new"), "insert_before": ("anchor", "new"),
         "append": ("new",), "create": ("new",)}
@@ -174,6 +176,23 @@ def apply_edits(rel, edits, errs):
                 continue
             body = body[:i] + e["new"] + body[j + len(e_str):]
             checks.append(("one", name, e["new"]))
+            continue
+        if op == "delete_block":
+            anc = e["anchor"]
+            n = body.count(anc)
+            print("  ANCHOR %-22s khop=%d" % (name, n))
+            if n != 1:
+                errs.append("[%s] KHONG KHOP anchor '%s' khop %d lan, phai dung 1"
+                            % (rel, name, n))
+                continue
+            i0 = body.index(anc)
+            ls = body.rfind("\n", 0, i0) + 1
+            j0 = body.find("\n\n", i0)
+            end = len(body) if j0 < 0 else j0 + 2
+            print("  XOA KHOI %-20s %d byte, tu dau dong den dong trong ke tiep"
+                  % (name, len(body[ls:end].encode("utf-8"))))
+            body = body[:ls] + body[end:]
+            checks.append(("gone", name, anc))
             continue
         key = "old" if op in ("replace", "delete") else "anchor"
         src_s = e[key]
@@ -367,6 +386,12 @@ def run_spec(spec_path, apply, allow_dirty):
         for e in groups[rel]:
             if "new" not in e:
                 continue
+            nb = len(e["new"].encode("utf-8"))
+            if (rel.lower().endswith(".md") and nb >= 400
+                    and not any(ord(c) > 127 for c in e["new"])):
+                warns.append("[%s/%s] %d byte ghi vao file .md ma khong co ky tu co "
+                             "dau nao -- tieng Viet phai co dau"
+                             % (rel, e["name"], nb))
             for lineno, tok, st, tgt in scan_new_text(e["new"], rel, index, byname, ns):
                 if ns["norm"](tok) in allow:
                     print("  MIEN TRU %s (khai trong allow_paths)" % tok)
@@ -505,7 +530,24 @@ def selftest():
     cases.append(("probe-am", 2, "chan doan", {"edits": [
         {"name": "probe2", "file": "docs/TODO.md", "op": "replace",
          "old": "ANCHOR KHONG TON TAI 20260805 xyz"}]}))
-    extra = {"probe-duong": ["--probe"], "probe-am": ["--probe"]}
+    blk = REPO / ("_selftest_block_%s.txt" % day)
+    blk.write_text("# thu nghiem\n\n## muc mot\n\ndong dau khoi 20260805\n"
+                   "dong hai cua khoi\n\n## muc hai\n\nnoi dung cuoi\n",
+                   encoding="utf-8", newline="\n")
+    sc3 = REPO / ("_selftest_ma3_%s.txt" % day)
+    sc3.write_text("ALPHA20260805\nBETA20260805\n", encoding="utf-8", newline="\n")
+    cases.append(("delete-block", 0, "DA GHI 1 FILE, KIEM SAU SACH", {"edits": [
+        {"name": "xoakhoi", "file": blk.name, "op": "delete_block",
+         "anchor": "dong dau khoi 20260805"}]}))
+    cases.append(("md-khong-dau", 0, "khong co ky tu co dau", {"edits": [
+        {"name": "khongdau", "file": "docs/TODO.md", "op": "append",
+         "new": "\n" + ("z " * 300)}]}))
+    cases.append(("ma-thoat-3", 3, "KIEM SAU THAT BAI", {"edits": [
+        {"name": "trung", "file": sc3.name, "op": "replace",
+         "old": "ALPHA20260805", "new": "BETA20260805"}]}))
+    extra = {"probe-duong": ["--probe"], "probe-am": ["--probe"],
+             "delete-block": ["--apply", "--allow-dirty"],
+             "ma-thoat-3": ["--apply", "--allow-dirty"]}
 
     rows = []
     for name, want, marker, spec in cases:
@@ -517,6 +559,12 @@ def selftest():
                            capture_output=True, text=True)
         hit = marker in (r.stdout or "")
         rows.append((name, want, r.returncode, marker, hit))
+
+    for _p in (blk, sc3):
+        try:
+            _p.unlink()
+        except OSError:
+            pass
 
     print("")
     print("=== SELFTEST docs_patch ===")
@@ -534,7 +582,6 @@ def selftest():
               % (name, want, got, marker, "co" if hit else "KHONG",
                  "OK" if okc else "THAT BAI"))
     print("")
-    print("ma thoat 3 (ghi xong nhung kiem sau that bai): KHONG dung duoc ca thu, CHUA KIEM CHUNG")
     print("KET QUA: %d/%d ca dat" % (len(rows) - bad, len(rows)))
     return 0 if bad == 0 else 2
 
