@@ -4,6 +4,7 @@ Mỗi phiên làm việc một file, tên theo quy ước `<ngày>-<số thứ t
 
 | Phiên | File | Nội dung chính |
 |---|---|---|
+| 05/08-4 05/08-4 chiều | `2026-08-05-4-pragma-enc-va-docstring-tools.md` | Đóng nhóm 21 chỗ subprocess thiếu encoding bằng 6 chỗ sửa thật cộng 15 chỗ khai nhãn pragma, chuyển reference/describe.json sang UTF-8 không BOM, viết lại 15 docstring trong tools/, sửa tools/repo_bytecheck.py nuốt lỗi 403, py_audit đi từ 53 xuống 16 LOI. |
 | 05/08-3 chiều | `2026-08-05-3-vet-state-va-nhom-reconfigure.md` | Truy nguyên và vá ba đoạn bị lượt vá kết phiên trước xoá mất khỏi `docs/STATE.md`, rồi đóng nhóm 42 script thiếu `sys.stdout.reconfigure` bằng một spec sinh tự động. |
 | 05/08-2 trưa | `2026-08-05-2-mien-tru-tran-va-dong-phien.md` | Cài cơ chế miễn trừ trần có hạn qua `cap_for()` dùng chung hai tool, hoàn tất dòng khai Phiên cho 26 file nhật ký, và viết `tools/py_audit.py` đo được 136 lỗi mã hoá đang chờ sửa. |
 | 05/08-1 khuya | `2026-08-05-1-docs-patch-probe-hop-do-nghe.md` | Trả nợ công cụ trọn cụm Một phần đầu: `tools/docs_patch.py` lên tám op và mười lăm ca selftest với mã thoát 3 đã nghiệm thu, thêm `--probe` cùng `content_file` để tách phép đo neo khỏi lượt viết nội dung, và `tools/scripts_index.py` có `--brief` với `--find` để trợ lý biết hộp đồ nghề tồn tại ngay từ lượt đầu. |
@@ -33,8 +34,9 @@ Mỗi phiên làm việc một file, tên theo quy ước `<ngày>-<số thứ t
 | 29/07-3 (v7) | `2026-07-29-3-v7.md` | Chuẩn hoá `CAPCUT_LAB`, đóng vendor kit, chặn updater, dựng mốc vàng parity |
 | 29/07-2 (v6) | `2026-07-29-2-v6.md` | Export MP4 thật lần đầu, chặn bởi khoá Pro, đo từng khung, `cube` ra cắt cứng |
 | 29/07-1 (v5) | `2026-07-29-1-v5.md` | Lớp filter bằng Python, quy tắc cache-first, bỏ hẳn `add-filter` |
-| 28/07-1 | `2026-07-28-1-mo-dau.md` | Quyết định giữ CapCut, hệ toạ độ NDC, công thức lề, ba lỗi im lặng đầu tiên |
 
 Bốn file của ngày 28 và 29/07 vốn là phụ lục E1 tới E4 chép sang từ `../legacy/v0.8-full.md`, chưa được viết lại, nên văn phong khác các phiên sau.
 
 Số liệu trong nhật ký là số **tại thời điểm phiên đó**. Khi một con số bị đính chính ở phiên sau, phiên cũ được thêm một đoạn "Đính chính" trỏ tới phiên đã sửa, chứ không sửa lặng lẽ. Nguồn số hiện hành luôn là `../reference.md` và `../STATE.md`.
+
+Cac phien cu hon nam o [`INDEX-archive.md`](INDEX-archive.md).

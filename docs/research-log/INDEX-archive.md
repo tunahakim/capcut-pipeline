@@ -4,3 +4,4 @@ Các phiên cũ hơn ba mươi phiên gần nhất, đẩy sang đây bằng `py
 
 | Phiên | File | Nội dung chính |
 |---|---|---|
+| 28/07-1 | `2026-07-28-1-mo-dau.md` | Quyết định giữ CapCut, hệ toạ độ NDC, công thức lề, ba lỗi im lặng đầu tiên |
