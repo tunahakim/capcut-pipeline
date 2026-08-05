@@ -3,9 +3,18 @@
 r"""
 tools/docs_patch.py -- va tai lieu va ma nguon theo dac ta JSON, sau chot an toan.
 
-  python tools/docs_patch.py --spec <file.json>           # chay thu, KHONG ghi
-  python tools/docs_patch.py --spec <file.json> --apply    # ghi that
-  python tools/docs_patch.py --selftest                    # tu kiem bay ca
+  python tools/docs_patch.py --spec <file.json> --probe    # chi dem neo, khong ghi
+  python tools/docs_patch.py --spec <file.json>            # chay thu, KHONG ghi
+  python tools/docs_patch.py --spec <file.json> --apply     # ghi that
+  python tools/docs_patch.py --selftest                     # tu kiem moi ca
+
+Quy trinh chuan cho luot va dai: luot mot chi phat spec ke hoach gom neo ngan cong
+khoa content_file tro toi mot file trong thu muc tam CHUA ton tai, roi chay --probe
+cho re; luot hai moi viet noi dung moi ra dung file do roi --apply. Noi dung moi nam
+tren dia chu khong nam trong lich su hoi thoai, nen neo hong thi chi phat lai neo.
+Co --fill-bytes thi --probe tu ghi expect_bytes do duoc nguoc vao spec. Doan dai tu
+khoang muoi dong tro len bat buoc dung replace_between voi hai neo ngan va duy nhat,
+khong dung replace voi nguyen van doan cu, vi khi do chinh doan dai la cai neo.
 
 Bay thao tac: replace, replace_between, delete, insert_after, insert_before, append,
 create. Op replace_between nhan hai sentinel start va end, moi cai phai khop dung 1
@@ -190,6 +199,89 @@ def apply_edits(rel, edits, errs):
     return body, nl, checks
 
 
+def diag(body, s, lab):
+    """In chan doan khi mot neo khong khop dung mot lan."""
+    lines = body.split("\n")
+    first = (s.split("\n")[0] or "").strip()
+    if first:
+        hits = [k + 1 for k, ln in enumerate(lines) if first in ln]
+        print("    chan doan %s: dong dau khop %d dong, vi tri %s"
+              % (lab, len(hits), hits[:6]))
+    fs = " ".join(s.split())
+    flat = " ".join(body.split())
+    print("    chan doan %s: go khoang trang thi khop %d lan"
+          % (lab, flat.count(fs) if fs else -1))
+
+
+def run_probe(spec_path, fill):
+    """Dem neo va do vung giua hai neo, KHONG ghi file dich nao."""
+    try:
+        spec = json.loads(Path(spec_path).read_text(encoding="utf-8"))
+    except Exception as exc:
+        print("LOI doc spec: %s" % exc)
+        return 1
+    edits = spec.get("edits")
+    if not isinstance(edits, list) or not edits:
+        print("LOI: spec thieu khoa 'edits' hoac rong")
+        return 1
+    print("=== PROBE: chi dem neo, KHONG ghi gi ===")
+    cache, bad, changed = {}, 0, False
+    for i, e in enumerate(edits):
+        name = str(e.get("name", "edit%d" % (i + 1)))
+        op = e.get("op", "")
+        rel = Path(e.get("file", "")).as_posix()
+        if op in ("append", "create"):
+            print("%-24s %-16s khong co neo, bo qua" % (name, op))
+            continue
+        if rel not in cache:
+            p = REPO / rel
+            cache[rel] = (p.read_text(encoding="utf-8").replace("\r\n", "\n")
+                          if p.is_file() else None)
+        body = cache[rel]
+        if body is None:
+            print("%-24s %-16s KHONG CO FILE %s" % (name, op, rel))
+            bad += 1
+            continue
+        if op == "replace_between":
+            s, t = e.get("start", ""), e.get("end", "")
+            n1, n2 = body.count(s), body.count(t)
+            size, chieu, ok = 0, "-", (n1 == 1 and n2 == 1)
+            if ok:
+                i0, j0 = body.index(s), body.index(t)
+                if j0 < i0 + len(s):
+                    ok, chieu = False, "NGUOC"
+                else:
+                    chieu = "xuoi"
+                    size = len(body[i0:j0 + len(t)].encode("utf-8"))
+            print("%-24s %-16s start=%d end=%d %s vung=%d byte"
+                  % (name, op, n1, n2, chieu, size))
+            if not ok:
+                bad += 1
+                if n1 != 1:
+                    diag(body, s, "start")
+                if n2 != 1:
+                    diag(body, t, "end")
+            elif fill and e.get("expect_bytes") != size:
+                e["expect_bytes"] = size
+                changed = True
+        else:
+            key = "old" if op in ("replace", "delete") else "anchor"
+            s = e.get(key, "")
+            n1 = body.count(s)
+            print("%-24s %-16s %s khop=%d" % (name, op, key, n1))
+            if n1 != 1:
+                bad += 1
+                diag(body, s, key)
+    if fill and changed:
+        Path(spec_path).write_text(
+            json.dumps(spec, ensure_ascii=False, indent=1),
+            encoding="utf-8", newline="\n")
+        print("da ghi expect_bytes do duoc nguoc vao spec")
+    print("")
+    print("=== PROBE: %d muc, %d muc hong ===" % (len(edits), bad))
+    return 0 if bad == 0 else 2
+
+
 def run_spec(spec_path, apply, allow_dirty):
     try:
         spec = json.loads(Path(spec_path).read_text(encoding="utf-8"))
@@ -203,6 +295,20 @@ def run_spec(spec_path, apply, allow_dirty):
 
     order, groups = [], {}
     for i, e in enumerate(edits):
+        cf = e.get("content_file")
+        if cf:
+            if "new" in e:
+                print("LOI: edit thu %d khai ca 'new' lan 'content_file'" % (i + 1))
+                return 1
+            cp = Path(cf)
+            if not cp.is_absolute():
+                cp = REPO / cf
+            if not cp.is_file():
+                print("LOI: edit thu %d content_file khong ton tai: %s" % (i + 1, cp))
+                return 1
+            e["new"] = cp.read_text(encoding="utf-8").replace("\r\n", "\n")
+            print("NOI DUNG %s <- %s (%d byte)"
+                  % (e.get("name", i + 1), cp, len(e["new"].encode("utf-8"))))
         for k in ("name", "file", "op"):
             if k not in e:
                 print("LOI: edit thu %d thieu khoa '%s'" % (i + 1, k))
@@ -387,13 +493,28 @@ def selftest():
         {"name": "lechbyte", "file": "docs/TODO.md", "op": "replace_between",
          "start": h1, "end": h2, "new": mid, "expect_bytes": 50}]}))
 
+    cf = tmp / ("tmp_%s_selftest_contentfile.txt" % day)
+    cf.write_text("noi dung thu tu content_file, khong nhac file nao.\n",
+                  encoding="utf-8", newline="\n")
+    cases.append(("content-file", 0, "KIEM TRUOC: SACH", {"edits": [
+        {"name": "ngoaitep", "file": "docs/TODO.md", "op": "replace",
+         "old": h1, "content_file": str(cf)}]}))
+    cases.append(("probe-duong", 0, "0 muc hong", {"edits": [
+        {"name": "probe1", "file": "docs/TODO.md", "op": "replace_between",
+         "start": h1, "end": h2}]}))
+    cases.append(("probe-am", 2, "chan doan", {"edits": [
+        {"name": "probe2", "file": "docs/TODO.md", "op": "replace",
+         "old": "ANCHOR KHONG TON TAI 20260805 xyz"}]}))
+    extra = {"probe-duong": ["--probe"], "probe-am": ["--probe"]}
+
     rows = []
     for name, want, marker, spec in cases:
         sp = tmp / ("tmp_%s_selftest_%s.json" % (day, name))
         sp.write_text(json.dumps(spec, ensure_ascii=False, indent=1),
                       encoding="utf-8", newline="\n")
         r = subprocess.run([sys.executable, str(Path(__file__).resolve()),
-                            "--spec", str(sp)], capture_output=True, text=True)
+                            "--spec", str(sp)] + extra.get(name, []),
+                           capture_output=True, text=True)
         hit = marker in (r.stdout or "")
         rows.append((name, want, r.returncode, marker, hit))
 
@@ -424,12 +545,16 @@ def main():
     ap.add_argument("--apply", action="store_true")
     ap.add_argument("--allow-dirty", action="store_true")
     ap.add_argument("--selftest", action="store_true")
+    ap.add_argument("--probe", action="store_true")
+    ap.add_argument("--fill-bytes", action="store_true")
     a = ap.parse_args()
     if a.selftest:
         return selftest()
     if not a.spec:
         print("LOI: can --spec <file.json> hoac --selftest")
         return 1
+    if a.probe:
+        return run_probe(a.spec, a.fill_bytes)
     return run_spec(a.spec, a.apply, a.allow_dirty)
 
 
