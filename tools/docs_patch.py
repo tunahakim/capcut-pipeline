@@ -99,6 +99,26 @@ def scan_new_text(text, src, index, byname, ns):
     return out
 
 
+def show_hits(body, s, lab, limit=3):
+    """In cac cho khop kem mot dong tren mot dong duoi, de chon neo dai hon."""
+    lines = body.split("\n")
+    pos, start = [], 0
+    while True:
+        k = body.find(s, start)
+        if k < 0:
+            break
+        pos.append(k)
+        start = k + max(1, len(s))
+    for k in pos[:limit]:
+        ln = body.count("\n", 0, k) + 1
+        lo, hi = max(1, ln - 1), min(len(lines), ln + 1)
+        print("    --- %s khop tai dong %d ---" % (lab, ln))
+        for m in range(lo, hi + 1):
+            print("    %5d | %s" % (m, lines[m - 1][:100]))
+    if len(pos) > limit:
+        print("    ... con %d cho khop nua, khong in" % (len(pos) - limit))
+
+
 def apply_edits(rel, edits, errs):
     """Tra ve (text_moi, nl, kiem_sau) hoac None neu loi. Khong ghi gi."""
     path = REPO / rel
@@ -199,6 +219,10 @@ def apply_edits(rel, edits, errs):
         n = body.count(src_s)
         print("  ANCHOR %-22s khop=%d" % (name, n))
         if n != 1:
+            if n > 1:
+                show_hits(body, src_s, name)
+            else:
+                diag(body, src_s, name)
             errs.append("[%s] KHONG KHOP anchor '%s' khop %d lan, phai dung 1"
                         % (rel, name, n))
             continue
@@ -211,7 +235,7 @@ def apply_edits(rel, edits, errs):
         else:
             dst = e["new"] + src_s
         body = body.replace(src_s, dst)
-        if op == "delete":
+        if op == "delete" or dst == "":
             checks.append(("gone", name, src_s))
         else:
             checks.append(("one", name, dst))
@@ -429,10 +453,13 @@ def run_spec(spec_path, apply, allow_dirty):
         print("=== LOI (%d) -- KHONG SUA FILE NAO ===" % len(errs))
         for x in errs:
             print("  " + x)
+        print("")
+        print("Hướng xử lý theo từng loại. Neo khớp 0 lần: so lại nguyên văn, chú ý khoảng trắng cuối dòng và kiểu xuống dòng, phần chẩn đoán ở trên đã in số lần khớp của riêng dòng đầu. Neo khớp nhiều lần: đọc các đoạn vừa in kèm số dòng rồi kéo dài neo cho duy nhất, hoặc đổi sang op replace_between với hai neo ngắn. SAI CHO hoặc MISSING: viết lại đường dẫn tương đối đầy đủ tính từ gốc repo. VUOT TRAN: rút gọn tài liệu trước khi vá, và nếu đang ở cuối phiên không còn chỗ để rút gọn thì xem mục miễn trừ trần có hạn trong docs/TODO.md, đừng nâng trần lặng lẽ.")
         return 2
     print("=== KIEM TRUOC: SACH (%d file, %d edit) ===" % (len(plan), len(edits)))
+    print("Mọi neo khớp đúng một lần, mọi phép kiểm trước đều sạch: vá được rồi.")
     if not apply:
-        print("che do chay thu, khong ghi. Them --apply de ghi that.")
+        print("Đang chạy thử nên chưa ghi gì. Thêm --apply vào đúng lệnh vừa chạy để ghi thật.")
         return 0
 
     if not allow_dirty:
@@ -545,9 +572,20 @@ def selftest():
     cases.append(("ma-thoat-3", 3, "KIEM SAU THAT BAI", {"edits": [
         {"name": "trung", "file": sc3.name, "op": "replace",
          "old": "ALPHA20260805", "new": "BETA20260805"}]}))
+    dup = REPO / ("_selftest_dup_%s.txt" % day)
+    dup.write_text("DUP20260805\nkhac\nDUP20260805\n", encoding="utf-8", newline="\n")
+    rong = REPO / ("_selftest_rong_%s.txt" % day)
+    rong.write_text("GIU20260805\nXOA20260805\n", encoding="utf-8", newline="\n")
+    cases.append(("am-anchor-2", 2, "khop 2 lan", {"edits": [
+        {"name": "trunganchor", "file": dup.name, "op": "replace",
+         "old": "DUP20260805", "new": "MOI20260805"}]}))
+    cases.append(("replace-rong", 0, "DA GHI 1 FILE, KIEM SAU SACH", {"edits": [
+        {"name": "xoachuoi", "file": rong.name, "op": "replace",
+         "old": "XOA20260805\n", "new": ""}]}))
     extra = {"probe-duong": ["--probe"], "probe-am": ["--probe"],
              "delete-block": ["--apply", "--allow-dirty"],
-             "ma-thoat-3": ["--apply", "--allow-dirty"]}
+             "ma-thoat-3": ["--apply", "--allow-dirty"],
+             "replace-rong": ["--apply", "--allow-dirty"]}
 
     rows = []
     for name, want, marker, spec in cases:
@@ -560,7 +598,7 @@ def selftest():
         hit = marker in (r.stdout or "")
         rows.append((name, want, r.returncode, marker, hit))
 
-    for _p in (blk, sc3):
+    for _p in (blk, sc3, dup, rong):
         try:
             _p.unlink()
         except OSError:
