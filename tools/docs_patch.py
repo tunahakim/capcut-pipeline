@@ -18,7 +18,8 @@ khong dung replace voi nguyen van doan cu, vi khi do chinh doan dai la cai neo.
 
 Tam thao tac: replace, replace_between, delete, delete_block, insert_after,
 insert_before, append, create. Op delete_block nhan anchor la dong dau khoi roi xoa
-tu dau dong do den dong trong ke tiep. Op replace_between nhan hai sentinel start va end, moi cai phai khop dung 1
+tu dau dong do den dong trong ke tiep; khong tim thay dong trong phia sau thi DUNG
+chu KHONG xoa toi het file. Op replace_between nhan hai sentinel start va end, moi cai phai khop dung 1
 lan, end phai nam sau start va khong chong len start, vung bi thay GOM CA hai
 sentinel, va dac ta phai khai truoc expect_bytes la so byte du kien bi thay -- lech
 qua tol_bytes thi dung, vi do la dau hieu sentinel cuoi bat vao cho xa hon du tinh.
@@ -119,6 +120,47 @@ def show_hits(body, s, lab, limit=3):
         print("    ... con %d cho khop nua, khong in" % (len(pos) - limit))
 
 
+def doc_than(rel):
+    """Doc file dich va kiem BOM cung newline lan. Tra ve (body_LF, nl, loi).
+
+    Duong doc duy nhat cho ca apply_edits() lan run_probe(): hai ben tung doc
+    bang hai doan ma rieng nen probe co the bao sach roi apply moi tu choi.
+    loi la None khi doc duoc.
+    """
+    p = REPO / rel
+    if not p.is_file():
+        return None, None, "khong tim thay file"
+    raw = p.read_bytes()
+    if raw[:3] == b"\xef\xbb\xbf":
+        return None, None, "file co BOM, luat repo la UTF-8 khong BOM"
+    try:
+        body = raw.decode("utf-8")
+    except UnicodeDecodeError as exc:
+        return None, None, "khong decode duoc UTF-8: %s" % exc
+    crlf = body.count("\r\n")
+    lone = body.replace("\r\n", "").count("\n")
+    if crlf and lone:
+        return None, None, "LAN newline: CRLF %d va LF %d" % (crlf, lone)
+    return body.replace("\r\n", "\n"), ("\r\n" if crlf else "\n"), None
+
+
+def do_vung(body, start, end):
+    """Dem hai neo va do vung giua chung. Tra ve (n_start, n_end, xuoi, size).
+
+    size la so byte UTF-8 cua vung GOM CA hai neo, bang 0 khi chua do duoc.
+    Duong do duy nhat cho ca apply_edits() lan run_probe(), de hai ben khong
+    the lech nhau sau moi lan sua.
+    """
+    n1, n2 = body.count(start), body.count(end)
+    if n1 != 1 or n2 != 1:
+        return n1, n2, False, 0
+    i = body.index(start)
+    j = body.index(end)
+    if j < i + len(start):
+        return n1, n2, False, 0
+    return n1, n2, True, len(body[i:j + len(end)].encode("utf-8"))
+
+
 def apply_edits(rel, edits, errs):
     """Tra ve (text_moi, nl, kiem_sau) hoac None neu loi. Khong ghi gi."""
     path = REPO / rel
@@ -132,25 +174,10 @@ def apply_edits(rel, edits, errs):
             return None
         body, nl = "", "\n"
     else:
-        if not path.is_file():
-            errs.append("[%s] khong tim thay file" % rel)
+        body, nl, loi = doc_than(rel)
+        if loi is not None:
+            errs.append("[%s] %s" % (rel, loi))
             return None
-        raw = path.read_bytes()
-        if raw[:3] == b"\xef\xbb\xbf":
-            errs.append("[%s] file co BOM, luat repo la UTF-8 khong BOM" % rel)
-            return None
-        try:
-            body = raw.decode("utf-8")
-        except UnicodeDecodeError as e:
-            errs.append("[%s] khong decode duoc UTF-8: %s" % (rel, e))
-            return None
-        crlf = body.count("\r\n")
-        lone = body.replace("\r\n", "").count("\n")
-        if crlf and lone:
-            errs.append("[%s] LAN newline: CRLF %d va LF %d" % (rel, crlf, lone))
-            return None
-        nl = "\r\n" if crlf else "\n"
-        body = body.replace("\r\n", "\n")
 
     checks = []
     for e in edits:
@@ -167,20 +194,18 @@ def apply_edits(rel, edits, errs):
             continue
         if op == "replace_between":
             s_str, e_str = e["start"], e["end"]
-            ns_, ne = body.count(s_str), body.count(e_str)
+            ns_, ne, xuoi, got = do_vung(body, s_str, e_str)
             print("  ANCHOR %-22s start khop=%d end khop=%d" % (name, ns_, ne))
             if ns_ != 1 or ne != 1:
                 errs.append("[%s] KHONG KHOP replace_between '%s': start khop %d, "
                             "end khop %d, ca hai phai dung 1" % (rel, name, ns_, ne))
                 continue
-            i = body.index(s_str)
-            j = body.index(e_str)
-            if j < i + len(s_str):
+            if not xuoi:
                 errs.append("[%s] replace_between '%s': sentinel cuoi nam TRUOC hoac "
                             "chong len sentinel dau" % (rel, name))
                 continue
-            region = body[i:j + len(e_str)]
-            got = len(region.encode("utf-8"))
+            i = body.index(s_str)
+            j = body.index(e_str)
             want = int(e["expect_bytes"])
             tol = int(e.get("tol_bytes", max(200, want // 5)))
             print("  VUNG THAY %-20s du kien=%d thuc=%d bien do=%d"
@@ -208,7 +233,13 @@ def apply_edits(rel, edits, errs):
             i0 = body.index(anc)
             ls = body.rfind("\n", 0, i0) + 1
             j0 = body.find("\n\n", i0)
-            end = len(body) if j0 < 0 else j0 + 2
+            if j0 < 0:
+                errs.append("[%s] delete_block '%s': khong tim thay dong trong sau "
+                            "khoi nen khong biet khoi ket thuc o dau, tu choi xoa toi "
+                            "het file. Dung op delete voi nguyen van, hoac them mot "
+                            "dong trong" % (rel, name))
+                continue
+            end = j0 + 2
             print("  XOA KHOI %-20s %d byte, tu dau dong den dong trong ke tiep"
                   % (name, len(body[ls:end].encode("utf-8"))))
             body = body[:ls] + body[end:]
@@ -273,29 +304,26 @@ def run_probe(spec_path, fill):
         name = str(e.get("name", "edit%d" % (i + 1)))
         op = e.get("op", "")
         rel = Path(e.get("file", "")).as_posix()
+        if op not in OPS:
+            print("%-24s %-16s OP KHONG HOP LE, phai la mot trong: %s"
+                  % (name, op, ", ".join(OPS)))
+            bad += 1
+            continue
         if op in ("append", "create"):
             print("%-24s %-16s khong co neo, bo qua" % (name, op))
             continue
         if rel not in cache:
-            p = REPO / rel
-            cache[rel] = (p.read_text(encoding="utf-8").replace("\r\n", "\n")
-                          if p.is_file() else None)
-        body = cache[rel]
-        if body is None:
-            print("%-24s %-16s KHONG CO FILE %s" % (name, op, rel))
+            cache[rel] = doc_than(rel)
+        body, _nl, loi = cache[rel]
+        if loi is not None:
+            print("%-24s %-16s %s: %s" % (name, op, rel, loi))
             bad += 1
             continue
         if op == "replace_between":
             s, t = e.get("start", ""), e.get("end", "")
-            n1, n2 = body.count(s), body.count(t)
-            size, chieu, ok = 0, "-", (n1 == 1 and n2 == 1)
-            if ok:
-                i0, j0 = body.index(s), body.index(t)
-                if j0 < i0 + len(s):
-                    ok, chieu = False, "NGUOC"
-                else:
-                    chieu = "xuoi"
-                    size = len(body[i0:j0 + len(t)].encode("utf-8"))
+            n1, n2, xuoi, size = do_vung(body, s, t)
+            ok = (n1 == 1 and n2 == 1 and xuoi)
+            chieu = "xuoi" if xuoi else ("NGUOC" if (n1 == 1 and n2 == 1) else "-")
             print("%-24s %-16s start=%d end=%d %s vung=%d byte"
                   % (name, op, n1, n2, chieu, size))
             if not ok:
@@ -503,6 +531,46 @@ def run_spec(spec_path, apply, allow_dirty):
     return 0
 
 
+def lay_so(text, khoa):
+    """Lay so nguyen dung ngay sau mot khoa dang 'vung=' trong output cua tool."""
+    k = text.find(khoa)
+    if k < 0:
+        return -1
+    so = ""
+    for ch in text[k + len(khoa):]:
+        if ch.isdigit():
+            so += ch
+        else:
+            break
+    return int(so) if so else -1
+
+
+def so_hai_duong(tmp, day, h1, h2):
+    """Bat --probe va apply_edits do CUNG mot vung roi so hai con so do duoc.
+
+    Hai duong tung dem neo bang hai doan ma rieng va chi tinh co dong y voi nhau.
+    Ca nay khong nhin ma thoat, no doc thang so byte hai ben in ra: probe in
+    'vung=' con apply_edits in 'thuc='. Lech nhau nghia la do_vung() da bi mot
+    ben bo qua trong mot lan sua nao do.
+    """
+    spec = {"edits": [{"name": "haiduong", "file": "docs/TODO.md",
+                       "op": "replace_between", "start": h1, "end": h2,
+                       "new": "x\n", "expect_bytes": 1, "tol_bytes": 0}]}
+    sp = tmp / ("tmp_" + day + "_selftest_haiduong.json")
+    sp.write_text(json.dumps(spec, ensure_ascii=False, indent=1),
+                  encoding="utf-8", newline="\n")
+    me = str(Path(__file__).resolve())
+    out = []
+    for args in (["--probe"], []):
+        r = subprocess.run([sys.executable, me, "--spec", str(sp)] + args,
+                           capture_output=True, text=True,
+                           encoding="utf-8", errors="replace")
+        out.append(r.stdout or "")
+    a = lay_so(out[0], "vung=")
+    b = lay_so(out[1], "thuc=")
+    return (a == b and a > 0), a, b
+
+
 def selftest():
     tmp = da.LAB / "tmp"
     tmp.mkdir(parents=True, exist_ok=True)
@@ -567,8 +635,11 @@ def selftest():
     cases.append(("delete-block", 0, "DA GHI 1 FILE, KIEM SAU SACH", {"edits": [
         {"name": "xoakhoi", "file": blk.name, "op": "delete_block",
          "anchor": "dong dau khoi 20260805"}]}))
+    mdt = REPO / ("_selftest_md_" + day + ".md")
+    mdt.write_text("# thu nghiem selftest\n\nmot dong noi dung.\n",
+                   encoding="utf-8", newline="\n")
     cases.append(("md-khong-dau", 0, "khong co ky tu co dau", {"edits": [
-        {"name": "khongdau", "file": "docs/TODO.md", "op": "append",
+        {"name": "khongdau", "file": mdt.name, "op": "append",
          "new": "\n" + ("z " * 300)}]}))
     cases.append(("ma-thoat-3", 3, "KIEM SAU THAT BAI", {"edits": [
         {"name": "trung", "file": sc3.name, "op": "replace",
@@ -583,28 +654,52 @@ def selftest():
     cases.append(("replace-rong", 0, "DA GHI 1 FILE, KIEM SAU SACH", {"edits": [
         {"name": "xoachuoi", "file": rong.name, "op": "replace",
          "old": "XOA20260805\n", "new": ""}]}))
+    dbe = REPO / ("_selftest_dbcuoi_" + day + ".txt")
+    dbe.write_text("# thu nghiem\n\n## muc mot\n\ndong dau khoi cuoi 20260805\n"
+                   "dong hai cua khoi cuoi\n", encoding="utf-8", newline="\n")
+    cases.append(("delete-block-cuoi-file", 2, "tu choi xoa toi het file", {"edits": [
+        {"name": "khoicuoi", "file": dbe.name, "op": "delete_block",
+         "anchor": "dong dau khoi cuoi 20260805"}]}))
+    bom = REPO / ("_selftest_bom_" + day + ".txt")
+    bom.write_bytes(b"\xef\xbb\xbfGIU20260805\ndong hai\n")
+    cases.append(("probe-bom", 2, "file co BOM", {"edits": [
+        {"name": "cobom", "file": bom.name, "op": "replace",
+         "old": "GIU20260805", "new": "MOI20260805"}]}))
+    cases.append(("probe-op-la", 2, "OP KHONG HOP LE", {"edits": [
+        {"name": "opla", "file": "docs/TODO.md", "op": "replace_bewteen",
+         "start": h1, "end": h2}]}))
+    cases.append(("probe-di-voi-apply", 1, "khong di cung --apply", {"edits": [
+        {"name": "probeapply", "file": "docs/TODO.md", "op": "replace",
+         "old": h1, "new": h1}]}))
     extra = {"probe-duong": ["--probe"], "probe-am": ["--probe"],
+             "probe-bom": ["--probe"], "probe-op-la": ["--probe"],
+             "probe-di-voi-apply": ["--probe", "--apply"],
              "delete-block": ["--apply", "--allow-dirty"],
              "ma-thoat-3": ["--apply", "--allow-dirty"],
              "replace-rong": ["--apply", "--allow-dirty"]}
 
+    rac = [blk, sc3, dup, rong, mdt, dbe, bom]
     rows = []
-    for name, want, marker, spec in cases:
-        sp = tmp / ("tmp_%s_selftest_%s.json" % (day, name))
-        sp.write_text(json.dumps(spec, ensure_ascii=False, indent=1),
-                      encoding="utf-8", newline="\n")
-        r = subprocess.run([sys.executable, str(Path(__file__).resolve()),
-                            "--spec", str(sp)] + extra.get(name, []),
-                           capture_output=True, text=True,
-                           encoding="utf-8", errors="replace")
-        hit = marker in (r.stdout or "")
-        rows.append((name, want, r.returncode, marker, hit))
-
-    for _p in (blk, sc3, dup, rong):
-        try:
-            _p.unlink()
-        except OSError:
-            pass
+    try:
+        for name, want, marker, spec in cases:
+            sp = tmp / ("tmp_" + day + "_selftest_" + name + ".json")
+            sp.write_text(json.dumps(spec, ensure_ascii=False, indent=1),
+                          encoding="utf-8", newline="\n")
+            r = subprocess.run([sys.executable, str(Path(__file__).resolve()),
+                                "--spec", str(sp)] + extra.get(name, []),
+                               capture_output=True, text=True,
+                               encoding="utf-8", errors="replace")
+            hit = marker in (r.stdout or "")
+            rows.append((name, want, r.returncode, marker, hit))
+        ok_vung, a_probe, a_apply = so_hai_duong(tmp, day, h1, h2)
+        rows.append(("do-vung-mot-duong", 0, 0 if ok_vung else 1,
+                     "probe=%d apply=%d" % (a_probe, a_apply), ok_vung))
+    finally:
+        for _p in rac:
+            try:
+                _p.unlink()
+            except OSError:
+                pass
 
     print("")
     print("=== SELFTEST docs_patch ===")
@@ -639,6 +734,12 @@ def main():
         return selftest()
     if not a.spec:
         print("LOI: can --spec <file.json> hoac --selftest")
+        return 1
+    if a.probe and a.apply:
+        print("LOI: --probe khong di cung --apply, chon mot trong hai")
+        return 1
+    if a.fill_bytes and not a.probe:
+        print("LOI: --fill-bytes chi co nghia khi di kem --probe")
         return 1
     if a.probe:
         return run_probe(a.spec, a.fill_bytes)
