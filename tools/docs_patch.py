@@ -452,8 +452,12 @@ def run_spec(spec_path, apply, allow_dirty):
                     print("  MIEN TRU %s (khai trong allow_paths)" % tok)
                     continue
                 if st == "OK-BASENAME":
-                    warns.append("[%s/%s] CANH BAO ten tran '%s' -- nen viet '%s'"
-                                 % (rel, e["name"], tok, tgt))
+                    if rel.lower().endswith(".py"):
+                        continue
+                    w = ("[%s] CANH BAO ten tran '%s' -- nen viet '%s'"
+                         % (rel, tok, tgt))
+                    if w not in warns:
+                        warns.append(w)
                 elif st == "SAI CHO":
                     errs.append("[%s/%s] SAI CHO '%s' -- duong dan dung la '%s'"
                                 % (rel, e["name"], tok, tgt))
@@ -761,6 +765,54 @@ def selftest():
     return 0 if bad == 0 else 2
 
 
+SPEC_MAU = {
+    "allow_paths": ["ten-file-vi-du-khong-co-that.md"],
+    "edits": [
+        {"name": "vi-du-replace", "file": "docs/TODO.md", "op": "replace",
+         "old": "nguyen van doan cu, phai khop dung 1 lan",
+         "new": "noi dung moi thay vao cho do"},
+        {"name": "vi-du-replace-between", "file": "docs/TODO.md",
+         "op": "replace_between", "start": "## Tieu de muc can thay",
+         "end": "## Tieu de muc ke tiep",
+         "new": "ca muc moi, GOM CA hai neo",
+         "expect_bytes": 3603, "tol_bytes": 400},
+        {"name": "vi-du-delete", "file": "docs/TODO.md", "op": "delete",
+         "old": "nguyen van doan can xoa"},
+        {"name": "vi-du-delete-block", "file": "docs/TODO.md",
+         "op": "delete_block", "anchor": "dong dau cua khoi can xoa"},
+        {"name": "vi-du-insert-after", "file": "docs/TODO.md",
+         "op": "insert_after", "anchor": "dong dung ngay truoc cho chen",
+         "new": "\ndong moi chen vao sau neo\n"},
+        {"name": "vi-du-insert-before", "file": "docs/TODO.md",
+         "op": "insert_before", "anchor": "dong dung ngay sau cho chen",
+         "new": "dong moi chen vao truoc neo\n"},
+        {"name": "vi-du-append", "file": "docs/TODO.md", "op": "append",
+         "new": "\ndoan noi them o cuoi file\n"},
+        {"name": "vi-du-create", "file": "docs/file-hoan-toan-moi.md",
+         "op": "create",
+         "content_file": "D:\\IT\\capcut-lab\\data\\tmp\\tmp_20260805_noi_dung.txt"},
+    ]}
+
+
+def in_mau(ngan=False):
+    """In mot spec mau hop le cho ca tam op, de nguoi dung va tro ly khong phai di tim tai lieu moi biet khuon."""
+    if ngan:
+        print("")
+        print("Xem spec mau day du: python tools/docs_patch.py --example")
+        return 1
+    print("=== SPEC MAU, hop le cho ca tam op ===")
+    print(json.dumps(SPEC_MAU, ensure_ascii=False, indent=1))
+    print("")
+    print("Moi edit bat buoc co ba khoa name, file, op. Khoa noi dung moi la 'new',")
+    print("hoac 'content_file' tro toi mot file UTF-8 tren dia -- khai ca hai la loi.")
+    print("Doan tu khoang muoi dong tro len thi dung replace_between voi hai neo ngan")
+    print("va duy nhat, dung dan ca doan cu lam neo.")
+    print("Quy trinh: --probe --fill-bytes de dem neo va tu do expect_bytes, roi")
+    print("--apply de ghi. Bo --apply thi khong ghi gi. Khong can chay thu o giua:")
+    print("--apply da chay lai toan bo phep kiem truoc va tu choi ghi khi co loi.")
+    return 0
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--spec")
@@ -769,7 +821,10 @@ def main():
     ap.add_argument("--selftest", action="store_true")
     ap.add_argument("--probe", action="store_true")
     ap.add_argument("--fill-bytes", action="store_true")
+    ap.add_argument("--example", action="store_true")
     a = ap.parse_args()
+    if a.example:
+        return in_mau()
     if a.selftest:
         return selftest()
     if not a.spec:
@@ -781,9 +836,11 @@ def main():
     if a.fill_bytes and not a.probe:
         print("LOI: --fill-bytes chi co nghia khi di kem --probe")
         return 1
-    if a.probe:
-        return run_probe(a.spec, a.fill_bytes)
-    return run_spec(a.spec, a.apply, a.allow_dirty)
+    ma = (run_probe(a.spec, a.fill_bytes) if a.probe
+          else run_spec(a.spec, a.apply, a.allow_dirty))
+    if ma == 1:
+        in_mau(ngan=True)
+    return ma
 
 
 if __name__ == "__main__":
