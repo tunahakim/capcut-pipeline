@@ -6,6 +6,12 @@ Nhánh filter ở đây chỉ để dò tên; catalogue --filters của namespac
 """
 
 import subprocess, json
+import sys
+
+try:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
 
 def run(a):
     p = subprocess.run(a, shell=True, capture_output=True)

@@ -6,6 +6,11 @@ Ghi thẳng, không sao lưu, không có chế độ chạy thử. Từ 01/08/20
 """
 
 import json, pathlib, sys
+
+try:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
 proj = pathlib.Path(sys.argv[1])
 mi = proj / "draft_meta_info.json"
 d = json.loads(mi.read_text(encoding="utf-8"))

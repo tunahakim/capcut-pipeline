@@ -13,6 +13,11 @@ Thay the tools/bench_shots.py. Khac biet chinh:
 import argparse, csv, math, random, re, subprocess, sys
 from pathlib import Path
 
+try:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
+
 CW, CH = 1920.0, 1080.0
 GRID_MS = 100
 S_LO, S_HI = 0.72, 0.92

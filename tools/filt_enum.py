@@ -1,6 +1,12 @@
 #!/usr/bin/env python3
 """filt_enum.py - xem catalogue filter ca hai namespace + tra ID da biet + kiem cache. [KIEM: chua]"""
 import subprocess, json, pathlib
+import sys
+
+try:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
 
 CACHE = pathlib.Path.home() / "AppData/Local/CapCut/User Data/Cache/effect"
 

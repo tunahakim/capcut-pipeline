@@ -7,6 +7,11 @@ import subprocess
 import sys
 import urllib.request
 
+try:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
+
 REPO = "tunahakim/capcut-pipeline"
 REF = "main"
 API = "https://api.github.com/repos/" + REPO

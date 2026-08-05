@@ -23,6 +23,11 @@ Luu y argparse cung tra 2 khi thieu tham so bat buoc -- trung so, khac nghia.
 """
 import argparse, datetime, json, pathlib, platform, sys
 
+try:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
+
 TOOL_VERSION = "2"
 REPO = pathlib.Path(__file__).resolve().parent.parent
 DEFAULT_OUT = REPO / "molds" / "capcut-9.1.0" / "filter.json"

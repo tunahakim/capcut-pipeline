@@ -2,6 +2,11 @@
 """strip_filters.py <project-dir> - go sach lop filter, giu nguyen moi thu khac. [KIEM: chua]"""
 import json, pathlib, shutil, sys
 
+try:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
+
 PROJ = pathlib.Path(sys.argv[1])
 TID = json.loads((PROJ / "Timelines" / "project.json").read_text(encoding="utf-8"))["main_timeline_id"]
 tg = [PROJ / "draft_content.json", PROJ / "template-2.tmp",

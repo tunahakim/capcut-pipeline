@@ -7,6 +7,11 @@ Dùng thay cho capcut enums --type X, vì cú pháp đó trả về mảng rỗn
 
 import subprocess, sys, json
 
+try:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
+
 def run(args):
     p = subprocess.run(args, shell=True, capture_output=True)
     txt = p.stdout.decode('utf-8', errors='replace').strip()

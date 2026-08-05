@@ -2,6 +2,11 @@
 """find_ph.py <project-dir> - dinh vi moi chuoi ##_material_placeholder trong cay JSON. [KIEM: chua]"""
 import json, pathlib, sys
 
+try:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
+
 PROJ = pathlib.Path(sys.argv[1])
 TID = json.loads((PROJ / "Timelines" / "project.json").read_text(encoding="utf-8"))["main_timeline_id"]
 NEEDLE = "##_material_placeholder"

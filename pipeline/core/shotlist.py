@@ -11,6 +11,11 @@ import re
 import sys
 from pathlib import Path
 
+try:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
+
 REQUIRED = ("idx", "start", "image")
 OPTIONAL = ("transition", "note")
 RESERVED = ("motion", "blur", "fx")

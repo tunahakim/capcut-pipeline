@@ -18,6 +18,11 @@ import json, pathlib, shutil, sys, uuid
 
 CACHE = pathlib.Path.home() / "AppData/Local/CapCut/User Data/Cache/effect"
 import re
+
+try:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
 HEX32 = re.compile(r"^[0-9a-f]{32}$")
 
 

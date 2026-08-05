@@ -7,6 +7,11 @@ Bỏ qua file nào mà sau khi thay không còn là JSON hợp lệ.
 
 import json, pathlib, shutil, sys
 
+try:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
+
 proj = pathlib.Path(sys.argv[1]); old = sys.argv[2]; new = sys.argv[3]
 apply = "--apply" in sys.argv
 EXT = {".json", ".tmp", ".bak", ".txt", ""}

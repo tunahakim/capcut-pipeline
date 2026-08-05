@@ -7,6 +7,11 @@ Sau script nay TUYET DOI khong chay them lenh ghi nao cua CLI.
 """
 import csv, json, os, pathlib, subprocess, sys, time
 
+try:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
+
 PROJ = sys.argv[1]
 CSVF = pathlib.Path(sys.argv[2])
 ASSETS = pathlib.Path(sys.argv[3])

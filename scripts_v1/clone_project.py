@@ -8,6 +8,11 @@ Từ chối chạy nếu thư mục đích đã tồn tại; mọi nội dung JS
 
 import json, pathlib, re, shutil, sys, time, uuid
 
+try:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
+
 SRC = pathlib.Path(sys.argv[1])          # scaffold sach
 DR  = pathlib.Path(sys.argv[2])          # thu muc drafts
 NEW = sys.argv[3]                        # ten project moi

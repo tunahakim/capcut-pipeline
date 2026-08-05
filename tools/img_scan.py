@@ -9,6 +9,11 @@ import csv, subprocess, sys
 from collections import Counter
 from pathlib import Path
 
+try:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
+
 SRC = Path(sys.argv[1])
 OUT = Path(sys.argv[2])
 CW, CH = 1920.0, 1080.0

@@ -12,6 +12,11 @@ Cach dung:  python kb_apply.py <project-dir>
 """
 import json, pathlib, shutil, sys, uuid
 
+try:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
+
 CW, CH = 1920.0, 1080.0
 IMG_W, IMG_H = 1376.0, 768.0
 CANVAS_BIT = 4096

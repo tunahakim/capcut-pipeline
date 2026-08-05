@@ -7,6 +7,11 @@ Chay:  python preflight.py          (day du, co tinh dung luong thu muc)
 """
 import os, sys, shutil, subprocess, pathlib, platform
 
+try:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
+
 LAB    = pathlib.Path(os.environ.get("CAPCUT_LAB", r"D:\Test_tool"))
 TARGET = pathlib.Path(r"D:\IT\CapCut")
 FAST   = "--fast" in sys.argv

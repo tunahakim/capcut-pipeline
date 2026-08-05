@@ -7,6 +7,11 @@ Vi du: python tools/rlog_index_trim.py --limit 30 --apply
 """
 import argparse, os, sys
 
+try:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 IDX = os.path.join(ROOT, "docs", "research-log", "INDEX.md")
 ARC = os.path.join(ROOT, "docs", "research-log", "INDEX-archive.md")

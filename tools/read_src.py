@@ -6,6 +6,11 @@ import os
 import subprocess
 import sys
 
+try:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LAB = os.environ.get("CAPCUT_LAB") or r"D:\IT\capcut-lab\data"
 NL = chr(10)

@@ -5,6 +5,12 @@ Vào: không tham số, cần capcut-cli trong PATH. Ra: in console usage, tham 
 """
 
 import subprocess, json
+import sys
+
+try:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
 
 p = subprocess.run("capcut describe", shell=True, capture_output=True)
 d = json.loads(p.stdout.decode("utf-8", errors="replace"))

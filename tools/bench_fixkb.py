@@ -8,6 +8,11 @@ LEN va day gia tri vuot mep. Chi cot kb_* bi sua; cac cot khac giu nguyen.
 """
 import csv, math, pathlib, shutil, sys
 
+try:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
+
 CW, CH, IMG_W, IMG_H = 1920.0, 1080.0, 1376.0, 768.0
 KY = (CW * IMG_H / IMG_W) / CH
 f = pathlib.Path(sys.argv[1])

@@ -10,6 +10,11 @@ Sau script nay:  python kb_apply.py <project>  ->  check_sync.py  ->  mo CapCut
 """
 import json, os, pathlib, subprocess, sys
 
+try:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
+
 LAB = pathlib.Path(os.environ.get("CAPCUT_LAB", r"D:\Test_tool"))
 
 SHOTS = [

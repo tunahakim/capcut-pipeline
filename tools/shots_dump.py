@@ -12,6 +12,11 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import shots_crosscheck as sc
 
+try:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
+
 BASE = ["idx", "image", "start_s", "dur_s", "transition", "blur"]
 KB = ["kb_s0", "kb_s1"]
 

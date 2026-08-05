@@ -8,6 +8,11 @@ Trich khung hinh tai cac moc kiem chung, kem md5 va mau trung binh RGB.
 """
 import subprocess, pathlib, sys, os, hashlib
 
+try:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
+
 LAB = pathlib.Path(os.environ.get("CAPCUT_LAB", r"D:\Test_tool"))
 VID = pathlib.Path(sys.argv[1])
 OUT = pathlib.Path(sys.argv[2]) if len(sys.argv) > 2 else LAB / "frames"

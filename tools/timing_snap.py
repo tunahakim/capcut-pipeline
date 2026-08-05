@@ -7,6 +7,11 @@ Vào: project ở chế độ snap, hai file snapshot ở chế độ diff. Ra: 
 
 import json, pathlib, sys
 
+try:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
+
 MODE = sys.argv[1]
 
 def load(proj):

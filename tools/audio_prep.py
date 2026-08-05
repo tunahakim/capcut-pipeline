@@ -8,6 +8,11 @@ Vào: file audio nguồn. Ra: file audio đích, file concat_list.txt cạnh nó
 import math, re, subprocess, sys
 from pathlib import Path
 
+try:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
+
 SRC = Path(sys.argv[1])
 DST = Path(sys.argv[2])
 TARGET_MIN = float(sys.argv[3]) if len(sys.argv) > 3 else 59.0

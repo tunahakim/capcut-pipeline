@@ -7,6 +7,11 @@ Nguong lay tu 3 cua so NEN do ben trong shot (chi co Ken Burns).
 """
 import subprocess, pathlib, sys
 
+try:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
+
 VID  = pathlib.Path(sys.argv[1])
 GRID, SPAN = 32, 1.20
 FSZ  = GRID * GRID * 3

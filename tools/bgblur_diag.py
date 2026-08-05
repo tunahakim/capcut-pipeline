@@ -9,6 +9,11 @@ import argparse, json, os, sys
 from pathlib import Path
 from collections import Counter
 
+try:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
+
 DRAFTS = Path(os.environ.get("LOCALAPPDATA", "")) / "CapCut" / "User Data" / "Projects" / "com.lveditor.draft"
 LAB = Path(os.environ.get("CAPCUT_LAB") or (Path(__file__).resolve().parents[2] / "data"))
 _AP = argparse.ArgumentParser(description="Chan doan lop canvas cua mot hay nhieu project CapCut.")

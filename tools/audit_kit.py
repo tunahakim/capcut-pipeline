@@ -11,6 +11,11 @@ Tra loi:
 """
 import hashlib, json, os, pathlib, re, sys
 
+try:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
+
 LAB = pathlib.Path(os.environ.get("CAPCUT_LAB", r"D:\Test_tool"))
 DR = pathlib.Path(os.environ["LOCALAPPDATA"]) / "CapCut/User Data/Projects/com.lveditor.draft"
 CACHE = pathlib.Path.home() / "AppData/Local/CapCut/User Data/Cache/effect"

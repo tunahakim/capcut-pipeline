@@ -12,6 +12,11 @@ SAU SCRIPT NAY TUYET DOI KHONG CHAY THEM LENH GHI NAO CUA CLI.
 """
 import contextlib, csv, importlib.util, io, os, pathlib, sys, time
 
+try:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
+
 proj = sys.argv[1]
 csvf = pathlib.Path(sys.argv[2])
 here = pathlib.Path(__file__).resolve().parents[1]

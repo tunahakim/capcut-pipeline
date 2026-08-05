@@ -8,6 +8,11 @@ Mẫu gồm một cặp đối chứng blur mạnh cạnh canvas_color, một sh
 import argparse, json, os, subprocess, sys
 from pathlib import Path
 
+try:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
+
 DRAFTS = Path(os.environ.get("LOCALAPPDATA", "")) / "CapCut" / "User Data" / "Projects" / "com.lveditor.draft"
 LAB = Path(os.environ.get("CAPCUT_LAB") or r"D:\IT\capcut-lab\data")
 _AP = argparse.ArgumentParser(description="Chon mau shot de kiem thi giac canvas blur.")

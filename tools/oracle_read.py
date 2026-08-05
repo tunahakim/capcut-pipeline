@@ -9,6 +9,11 @@ import json, pathlib, sys
 import os
 import argparse
 
+try:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
+
 LAB = pathlib.Path(os.environ.get("CAPCUT_LAB", r"D:\IT\capcut-lab\data"))
 
 BASE_V3 = [(0,19.74),(19.74,14.94),(34.68,14.20),(48.88,23.84),

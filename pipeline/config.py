@@ -11,6 +11,11 @@ import shutil
 import sys
 from pathlib import Path
 
+try:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
+
 SCHEMA = 1
 EXIT_OK = 0
 EXIT_CONFIG = 2

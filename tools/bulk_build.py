@@ -7,6 +7,11 @@ Dừng ngay ở lệnh đầu tiên bị lỗi. Đã chạy ở n=10 và n=300 t
 
 import json, os, pathlib, subprocess, sys, time
 
+try:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
+
 PROJ = sys.argv[1]
 SRC  = pathlib.Path(sys.argv[2])
 N    = int(sys.argv[3]) if len(sys.argv) > 3 else 300

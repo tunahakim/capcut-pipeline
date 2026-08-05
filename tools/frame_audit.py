@@ -8,6 +8,11 @@ Chỉ kết luận khi viền dự đoán chiếm trên 2 phần trăm khung hì
 import argparse, csv, json, os, subprocess, sys
 from pathlib import Path
 
+try:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
+
 DRAFTS = Path(os.environ.get("LOCALAPPDATA", "")) / "CapCut" / "User Data" / "Projects" / "com.lveditor.draft"
 LAB = Path(os.environ.get("CAPCUT_LAB") or r"D:\IT\capcut-lab\data")
 _AP = argparse.ArgumentParser(description="Doi chieu JSON voi pixel that cua ban export, bang chung muc 5.")

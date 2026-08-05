@@ -5,6 +5,11 @@ import json, pathlib, sys
 CACHE = pathlib.Path.home() / "AppData/Local/CapCut/User Data/Cache/effect"
 PH = "##_material_placeholder"
 import re
+
+try:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
 HEX32 = re.compile(r"^[0-9a-f]{32}$")
 
 

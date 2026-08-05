@@ -18,6 +18,11 @@ Cach dung:
 """
 import argparse, csv, pathlib, random, shutil, sys
 
+try:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
+
 CW, CH = 1920.0, 1080.0
 IMG_W, IMG_H = 1376.0, 768.0
 KY = (CW * IMG_H / IMG_W) / CH

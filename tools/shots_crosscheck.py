@@ -9,6 +9,11 @@ Ví dụ: python tools/shots_crosscheck.py --project prod60 --csv D:/IT/capcut-l
 import argparse, csv, json, os, sys
 from pathlib import Path
 
+try:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
+
 DRAFTS = Path(os.environ.get("LOCALAPPDATA", "")) / "CapCut" / "User Data" / "Projects" / "com.lveditor.draft"
 LEVELS = {0: None, 1: 0.0625, 2: 0.375, 3: 0.75, 4: 1.0}
 NEED = ["image", "start_s", "dur_s", "transition", "blur"]
