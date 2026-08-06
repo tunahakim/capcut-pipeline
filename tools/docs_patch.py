@@ -3,11 +3,11 @@
 r"""
 tools/docs_patch.py -- vá tài liệu và mã nguồn theo đặc tả JSON, có bảy chốt an toàn trước khi ghi.
 
-  python tools/docs_patch.py --spec <file.json> --probe    # chi dem neo, khong ghi
-  python tools/docs_patch.py --spec <file.json>            # chay thu, KHONG ghi
-  python tools/docs_patch.py --spec <file.json> --apply    # ghi that
-  python tools/docs_patch.py --selftest                    # tu kiem moi ca
-  python tools/docs_patch.py --example                     # in spec mau cho ca tam op
+  python tools/docs_patch.py --spec <file.json> --probe    # chỉ đếm neo, không ghi
+  python tools/docs_patch.py --spec <file.json>            # chạy thử, KHÔNG ghi
+  python tools/docs_patch.py --spec <file.json> --apply    # ghi thật
+  python tools/docs_patch.py --selftest                    # tự kiểm mọi ca
+  python tools/docs_patch.py --example                     # in spec mẫu cho cả tám op
 
 Quy trình chuẩn cho lượt vá dài: lượt một chỉ phát spec kế hoạch gồm neo ngắn cộng khoá content_file trỏ tới một file trong thư mục tạm CHƯA tồn tại, rồi chạy --probe cho rẻ; lượt hai mới viết nội dung mới ra đúng file đó rồi --apply. Nội dung mới nằm trên đĩa chứ không nằm trong lịch sử hội thoại, nên neo hỏng thì chỉ phát lại neo. Có --fill-bytes thì --probe tự ghi expect_bytes đo được ngược vào spec. Đoạn dài từ khoảng mười dòng trở lên bắt buộc dùng replace_between với hai neo ngắn và duy nhất, không dùng replace với nguyên văn đoạn cũ, vì khi đó chính đoạn dài là cái neo.
 
@@ -57,12 +57,12 @@ NEED = {"replace": ("old", "new"), "delete": ("old",), "delete_block": ("anchor"
 
 
 def audit_ns_default():
-    """Bang luat lay tu ban tools/docs_audit.py dang nam tren dia."""
+    """Bảng luật lấy từ bản tools/docs_audit.py đang nằm trên đĩa."""
     return dict((k, getattr(da, k)) for k in NS_NAMES)
 
 
 def audit_from_text(text):
-    """Bang luat lay tu ban tools/docs_audit.py DA VA, con trong bo nho."""
+    """Bảng luật lấy từ bản tools/docs_audit.py ĐÃ VÁ, còn trong bộ nhớ."""
     ns = {"__name__": "docs_audit_patched",
           "__file__": str(REPO / AUDIT_REL)}
     exec(compile(text, "docs_audit(patched)", "exec"), ns)
@@ -73,7 +73,7 @@ def audit_from_text(text):
 
 
 def scan_new_text(text, src, index, byname, ns):
-    """Phan loai token duong dan trong noi dung sap ghi. Phan phan xu dung resolve()."""
+    """Phân loại token đường dẫn trong nội dung sắp ghi. Phần phân xử dùng resolve()."""
     out = []
     for lineno, line in ns["strip_fences"](text):
         for m in ns["TOKEN_RE"].finditer(line):
@@ -89,7 +89,7 @@ def scan_new_text(text, src, index, byname, ns):
 
 
 def show_hits(body, s, lab, limit=3):
-    """In cac cho khop kem mot dong tren mot dong duoi, de chon neo dai hon."""
+    """In các chỗ khớp kèm một dòng trên một dòng dưới, để chọn neo dài hơn."""
     lines = body.split("\n")
     pos, start = [], 0
     while True:
@@ -109,11 +109,11 @@ def show_hits(body, s, lab, limit=3):
 
 
 def doc_than(rel):
-    """Doc file dich va kiem BOM cung newline lan. Tra ve (body_LF, nl, loi).
+    """Đọc file đích và kiểm BOM cùng newline lẫn. Trả về (body_LF, nl, loi).
 
-    Duong doc duy nhat cho ca apply_edits() lan run_probe(): hai ben tung doc
-    bang hai doan ma rieng nen probe co the bao sach roi apply moi tu choi.
-    loi la None khi doc duoc.
+    Đường đọc duy nhất cho cả apply_edits() lẫn run_probe(): hai bên từng đọc
+    bằng hai đoạn mã riêng nên probe có thể báo sạch rồi apply mới từ chối.
+    loi là None khi đọc được.
     """
     p = REPO / rel
     if not p.is_file():
@@ -133,12 +133,12 @@ def doc_than(rel):
 
 
 def do_vung(body, start, end, end_mode="giu"):
-    """Dem hai neo va do vung giua chung. Tra ve (n_start, n_end, xuoi, size, i, k).
+    """Đếm hai neo và đo vùng giữa chúng. Trả về (n_start, n_end, xuoi, size, i, k).
 
-    Vung bi thay la body[i:k]. Che do "giu" la mac dinh, k dung ngay TRUOC neo
-    cuoi nen neo cuoi con nguyen trong file; che do "gom" la hanh vi cu, k nam
-    sau neo cuoi nen neo cuoi bi nuot. size la so byte UTF-8 cua vung do, bang 0
-    khi chua do duoc. Duong do duy nhat cho ca apply_edits() lan run_probe().
+    Vùng bị thay là body[i:k]. Chế độ "giu" là mặc định, k dừng ngay TRƯỚC neo
+    cuối nên neo cuối còn nguyên trong file; chế độ "gom" là hành vi cũ, k nằm
+    sau neo cuối nên neo cuối bị nuốt. size là số byte UTF-8 của vùng đó, bằng 0
+    khi chưa đo được. Đường đo duy nhất cho cả apply_edits() lẫn run_probe().
     """
     n1, n2 = body.count(start), body.count(end)
     if n1 != 1 or n2 != 1:
@@ -152,7 +152,7 @@ def do_vung(body, start, end, end_mode="giu"):
 
 
 def in_vung(body, i, k, nhan):
-    """In dong dau va dong cuoi cua vung sap bi thay, de nhin ra ngay neo cuoi bat sai cho."""
+    """In dòng đầu và dòng cuối của vùng sắp bị thay, để nhìn ra ngay neo cuối bắt sai chỗ."""
     doan = body[i:k]
     lines = doan.split("\n")
     ln_dau = body.count("\n", 0, i) + 1
@@ -167,11 +167,11 @@ def in_vung(body, i, k, nhan):
 
 
 def apply_edits(rel, edits, errs, probe=False, do_duoc=None):
-    """Tra ve (text_moi, nl, kiem_sau) hoac None neu loi. Khong ghi gi.
+    """Trả về (text_moi, nl, kiem_sau) hoặc None nếu lỗi. Không ghi gì.
 
-    Cac edit duoc ap TUAN TU len cung mot ban trong bo nho, dung thu tu trong
-    spec. Voi probe=True thi khong phan xu expect_bytes va khong doi phai co
-    "new"; edit nao chua co "new" thi giu nguyen vung do roi in GHI CHU.
+    Các edit được áp TUẦN TỰ lên cùng một bản trong bộ nhớ, đúng thứ tự trong
+    spec. Với probe=True thì không phân xử expect_bytes và không đòi phải có
+    "new"; edit nào chưa có "new" thì giữ nguyên vùng đó rồi in GHI CHU.
     """
     path = REPO / rel
     creating = any(e["op"] == "create" for e in edits)
@@ -316,7 +316,7 @@ def apply_edits(rel, edits, errs, probe=False, do_duoc=None):
 
 
 def diag(body, s, lab):
-    """In chan doan khi mot neo khong khop dung mot lan."""
+    """In chẩn đoán khi một neo không khớp đúng một lần."""
     lines = body.split("\n")
     first = (s.split("\n")[0] or "").strip()
     if first:
@@ -330,7 +330,7 @@ def diag(body, s, lab):
 
 
 def nhom_theo_file(edits):
-    """Gom edit theo file, giu nguyen thu tu xuat hien trong spec."""
+    """Gom edit theo file, giữ nguyên thứ tự xuất hiện trong spec."""
     order, groups = [], {}
     for e in edits:
         rel = Path(e.get("file", "")).as_posix()
@@ -342,7 +342,7 @@ def nhom_theo_file(edits):
 
 
 def run_probe(spec_path, fill):
-    """Dem neo va do vung, KHONG ghi file dich nao, dung chung duong ap voi --apply."""
+    """Đếm neo và đo vùng, KHÔNG ghi file đích nào, dùng chung đường áp với --apply."""
     try:
         spec = json.loads(Path(spec_path).read_text(encoding="utf-8"))
     except Exception as exc:
@@ -617,7 +617,7 @@ def run_spec(spec_path, apply, allow_dirty):
 
 
 def lay_so(text, khoa):
-    """Lay so nguyen dung ngay sau mot khoa dang 'thuc=' trong output cua tool."""
+    """Lấy số nguyên đứng ngay sau một khoá dạng 'thuc=' trong output của tool."""
     k = text.find(khoa)
     if k < 0:
         return -1
@@ -631,13 +631,13 @@ def lay_so(text, khoa):
 
 
 def so_hai_duong(tmp, day, h1, h2, vung_giu):
-    """Bat --probe va --apply do CUNG mot vung sau khi mot edit truoc do da lam vung ay to ra.
+    """Bắt --probe và --apply đo CÙNG một vùng sau khi một edit trước đó đã làm vùng ấy to ra.
 
-    Spec co hai edit tren cung mot file: edit dau chen them chu ngay sau neo dau,
-    edit sau do vung giua hai neo. Probe cu do tung edit doc lap tren ban goc nen
-    se bao dung bang vung_giu, tuc BO SOT phan vua chen; probe tuan tu phai bao
-    dung bang vung_giu cong so byte da chen. Ca nay khong nhin ma thoat, no doc
-    thang con so hai ben in ra sau chu 'thuc='.
+    Spec có hai edit trên cùng một file: edit đầu chèn thêm chữ ngay sau neo đầu,
+    edit sau đo vùng giữa hai neo. Probe cũ đo từng edit độc lập trên bản gốc nên
+    sẽ báo đúng bằng vung_giu, tức BỎ SÓT phần vừa chèn; probe tuần tự phải báo
+    đúng bằng vung_giu cộng số byte đã chèn. Ca này không nhìn mã thoát, nó đọc
+    thẳng con số hai bên in ra sau chữ 'thuc='.
     """
     chen = "\ndong chen selftest " + day + "\n"
     spec = {"edits": [
@@ -905,7 +905,7 @@ SPEC_MAU = {
 
 
 def in_mau(ngan=False):
-    """In mot spec mau hop le cho ca tam op, de nguoi dung va tro ly khong phai di tim tai lieu moi biet khuon."""
+    """In một spec mẫu hợp lệ cho cả tám op, để người dùng và trợ lý không phải đi tìm tài liệu mới biết khuôn."""
     if ngan:
         print("")
         print("Xem spec mau day du: python tools/docs_patch.py --example")
