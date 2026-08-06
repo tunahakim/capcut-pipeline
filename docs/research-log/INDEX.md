@@ -4,6 +4,7 @@ Mỗi phiên làm việc một file, tên theo quy ước `<ngày>-<số thứ t
 
 | Phiên | File | Nội dung chính |
 |---|---|---|
+| 06/08-1 sáng | `2026-08-06-1-endmode-conventions-va-hai-vai.md` | Đóng `end_mode` cùng probe tuần tự cho `tools/docs_patch.py`, chuyển mọi câu văn xuôi in ra console sang tiếng Việt có dấu, dựng `docs/conventions.md` làm nơi ở của luật thao tác, và đổi cách làm việc sang hai vai điều phối cùng thực thi. |
 | 05/08-4 05/08-4 chiều | `2026-08-05-4-pragma-enc-va-docstring-tools.md` | Đóng nhóm 21 chỗ subprocess thiếu encoding bằng 6 chỗ sửa thật cộng 15 chỗ khai nhãn pragma, chuyển reference/describe.json sang UTF-8 không BOM, viết lại 15 docstring trong tools/, sửa tools/repo_bytecheck.py nuốt lỗi 403, py_audit đi từ 53 xuống 16 LOI. |
 | 05/08-3 chiều | `2026-08-05-3-vet-state-va-nhom-reconfigure.md` | Truy nguyên và vá ba đoạn bị lượt vá kết phiên trước xoá mất khỏi `docs/STATE.md`, rồi đóng nhóm 42 script thiếu `sys.stdout.reconfigure` bằng một spec sinh tự động. |
 | 05/08-2 trưa | `2026-08-05-2-mien-tru-tran-va-dong-phien.md` | Cài cơ chế miễn trừ trần có hạn qua `cap_for()` dùng chung hai tool, hoàn tất dòng khai Phiên cho 26 file nhật ký, và viết `tools/py_audit.py` đo được 136 lỗi mã hoá đang chờ sửa. |
@@ -33,7 +34,6 @@ Mỗi phiên làm việc một file, tên theo quy ước `<ngày>-<số thứ t
 | 30/07-1 | `2026-07-30-1-refactor.md` | Di trú sang cây ba nhánh, tạo bộ tài liệu, đưa tài liệu nháp cũ ra khỏi repo |
 | 29/07-3 (v7) | `2026-07-29-3-v7.md` | Chuẩn hoá `CAPCUT_LAB`, đóng vendor kit, chặn updater, dựng mốc vàng parity |
 | 29/07-2 (v6) | `2026-07-29-2-v6.md` | Export MP4 thật lần đầu, chặn bởi khoá Pro, đo từng khung, `cube` ra cắt cứng |
-| 29/07-1 (v5) | `2026-07-29-1-v5.md` | Lớp filter bằng Python, quy tắc cache-first, bỏ hẳn `add-filter` |
 
 Bốn file của ngày 28 và 29/07 vốn là phụ lục E1 tới E4 chép sang từ `../legacy/v0.8-full.md`, chưa được viết lại, nên văn phong khác các phiên sau.
 

@@ -49,3 +49,27 @@ Về `end_mode` của `replace_between`: mặc định là `giu`, tức vùng b�
 ## 5. Luật chống quên sau khi fetch
 
 Kết quả `crawler` bị cắt khỏi ngữ cảnh của trợ lý sau một hai lượt, trong khi nội dung người dùng dán thẳng vào hội thoại thì giữ nguyên văn suốt phiên. Vì vậy: không trích dẫn, không kết luận, không viện dẫn nội dung một file đã fetch ở lượt trước; hoặc xin dán lại, hoặc nói thẳng là không còn nguyên văn. Cảm giác nhớ được không phải bằng chứng. Fetch chỉ dành cho thứ dùng xong ngay trong lượt đó. Cơ chế đầy đủ ở `docs/ai-reading-channel.md`.
+
+## 6. Ba mức chọn công cụ theo cỡ việc
+
+Luật này là tiêu chí đếm được cho câu chọn công cụ theo cỡ việc ở mục 8 của `docs/START-HERE.md`, sinh ra sau khi một lượt sửa đúng hai dòng ASCII trong `tools/docs_audit.py` tốn ba lượt đối đáp chỉ vì đã dựng spec thay vì sửa thẳng.
+
+Mức một, hai dòng PowerShell: khi thay đổi dưới ba dòng, chuỗi tìm và chuỗi thay đều thuần ASCII, file đã tồn tại, và có sẵn một lệnh kiểm chạy ngay sau đó. Khuôn là đọc bằng `[System.IO.File]::ReadAllText`, gọi `.Replace`, rồi ghi bằng `[System.IO.File]::WriteAllText` với `UTF8Encoding($false)`.
+
+Mức hai, script Python sinh bằng heredoc cộng `WriteAllText`: khi nội dung mới có chữ tiếng Việt, hoặc khi phải sửa từ ba đoạn trở lên trên cùng một file, hoặc khi cần đếm số lần khớp trước khi ghi.
+
+Mức ba, dựng spec JSON cho `tools/docs_patch.py`: khi vá tài liệu nhiều đoạn cần đếm khớp từng đoạn, cần chốt an toàn và cần kiểm lại sau khi ghi.
+
+Một điều không nới ở mọi mức: không bao giờ khuyên người dùng mở Notepad sửa file chứa tiếng Việt có dấu, vì một lần lưu nhầm cp1252 là hỏng âm thầm mà `tools/docs_audit.py` không bắt được do nó đếm byte chứ không kiểm mã hoá.
+
+## 7. Probe sạch không bảo chứng apply chạy
+
+Nhánh probe của `tools/docs_patch.py` chỉ đếm neo và đo vùng. Hai chốt an toàn khác chỉ chạy ở nhánh apply: chốt đường dẫn, tức mọi tên file nhắc trong nội dung mới phải tồn tại thật hoặc đã khai trong `PLANNED` của `tools/docs_audit.py`; và chốt trần kích thước sau khi vá. Vì vậy mọi lượt vá có tạo file mới hoặc có nhắc tên file chưa tồn tại phải dự đoán riêng cho nhánh apply, trả lời trước hai câu: tên file mới đã khai trong `PLANNED` chưa, và kích thước sau vá có vượt trần không.
+
+Kèm một bẫy đã trả giá bằng một lượt: `ast.literal_eval` không đánh giá được phép nhân, nó chỉ nhận hằng, tuple, list, dict, set và duy nhất phép cộng trừ để dựng số phức. Bảng trần viết giá trị dưới dạng một phép nhân nên mọi script đọc bảng đó bằng `literal_eval` sẽ ném lỗi malformed node; thay bằng một bộ đánh giá đệ quy nhỏ chỉ nhận hằng số và bốn phép nhân cộng trừ chia lấy nguyên.
+
+## 8. Mô hình hai vai: AI điều phối và AI thực thi
+
+Từ 06/08/2026 mỗi phiên chia hai vai. AI điều phối là phiên duy nhất đọc trọn bốn file cửa vào cộng file này, giữ lộ trình, chẩn đoán lỗi và soạn prompt giao việc. AI thực thi là các phiên rời, mỗi phiên làm đúng một việc, không đọc bốn file cửa vào, chỉ nhận đúng ngữ cảnh mà điều phối cấp cộng phần mã hoặc tài liệu người dùng dán vào. Lý do: bốn file cửa vào ngốn phần lớn ngân sách của mọi phiên, mà chỉ một phiên cần nắm chúng.
+
+Hệ quả bắt buộc với điều phối: prompt giao việc phải tự đủ, gồm mục tiêu, tiêu chí xong đếm được, mọi luật thao tác cần thiết chép thẳng vào chứ không trỏ tới file, dự đoán số đo chốt trước, và khuôn báo cáo bắt buộc trả về. Hệ quả bắt buộc với thực thi: không tự mở rộng phạm vi, không sửa file ngoài danh sách được giao, và báo cáo phải nêu rõ mọi chỗ số đo thực tế lệch dự đoán.

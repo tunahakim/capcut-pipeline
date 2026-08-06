@@ -116,3 +116,13 @@ Kiểm thị giác bản export `prod60` theo quy tắc in ground truth trước
 Kéo về máy lab hai thứ không tái tạo được: file `narration59.mp3` và thư mục 326 ảnh gốc ở `D:\IT\capcut-help\Picture`.
 
 Nghiệm thu `tools/data_manifest.py` giữa hai máy. Trên máy render chạy `--scan --machine render` rồi commit bản kê, sau đó `--compare --mine manifests/lab.json --theirs manifests/render.json`. Tiêu chí xong: báo cáo in đúng danh sách hai máy thiếu của nhau; mã thoát 0 hoặc 2 đều được miễn mọi dòng lệch giải thích được. Khối `vendor_extra` lệch nhiều là bình thường; chỉ `data` và `vendor_canonical` mới đáng xử lý.
+
+## Nợ ghi thêm cuối phiên 06/08-1
+
+Rà trùng khối này với mục Ưu tiên 0 rồi gộp làm một, vì nó viết lúc cuối phiên khi không còn nguyên văn file trong ngữ cảnh nên có thể chép lại thứ đã có.
+
+Hạ trần `docs/TODO.md` trong `PER_FILE_BUDGET` của `tools/docs_audit.py` về lại 25 KB sau khi rút gọn file này; trần 30 KB hiện hành là nới tạm ngày 06/08/2026 để chèn mục Ưu tiên 0. Tiêu chí xong: trần về 25 KB và `python tools/docs_audit.py --brief` vẫn thoát 0.
+
+Thêm `docs/conventions.md` vào bản đồ tài liệu ở mục 5 của `docs/START-HERE.md`, ghi rõ nó bắt buộc với AI điều phối và không nằm trong thứ tự đọc của AI thực thi. Gộp vào lượt viết lại mục 8. Tiêu chí xong: bản đồ liệt kê đủ mọi file trong `docs/`.
+
+Ba chỗ trong mục 8 của `docs/START-HERE.md` đang nói ngược với thứ có thật trên đĩa, sửa cùng lượt viết lại: ba ngưỡng dòng của `tools/read_src.py`, câu nói `docs/TODO.md` chật hơn trần mặc định trong khi nó đang rộng hơn, và dòng tiêu đề mục 8 lặp hai lần liên tiếp.
