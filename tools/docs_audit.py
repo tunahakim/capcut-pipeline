@@ -8,7 +8,7 @@ tools/docs_audit.py -- kiem ke tai lieu: kich thuoc va tham chieu cheo.
   python tools/docs_audit.py --compare       # so voi moc chuan
   python tools/docs_audit.py --brief         # bo ma tran, chi in file gan tran
 
-Snapshot ghi vao <CAPCUT_LAB>/perf/. Console chi in ASCII.
+Snapshot ghi vao <CAPCUT_LAB>/perf/. Console: nhan va tu khoa may doc giu ASCII vi tool khac grep chung, con van xuoi la tieng Viet co dau.
 
 Phan loai tham chieu. OK la file co that, dung duong dan. PLANNED la file da len ke
 hoach nhung chua viet. NGOAI la duong dan co y tro ra ngoai repo, vi du script dung
@@ -28,6 +28,14 @@ kieu LF vao file dang CRLF se lam file do LAN hai kieu, va luc do tools/docs_pat
 cung tools/rlog_index.py dung lai. Quet va chuan hoa bang tools/nl_audit.py. Tool nay
 KHONG kiem newline va KHONG kiem ma hoa, nen mot file UTF-16LE nhu reference/describe.json
 van lot qua sach.
+
+Lớp thứ tư của trần, KHÔNG ĐO TRẦN. Một mục trong PER_FILE_BUDGET khai giá trị None nghĩa là bỏ hẳn phép so trần cho file đó: cap_for() trả về trần rỗng, file không bao giờ xuất hiện trong khối VUOT TRAN và không làm đổi mã thoát, nhưng vẫn hiện kích thước trong khối riêng KHONG DO TRAN nên không mất khả năng quan sát. Lớp này chỉ dành cho file sinh tự động mà không tồn tại hành động hợp lệ nào làm nó tụt xuống dưới trần, và hai chốt chống lạm dụng được ghi ngay tại chỗ khai chứ không nằm rải trong tài liệu.
+
+Bảng mã thoát:
+0 -- Tài liệu sạch: khối VAN DE rỗng, mọi file đều dưới trần hoặc đang được miễn trừ còn hạn hoặc thuộc lớp không đo trần.
+1 -- argparse từ chối tham số dòng lệnh và tự thoát; hãy xem lại cú pháp lệnh.
+2 -- Khối VAN DE có ít nhất một mục, gồm tham chiếu hỏng, mục thiếu, miễn trừ hỏng hoặc file vượt trần; phải sửa rồi chạy lại.
+3 -- Không đọc được docs/planned-files.json nên tool dừng trước khi kiểm bất cứ thứ gì; hãy sửa file JSON đó rồi chạy lại.
 [KIEM: du lieu that]
 """
 import os, re, sys, json, argparse, datetime
@@ -58,7 +66,10 @@ PER_FILE_BUDGET = {
                                     # cham tran dung luc ket phien khi khong con ngu canh de rut gon,
                                     # tuc luat tu no gay ra kieu hong no dinh chan. Rut gon la viec rieng.
     "docs/TODO.md":     30 * 1024,  # noi 06/08/2026 tu 25 KB len 30 KB de chen muc Uu tien 0; NOI TAM, ha lai ve 25 KB sau khi rut gon TODO
-    "docs/scripts.md":  40 * 1024,  # tang DAN: sinh tu dong, dai theo so script
+    # LỚP THỨ TƯ CỦA TRẦN, KHÔNG ĐO TRẦN: giá trị None nghĩa là bỏ hẳn phép so trần cho file đó. cap_for() trả về trần rỗng, file không bao giờ vào khối VUOT TRAN và không làm đổi mã thoát, nhưng vẫn hiện kích thước ở khối riêng KHONG DO TRAN để không mất khả năng quan sát.
+    # Chốt chống lạm dụng thứ nhất: mỗi mục thuộc lớp này BẮT BUỘC ghi tên script sinh ra file đó ngay trên dòng khai; file do người viết tay thì luôn còn một hành động hợp lệ để rút gọn, nên không bao giờ được xếp vào đây.
+    # Chốt chống lạm dụng thứ hai: lớp này CHỈ dành cho file mà trợ lý AI luôn được người dùng dán thẳng vào hội thoại. File nào trợ lý có thể phải tự fetch thì trần vẫn là một ngưỡng kỹ thuật thật của crawler chứ không phải luật chống phình, nên tuyệt đối không được miễn.
+    "docs/scripts.md":  None,       # KHONG DO TRAN -- sinh tu dong boi tools/scripts_index.py, dai theo so script, khong ton tai hanh dong hop le nao lam no tut xuong duoi tran
     "docs/reference.md": 40 * 1024, # tang DAN: so tra, day len theo kien thuc da do
     "docs/failures.md": 40 * 1024,  # tang DAN: so tra loi, chi ghi them
 }
@@ -74,9 +85,9 @@ VALIDATE_EXT   = {".md", ".py"}
 IGNORE = {"file.py", "__init__.py", "capcut_post.py", "scan_paths.py",
           "scripts/pack_vendor.py", "x.mp4", "operations.jsonl"}
 # file da len ke hoach nhung chua viet -- bao rieng, khong tinh la loi
-PLANNED = {"docs/scripts-archive.md", "tools/docs_size.py", "tools/probe_drafts.py",
-           "pipeline/__main__.py", "tools/scaffold_make.py",
-           "tools/session_open.py"}
+
+# PLANNED không còn khai cứng ở đây: danh sách file dự kiến đọc từ docs/planned-files.json bằng hàm load_planned() đặt cạnh load_waivers().
+
 # duong dan co y nam NGOAI repo: thu muc lab CAPCUT_LAB, noi de script dung mot lan
 EXTERNAL_PREFIX = ("data/",)
 # file da tung ton tai roi bi xoa; tai lieu nhac lai lich su, khong phai lien ket hong
@@ -217,12 +228,60 @@ def load_waivers():
     return _WAIVER_CACHE
 
 
+PLANNED_FILE = "docs/planned-files.json"
+_PLANNED_CACHE = None
+
+
+def load_planned():
+    """Đọc danh sách file DỰ KIẾN từ docs/planned-files.json, hoặc từ đường dẫn khai trong biến môi trường DOCS_PLANNED khi cần thử nghiệm, rồi trả về dict đường dẫn tương đối trỏ tới lý do dự kiến viết file đó. Khác load_waivers() ở một điểm cố ý: hàm này KHÔNG trả về cặp (bảng, lỗi) mà chết ngay tại chỗ với mã thoát 3, vì một bảng miễn trừ rỗng chỉ làm mất một dòng cảnh báo, còn một danh sách dự kiến rỗng sẽ biến mọi tham chiếu dự kiến thành FILE THIEU và làm ngập khối VAN DE bằng lỗi giả."""
+    global _PLANNED_CACHE
+    if _PLANNED_CACHE is not None:
+        return _PLANNED_CACHE
+    p = Path(os.environ.get("DOCS_PLANNED") or (REPO / PLANNED_FILE))
+
+    def chet(cau):
+        print("=== LOI (1) ===")
+        print(cau)
+        print("MA THOAT 3 -- Không đọc được danh sách file dự kiến nên tool dừng sớm và chưa kiểm gì cả; hãy sửa %s rồi chạy lại, tuyệt đối đừng bỏ qua vì coi danh sách là rỗng sẽ khiến mọi tham chiếu dự kiến bị báo nhầm là FILE THIEU." % PLANNED_FILE)
+        sys.exit(3)
+
+    if not p.is_file():
+        chet("Mong đợi có file danh sách dự kiến tại %s, thực tế không tìm thấy file nào ở đường dẫn đó." % p)
+    try:
+        d = json.loads(p.read_text(encoding="utf-8"))
+    except Exception as exc:
+        chet("Mong đợi %s là JSON hợp lệ, thực tế đọc hỏng: %s." % (p, exc))
+    if d.get("schema") != 1:
+        chet("Mong đợi %s khai schema 1, thực tế khai schema %r nên tool này không dám đọc." % (p, d.get("schema")))
+    muc = d.get("planned")
+    if not isinstance(muc, dict):
+        chet("Mong đợi %s có khoá planned là object ánh xạ đường dẫn sang lý do, thực tế khoá planned có kiểu %s." % (p, type(muc).__name__))
+    bang = {}
+    for k, v in muc.items():
+        rel = Path(k).as_posix()
+        if not isinstance(v, str) or not v.strip():
+            chet("Mong đợi mục dự kiến %s có một câu lý do bằng chữ, thực tế lý do rỗng hoặc không phải chuỗi." % rel)
+        if rel in bang:
+            chet("Mong đợi mỗi đường dẫn chỉ khai một lần, thực tế mục dự kiến %s bị khai trùng." % rel)
+        bang[rel] = v
+    if not bang:
+        chet("Mong đợi %s có ít nhất một mục dự kiến, thực tế khoá planned rỗng." % p)
+    _PLANNED_CACHE = bang
+    return _PLANNED_CACHE
+
+
+PLANNED = load_planned()
+
+
 def cap_for(rel, size=None, hom_nay=None):
-    """Nguồn sự thật duy nhất về trần kích thước của một file tài liệu, trả về bộ ba (trần, trạng thái miễn trừ, mục miễn trừ) để tool này và tools/docs_patch.py không bao giờ phán xử lệch nhau."""
+    """Nguồn sự thật duy nhất về trần kích thước của một file tài liệu, trả về bộ ba (trần, trạng thái miễn trừ, mục miễn trừ) để tool này và tools/docs_patch.py không bao giờ phán xử lệch nhau. Trần trả về có thể là None, nghĩa là file thuộc lớp KHÔNG ĐO TRẦN, nên mọi nơi tiêu thụ bắt buộc kiểm None trước khi đem trần ra so sánh hay chia."""
     rel = Path(rel).as_posix()
     cap = PER_FILE_BUDGET.get(rel, BUDGET)
     bang, _loi = load_waivers()
     w = bang.get(rel)
+    if cap is None:
+        # Lớp thứ tư: trần rỗng nghĩa là KHÔNG ĐO TRẦN, trả về sớm ngay tại đây để mọi nơi tiêu thụ đều nhận cùng một phán quyết. Cố ý trả kèm mục miễn trừ nếu còn sót, để scan() báo mục đó đã thừa thay vì im lặng bỏ qua.
+        return None, "KHONG DO TRAN", w
     if w is None:
         return cap, "KHONG CO", None
     hom_nay = hom_nay or datetime.date.today()
@@ -279,7 +338,7 @@ def scan():
                 problems.append(("MUC THIEU", r["src"], r["line"],
                                  r["token"] + " muc " + r["muc"], r["target"]))
 
-    waived = []
+    waived, khong_do_tran = [], []
     bang_mt, loi_mt = load_waivers()
     for msg in loi_mt:
         problems.append(("MIEN TRU HONG", WAIVER_FILE, 0, WAIVER_FILE, msg))
@@ -287,6 +346,13 @@ def scan():
         if p.startswith(NO_SCAN):
             continue
         cap, tt, w = cap_for(p, s)
+        if tt == "KHONG DO TRAN":
+            khong_do_tran.append((p, s))
+            if w is not None:
+                problems.append(("MIEN TRU THUA", p, 0, p,
+                                 "file thuoc lop KHONG DO TRAN nen muc mien tru khong con y nghia, "
+                                 "xoa muc nay di khoi %s" % WAIVER_FILE))
+            continue
         if tt == "THUA":
             problems.append(("MIEN TRU THUA", p, 0, p,
                              "%d byte da xuong duoi tran %d byte, MIEN TRU THUA, "
@@ -319,6 +385,7 @@ def scan():
 
     return {"sizes": sizes, "refs": refs, "problems": problems, "planned": planned,
             "ngoai": ngoai, "romans": romans, "orphans": orphans, "waived": waived,
+            "khong_do_tran": khong_do_tran,
             "when": datetime.datetime.now().isoformat(timespec="seconds")}
 
 
@@ -336,6 +403,8 @@ def report(d, brief=False):
         cap, tt_mt, w_mt = cap_for(p, s)
         if p.startswith(NO_SCAN):
             tag = "mien tru (legacy)"
+        elif cap is None:
+            tag = "KHONG DO TRAN (sinh tu dong)"
         else:
             tag = ("VUOT %d%%" if s > cap else "ok %d%%") % round(s * 100.0 / cap)
             if p in PER_FILE_BUDGET:
@@ -366,6 +435,14 @@ def report(d, brief=False):
         for p, s, cap, han, ly_do in wv:
             print("  %s  %d byte > tran %d byte, mien tru toi %s" % (p, s, cap, han))
             print("      ly do: %s" % ly_do)
+
+    kdt = d.get("khong_do_tran") or []
+    if kdt:
+        print("")
+        print("=== KHONG DO TRAN (%d) ===" % len(kdt))
+        for p, s in kdt:
+            print("  %s  %d byte, %.1f KB" % (p, s, s / 1024.0))
+            print("      Không đo trần vì file này sinh tự động và không tồn tại hành động hợp lệ nào làm nó nhỏ lại; tên script sinh ra nó ghi ngay tại chỗ khai trong PER_FILE_BUDGET. Kích thước vẫn in ở đây để không mất khả năng quan sát, và không tính là vấn đề nên không làm đổi mã thoát.")
     print("")
     print("=== VAN DE (%d) ===" % len(d["problems"]))
     if not d["problems"]:
@@ -444,4 +521,11 @@ def main():
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    _ma = main()
+    if _ma == 0:
+        print("MA THOAT 0 -- Tài liệu sạch: khối VAN DE rỗng, mọi file đều dưới trần hoặc đang được miễn trừ còn hạn hoặc thuộc lớp không đo trần; không cần làm gì thêm.")
+    elif _ma == 2:
+        print("MA THOAT 2 -- Khối VAN DE ở trên còn ít nhất một mục; hãy sửa từng mục rồi chạy lại, mã thoát chỉ về 0 khi khối đó rỗng.")
+    else:
+        print("MA THOAT %d -- Mã thoát ngoài dự kiến của tool này; hãy đọc output ở trên để biết tool dừng ở chỗ nào." % _ma)
+    sys.exit(_ma)

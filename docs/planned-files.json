@@ -1,0 +1,11 @@
+{
+  "_doc": "Danh sách file DỰ KIẾN sẽ viết, tách khỏi biến PLANNED khai cứng trong tools/docs_audit.py ngày 06/08/2026 để thêm bớt một tên không còn phải sửa mã Python và không còn nguy cơ vỡ cú pháp. Mỗi khoá là đường dẫn tương đối tính từ gốc repo, mỗi giá trị là lý do vì sao file đó được dự kiến viết; lý do nằm ngay cạnh đường dẫn vì lý do là thứ dễ mất nhất khi dữ liệu rời khỏi mã. Tác dụng: tham chiếu trong tài liệu trỏ tới các file này được tools/docs_audit.py xếp loại PLANNED chứ không báo FILE THIEU. Viết xong file nào thì XOÁ HẲN mục của file đó khỏi đây, vì tool sẽ báo PLANNED DA CHET khi thấy file đã tồn tại. Cơ chế đọc file này là hàm load_planned() của tools/docs_audit.py, cùng khuôn với hàm load_waivers() đọc docs/budget-waivers.json; tools/docs_patch.py KHÔNG tự đọc file này mà dùng chung resolve() của tools/docs_audit.py, nên chỉ có một nguồn sự thật duy nhất. Thiếu file này hoặc JSON hỏng thì tool in một dòng LOI rồi thoát mã 3, KHÔNG bao giờ âm thầm coi danh sách là rỗng, vì rỗng sẽ biến mọi tham chiếu dự kiến thành FILE THIEU và làm ngập khối VAN DE. Biến môi trường DOCS_PLANNED trỏ sang một danh sách khác và chỉ dùng cho phép thử. Mục docs/scripts-archive.md đã bị bỏ khỏi danh sách ngày 06/08/2026 vì hướng tách file archive đã huỷ. Các lý do dưới đây do trợ lý soạn ngày 06/08/2026 suy từ tên file và ngữ cảnh tài liệu, CHƯA được chủ dự án xác nhận từng dòng; thấy sai thì sửa thẳng vào đây.",
+  "schema": 1,
+  "planned": {
+    "tools/docs_size.py": "Tách riêng phép đo kích thước và so trần ra khỏi tools/docs_audit.py, để đo nhanh một file mà không phải quét toàn bộ tham chiếu chéo của cả repo.",
+    "tools/probe_drafts.py": "Dò các bản nháp còn dở nằm rải trong repo và báo cái nào bị bỏ quên, để nháp không lặng lẽ biến thành tài liệu chính thức.",
+    "pipeline/__main__.py": "Điểm vào duy nhất cho gói pipeline, để chạy được bằng python -m pipeline thay vì gọi từng script rời và mỗi nơi gọi một kiểu.",
+    "tools/scaffold_make.py": "Sinh khung file mới đúng khuôn dự án gồm docstring tiếng Việt có dấu, bảng mã thoát đầy đủ và UTF-8 không BOM, để không phải chép tay mỗi lần thêm một tool.",
+    "tools/session_open.py": "Mở phiên làm việc: in trạng thái repo, số đo tài liệu và việc còn dở, đối xứng với bước kết phiên đang có."
+  }
+}

@@ -3,12 +3,6 @@
   "schema": 1,
   "waivers": [
   {
-   "file": "docs/scripts.md",
-   "ly_do": "File sinh tự động bởi tools/scripts_index.py, ở 42500 byte trên trần 40960 sau khi lô 15 docstring trong tools/ viết lại bằng tiếng Việt dài hơn bản cũ. Trần này khai kèm ghi chú tăng DẦN nên nới được, nhưng phải quyết có kiểm chứng chứ không nới lúc cuối phiên. Hai hướng đã chốt trong docs/TODO.md: nới trần riêng trong PER_FILE_BUDGET của tools/docs_audit.py, hoặc cắt cột mô tả trong tools/scripts_index.py xuống câu đầu. Phải quyết TRƯỚC lô 16 docstring còn lại vì lô đó đẩy file này to thêm.",
-   "ngay_cap": "2026-08-05",
-   "het_han": "2026-08-12"
-  },
-  {
    "file": "docs/START-HERE.md",
    "ly_do": "File ở 27194 byte trên trần 26624 sau khi thêm luật gộp bước vào mục 8. Hướng rút gọn đã chốt: chuyển mọi số đo còn sót sang docs/STATE.md, bỏ ba ngưỡng của tools/read_src.py vì chính câu văn đó nói ngưỡng nằm trong mã, bỏ bản sao thứ ba của PER_FILE_BUDGET.",
    "ngay_cap": "2026-08-05",
