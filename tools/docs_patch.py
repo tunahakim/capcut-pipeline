@@ -1,49 +1,33 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 r"""
-tools/docs_patch.py -- va tai lieu va ma nguon theo dac ta JSON, sau chot an toan.
+tools/docs_patch.py -- vá tài liệu và mã nguồn theo đặc tả JSON, có bảy chốt an toàn trước khi ghi.
 
   python tools/docs_patch.py --spec <file.json> --probe    # chi dem neo, khong ghi
   python tools/docs_patch.py --spec <file.json>            # chay thu, KHONG ghi
-  python tools/docs_patch.py --spec <file.json> --apply     # ghi that
-  python tools/docs_patch.py --selftest                     # tu kiem moi ca
+  python tools/docs_patch.py --spec <file.json> --apply    # ghi that
+  python tools/docs_patch.py --selftest                    # tu kiem moi ca
+  python tools/docs_patch.py --example                     # in spec mau cho ca tam op
 
-Quy trinh chuan cho luot va dai: luot mot chi phat spec ke hoach gom neo ngan cong
-khoa content_file tro toi mot file trong thu muc tam CHUA ton tai, roi chay --probe
-cho re; luot hai moi viet noi dung moi ra dung file do roi --apply. Noi dung moi nam
-tren dia chu khong nam trong lich su hoi thoai, nen neo hong thi chi phat lai neo.
-Co --fill-bytes thi --probe tu ghi expect_bytes do duoc nguoc vao spec. Doan dai tu
-khoang muoi dong tro len bat buoc dung replace_between voi hai neo ngan va duy nhat,
-khong dung replace voi nguyen van doan cu, vi khi do chinh doan dai la cai neo.
+Quy trình chuẩn cho lượt vá dài: lượt một chỉ phát spec kế hoạch gồm neo ngắn cộng khoá content_file trỏ tới một file trong thư mục tạm CHƯA tồn tại, rồi chạy --probe cho rẻ; lượt hai mới viết nội dung mới ra đúng file đó rồi --apply. Nội dung mới nằm trên đĩa chứ không nằm trong lịch sử hội thoại, nên neo hỏng thì chỉ phát lại neo. Có --fill-bytes thì --probe tự ghi expect_bytes đo được ngược vào spec. Đoạn dài từ khoảng mười dòng trở lên bắt buộc dùng replace_between với hai neo ngắn và duy nhất, không dùng replace với nguyên văn đoạn cũ, vì khi đó chính đoạn dài là cái neo.
 
-Tam thao tac: replace, replace_between, delete, delete_block, insert_after,
-insert_before, append, create. Op delete_block nhan anchor la dong dau khoi roi xoa
-tu dau dong do den dong trong ke tiep; khong tim thay dong trong phia sau thi DUNG
-chu KHONG xoa toi het file. Op replace_between nhan hai sentinel start va end, moi cai phai khop dung 1
-lan, end phai nam sau start va khong chong len start, vung bi thay GOM CA hai
-sentinel, va dac ta phai khai truoc expect_bytes la so byte du kien bi thay -- lech
-qua tol_bytes thi dung, vi do la dau hieu sentinel cuoi bat vao cho xa hon du tinh.
-tol_bytes mac dinh la max(200, expect_bytes // 5).
+Tám thao tác: replace, replace_between, delete, delete_block, insert_after, insert_before, append, create.
 
-Sau chot: BOM bao loi va CRLF lan LF thi dung; moi anchor phai khop dung 1 lan va
-kiem het moi file roi moi ghi; so byte sap ghi voi tran nhap tu tools/docs_audit.py;
-file .py thi compile() truoc khi ghi; kiem lai sau khi ghi; tu choi cay git ban tru
-khi co --allow-dirty. Chot thu bay: moi token dang duong dan trong noi dung SAP GHI
-duoc phan loai bang resolve() cua tools/docs_audit.py -- SAI CHO, MISSING va TRUNG
-TEN thi dung, ten tran khong co thu muc thi CANH BAO kem duong dan day du.
+Op delete_block nhận anchor là dòng đầu khối rồi xoá từ đầu dòng đó đến dòng trống kế tiếp; không tìm thấy dòng trống phía sau thì DỪNG chứ KHÔNG xoá tới hết file.
 
-Khi spec co sua chinh tools/docs_audit.py thi BUDGET, PER_FILE_BUDGET va ca resolve()
-deu nhap tu ban DA VA TRONG BO NHO, nen mot luot vua them entry PLANNED vua nhac file
-moi khong con bi chan oan.
+Op replace_between nhận hai sentinel start và end, mỗi cái phải khớp đúng 1 lần, end phải nằm sau start và không chồng lên start. MẶC ĐỊNH vùng bị thay gồm neo đầu và dừng NGAY TRƯỚC neo cuối, tức neo cuối vẫn còn nguyên trong file sau khi vá; khoá end_mode bằng "gom" khôi phục hành vi cũ là nuốt luôn cả neo cuối. Mặc định này đảo chiều ngày 06/08/2026 vì một spec quên chép neo cuối vào "new" đã xoá mất ba đoạn của docs/STATE.md mà không ai thấy: thừa một dòng thì dễ sửa, mất một dòng thì khoai. Khoá expect_bytes là số byte dự kiến của vùng THỰC SỰ bị thay theo đúng chế độ đang chọn, lệch quá tol_bytes thì dừng, vì đó là dấu hiệu sentinel cuối bắt vào chỗ xa hơn dự tính; tol_bytes mặc định là max(200, expect_bytes // 5).
 
-Trần kích thước không đọc thẳng từ PER_FILE_BUDGET nữa mà hỏi cap_for() của tools/docs_audit.py, nên một file đang có miễn trừ còn hạn trong docs/budget-waivers.json thì vẫn ghi được và chỉ nhận một dòng CANH BAO, còn miễn trừ đã hết hạn thì chặn ghi như mọi lần vượt trần khác.
+Chế độ --probe dựng bản mới TUẦN TỰ trong bộ nhớ đúng như --apply và dùng chung hàm apply_edits, nên spec nhiều edit trên cùng một file không còn cảnh probe sạch rồi apply mới trượt vì edit trước đã xoá mất neo của edit sau. Edit nào chưa có "new", chẳng hạn content_file còn chưa viết, thì probe giữ nguyên vùng đó và in GHI CHU chứ không giả định là xoá. Với replace_between, --probe in thêm dòng đầu và dòng cuối của vùng sắp mất, kèm một dòng CANH BAO khi neo cuối bị nuốt mà không xuất hiện lại trong "new", hoặc khi neo cuối được giữ mà "new" cũng chứa nó nên sẽ lặp hai lần.
 
-Ma thoat: 0 xong; 1 sai tham so hay spec khong doc duoc; 2 kiem TRUOC that bai nen
-CHUA GHI FILE NAO; 3 da ghi nhung kiem SAU that bai -- tool KHONG tu hoi phuc, no chi
-in ten file de nguoi dung tu chay git restore.
+Sáu chốt an toàn: BOM báo lỗi và CRLF lẫn LF thì dừng; mọi anchor phải khớp đúng 1 lần và kiểm hết mọi file rồi mới ghi; số byte sắp ghi so với trần hỏi từ cap_for() của tools/docs_audit.py; file .py thì compile() trước khi ghi; kiểm lại sau khi ghi; từ chối cây git bẩn trừ khi có --allow-dirty. Chốt thứ bảy: mọi token dạng đường dẫn trong nội dung SẮP GHI được phân loại bằng resolve() của tools/docs_audit.py, gặp SAI CHO, MISSING hay TRUNG TEN thì dừng, còn tên trần không có thư mục thì CANH BAO kèm đường dẫn đầy đủ.
+
+Khi spec có sửa chính tools/docs_audit.py thì BUDGET, PER_FILE_BUDGET và cả resolve() đều nhập từ bản ĐÃ VÁ TRONG BỘ NHỚ, nên một lượt vừa thêm entry PLANNED vừa nhắc file mới không còn bị chặn oan. Trần kích thước hỏi cap_for() chứ không đọc thẳng PER_FILE_BUDGET, nên một file đang có miễn trừ còn hạn trong docs/budget-waivers.json thì vẫn ghi được và chỉ nhận một dòng CANH BAO, còn miễn trừ đã hết hạn thì chặn ghi như mọi lần vượt trần khác.
+
+Mã thoát: 0 xong; 1 sai tham số hay spec không đọc được; 2 kiểm TRƯỚC thất bại nên CHƯA GHI FILE NÀO; 3 đã ghi nhưng kiểm SAU thất bại, tool KHÔNG tự hồi phục mà chỉ in tên file để người dùng tự chạy git restore.
 [KIEM: bo test]
 """
 import argparse
+import copy
 import datetime
 import json
 import os
@@ -65,6 +49,7 @@ NS_NAMES = ("resolve", "strip_fences", "norm", "TOKEN_RE",
             "BUDGET", "PER_FILE_BUDGET", "NO_SCAN", "cap_for", "WAIVER_FILE")
 OPS = ("replace", "replace_between", "delete", "delete_block", "insert_after",
        "insert_before", "append", "create")
+END_MODES = ("giu", "gom")
 NEED = {"replace": ("old", "new"), "delete": ("old",), "delete_block": ("anchor",),
         "replace_between": ("start", "end", "new", "expect_bytes"),
         "insert_after": ("anchor", "new"), "insert_before": ("anchor", "new"),
@@ -147,25 +132,47 @@ def doc_than(rel):
     return body.replace("\r\n", "\n"), ("\r\n" if crlf else "\n"), None
 
 
-def do_vung(body, start, end):
-    """Dem hai neo va do vung giua chung. Tra ve (n_start, n_end, xuoi, size).
+def do_vung(body, start, end, end_mode="giu"):
+    """Dem hai neo va do vung giua chung. Tra ve (n_start, n_end, xuoi, size, i, k).
 
-    size la so byte UTF-8 cua vung GOM CA hai neo, bang 0 khi chua do duoc.
-    Duong do duy nhat cho ca apply_edits() lan run_probe(), de hai ben khong
-    the lech nhau sau moi lan sua.
+    Vung bi thay la body[i:k]. Che do "giu" la mac dinh, k dung ngay TRUOC neo
+    cuoi nen neo cuoi con nguyen trong file; che do "gom" la hanh vi cu, k nam
+    sau neo cuoi nen neo cuoi bi nuot. size la so byte UTF-8 cua vung do, bang 0
+    khi chua do duoc. Duong do duy nhat cho ca apply_edits() lan run_probe().
     """
     n1, n2 = body.count(start), body.count(end)
     if n1 != 1 or n2 != 1:
-        return n1, n2, False, 0
+        return n1, n2, False, 0, -1, -1
     i = body.index(start)
     j = body.index(end)
     if j < i + len(start):
-        return n1, n2, False, 0
-    return n1, n2, True, len(body[i:j + len(end)].encode("utf-8"))
+        return n1, n2, False, 0, -1, -1
+    k = j + len(end) if end_mode == "gom" else j
+    return n1, n2, True, len(body[i:k].encode("utf-8")), i, k
 
 
-def apply_edits(rel, edits, errs):
-    """Tra ve (text_moi, nl, kiem_sau) hoac None neu loi. Khong ghi gi."""
+def in_vung(body, i, k, nhan):
+    """In dong dau va dong cuoi cua vung sap bi thay, de nhin ra ngay neo cuoi bat sai cho."""
+    doan = body[i:k]
+    lines = doan.split("\n")
+    ln_dau = body.count("\n", 0, i) + 1
+    ln_cuoi = ln_dau + len(lines) - 1
+    print("    VUNG SAP MAT %s: dong %d -> %d, %d dong, %d byte"
+          % (nhan, ln_dau, ln_cuoi, len(lines), len(doan.encode("utf-8"))))
+    print("    dong dau  | %s" % lines[0][:100])
+    if len(lines) == 1:
+        print("    dong cuoi | (vung chi co mot dong, trung dong dau)")
+    else:
+        print("    dong cuoi | %s" % lines[-1][:100])
+
+
+def apply_edits(rel, edits, errs, probe=False, do_duoc=None):
+    """Tra ve (text_moi, nl, kiem_sau) hoac None neu loi. Khong ghi gi.
+
+    Cac edit duoc ap TUAN TU len cung mot ban trong bo nho, dung thu tu trong
+    spec. Voi probe=True thi khong phan xu expect_bytes va khong doi phai co
+    "new"; edit nao chua co "new" thi giu nguyen vung do roi in GHI CHU.
+    """
     path = REPO / rel
     creating = any(e["op"] == "create" for e in edits)
     if creating:
@@ -186,20 +193,32 @@ def apply_edits(rel, edits, errs):
     for e in edits:
         op, name = e["op"], e["name"]
         if op == "create":
+            if "new" not in e:
+                print("  ANCHOR %-22s create: chua co 'new', probe bo qua" % name)
+                continue
             body = e["new"]
             checks.append(("in", name, e["new"]))
             print("  ANCHOR %-22s create %d byte" % (name, len(e["new"].encode("utf-8"))))
             continue
         if op == "append":
+            if "new" not in e:
+                print("  ANCHOR %-22s append: chua co 'new', probe bo qua" % name)
+                continue
             body = body + e["new"]
             checks.append(("in", name, e["new"]))
             print("  ANCHOR %-22s append %d byte" % (name, len(e["new"].encode("utf-8"))))
             continue
         if op == "replace_between":
             s_str, e_str = e["start"], e["end"]
-            ns_, ne, xuoi, got = do_vung(body, s_str, e_str)
-            print("  ANCHOR %-22s start khop=%d end khop=%d" % (name, ns_, ne))
+            mode = e.get("end_mode", "giu")
+            ns_, ne, xuoi, got, i, k = do_vung(body, s_str, e_str, mode)
+            print("  ANCHOR %-22s start khop=%d end khop=%d neo cuoi=%s"
+                  % (name, ns_, ne, mode))
             if ns_ != 1 or ne != 1:
+                if ns_ != 1:
+                    diag(body, s_str, "start")
+                if ne != 1:
+                    diag(body, e_str, "end")
                 errs.append("[%s] KHONG KHOP replace_between '%s': start khop %d, "
                             "end khop %d, ca hai phai dung 1" % (rel, name, ns_, ne))
                 continue
@@ -207,23 +226,40 @@ def apply_edits(rel, edits, errs):
                 errs.append("[%s] replace_between '%s': sentinel cuoi nam TRUOC hoac "
                             "chong len sentinel dau" % (rel, name))
                 continue
-            i = body.index(s_str)
-            j = body.index(e_str)
-            want = int(e["expect_bytes"])
-            tol = int(e.get("tol_bytes", max(200, want // 5)))
-            print("  VUNG THAY %-20s du kien=%d thuc=%d bien do=%d"
-                  % (name, want, got, tol))
-            if abs(got - want) > tol:
-                errs.append("[%s] replace_between '%s': vung bi thay %d byte, du kien "
-                            "%d, lech %d vuot bien do %d"
-                            % (rel, name, got, want, abs(got - want), tol))
+            want = int(e["expect_bytes"]) if "expect_bytes" in e else -1
+            tol = int(e.get("tol_bytes", max(200, (want if want > 0 else 0) // 5)))
+            print("  VUNG THAY %-20s du kien=%s thuc=%d bien do=%d"
+                  % (name, want if want >= 0 else "chua khai", got, tol))
+            if do_duoc is not None:
+                do_duoc[(rel, name)] = got
+            if probe:
+                in_vung(body, i, k, name)
+            co_new = "new" in e
+            new = e.get("new", "")
+            if co_new:
+                if mode == "gom" and e_str not in new:
+                    print("  CANH BAO %s: end_mode=gom nen neo cuoi BI NUOT, ma 'new' "
+                          "khong chep lai no -- doan do se mat han khoi file" % name)
+                elif mode == "giu" and e_str in new:
+                    print("  CANH BAO %s: end_mode=giu nen neo cuoi VAN CON trong file, "
+                          "ma 'new' cung chua no -- neo cuoi se bi lap hai lan" % name)
+            elif probe:
+                print("  GHI CHU %s: chua co 'new' nen chua kiem duoc neo cuoi co "
+                      "xuat hien lai hay khong, va vung nay duoc giu nguyen" % name)
+            if not probe:
+                if want >= 0 and abs(got - want) > tol:
+                    errs.append("[%s] replace_between '%s': vung bi thay %d byte, du "
+                                "kien %d, lech %d vuot bien do %d"
+                                % (rel, name, got, want, abs(got - want), tol))
+                    continue
+                if not new:
+                    errs.append("[%s] replace_between '%s': khoa 'new' rong, op nay "
+                                "khong dung de xoa" % (rel, name))
+                    continue
+            if not co_new:
                 continue
-            if not e["new"]:
-                errs.append("[%s] replace_between '%s': khoa 'new' rong, op nay khong "
-                            "dung de xoa" % (rel, name))
-                continue
-            body = body[:i] + e["new"] + body[j + len(e_str):]
-            checks.append(("one", name, e["new"]))
+            body = body[:i] + new + body[k:]
+            checks.append(("one", name, new))
             continue
         if op == "delete_block":
             anc = e["anchor"]
@@ -260,10 +296,13 @@ def apply_edits(rel, edits, errs):
             errs.append("[%s] KHONG KHOP anchor '%s' khop %d lan, phai dung 1"
                         % (rel, name, n))
             continue
-        if op == "replace":
-            dst = e["new"]
-        elif op == "delete":
+        if op == "delete":
             dst = ""
+        elif "new" not in e:
+            print("  GHI CHU %s: chua co 'new', probe giu nguyen doan nay" % name)
+            continue
+        elif op == "replace":
+            dst = e["new"]
         elif op == "insert_after":
             dst = src_s + e["new"]
         else:
@@ -290,8 +329,20 @@ def diag(body, s, lab):
           % (lab, flat.count(fs) if fs else -1))
 
 
+def nhom_theo_file(edits):
+    """Gom edit theo file, giu nguyen thu tu xuat hien trong spec."""
+    order, groups = [], {}
+    for e in edits:
+        rel = Path(e.get("file", "")).as_posix()
+        if rel not in groups:
+            groups[rel] = []
+            order.append(rel)
+        groups[rel].append(e)
+    return order, groups
+
+
 def run_probe(spec_path, fill):
-    """Dem neo va do vung giua hai neo, KHONG ghi file dich nao."""
+    """Dem neo va do vung, KHONG ghi file dich nao, dung chung duong ap voi --apply."""
     try:
         spec = json.loads(Path(spec_path).read_text(encoding="utf-8"))
     except Exception as exc:
@@ -301,59 +352,75 @@ def run_probe(spec_path, fill):
     if not isinstance(edits, list) or not edits:
         print("LOI: spec thieu khoa 'edits' hoac rong")
         return 1
-    print("=== PROBE: chi dem neo, KHONG ghi gi ===")
-    cache, bad, changed = {}, 0, False
+    print("=== PROBE: chi dem neo va do vung, KHONG ghi gi ===")
+    print("Cac edit tren cung mot file duoc ap TUAN TU trong bo nho, dung thu tu spec.")
+    bad = 0
     for i, e in enumerate(edits):
-        name = str(e.get("name", "edit%d" % (i + 1)))
+        if not isinstance(e, dict):
+            print("LOI: edit thu %d khong phai doi tuong JSON" % (i + 1))
+            return 1
+        e.setdefault("name", "edit%d" % (i + 1))
         op = e.get("op", "")
-        rel = Path(e.get("file", "")).as_posix()
         if op not in OPS:
             print("%-24s %-16s OP KHONG HOP LE, phai la mot trong: %s"
-                  % (name, op, ", ".join(OPS)))
+                  % (e["name"], op, ", ".join(OPS)))
             bad += 1
-            continue
-        if op in ("append", "create"):
-            print("%-24s %-16s khong co neo, bo qua" % (name, op))
-            continue
-        if rel not in cache:
-            cache[rel] = doc_than(rel)
-        body, _nl, loi = cache[rel]
-        if loi is not None:
-            print("%-24s %-16s %s: %s" % (name, op, rel, loi))
+        if op == "replace_between" and e.get("end_mode", "giu") not in END_MODES:
+            print("%-24s end_mode '%s' KHONG HOP LE, chi nhan: %s"
+                  % (e["name"], e.get("end_mode"), ", ".join(END_MODES)))
             bad += 1
+    if bad:
+        print("")
+        print("=== PROBE: %d muc, %d muc hong ===" % (len(edits), bad))
+        return 2
+
+    work = copy.deepcopy(edits)
+    for e in work:
+        cf = e.get("content_file")
+        if not cf or "new" in e:
             continue
-        if op == "replace_between":
-            s, t = e.get("start", ""), e.get("end", "")
-            n1, n2, xuoi, size = do_vung(body, s, t)
-            ok = (n1 == 1 and n2 == 1 and xuoi)
-            chieu = "xuoi" if xuoi else ("NGUOC" if (n1 == 1 and n2 == 1) else "-")
-            print("%-24s %-16s start=%d end=%d %s vung=%d byte"
-                  % (name, op, n1, n2, chieu, size))
-            if not ok:
-                bad += 1
-                if n1 != 1:
-                    diag(body, s, "start")
-                if n2 != 1:
-                    diag(body, t, "end")
-            elif fill and e.get("expect_bytes") != size:
-                e["expect_bytes"] = size
-                changed = True
+        cp = Path(cf)
+        if not cp.is_absolute():
+            cp = REPO / cf
+        if cp.is_file():
+            e["new"] = cp.read_text(encoding="utf-8").replace("\r\n", "\n")
+            print("NOI DUNG %s <- %s (%d byte)"
+                  % (e["name"], cp, len(e["new"].encode("utf-8"))))
         else:
-            key = "old" if op in ("replace", "delete") else "anchor"
-            s = e.get(key, "")
-            n1 = body.count(s)
-            print("%-24s %-16s %s khop=%d" % (name, op, key, n1))
-            if n1 != 1:
-                bad += 1
-                diag(body, s, key)
-    if fill and changed:
-        Path(spec_path).write_text(
-            json.dumps(spec, ensure_ascii=False, indent=1),
-            encoding="utf-8", newline="\n")
-        print("da ghi expect_bytes do duoc nguoc vao spec")
+            print("GHI CHU %s: content_file chua ton tai (%s), probe chi dem neo"
+                  % (e["name"], cp))
+
+    errs, do_duoc = [], {}
+    order, groups = nhom_theo_file(work)
+    for rel in order:
+        print("")
+        print("FILE %s" % rel)
+        apply_edits(rel, groups[rel], errs, probe=True, do_duoc=do_duoc)
+
+    if fill:
+        changed = False
+        for e in edits:
+            if e.get("op") != "replace_between":
+                continue
+            k = (Path(e.get("file", "")).as_posix(), e["name"])
+            if k in do_duoc and e.get("expect_bytes") != do_duoc[k]:
+                e["expect_bytes"] = do_duoc[k]
+                changed = True
+        if changed:
+            Path(spec_path).write_text(
+                json.dumps(spec, ensure_ascii=False, indent=1),
+                encoding="utf-8", newline="\n")
+            print("")
+            print("da ghi expect_bytes do duoc nguoc vao spec")
+
     print("")
-    print("=== PROBE: %d muc, %d muc hong ===" % (len(edits), bad))
-    return 0 if bad == 0 else 2
+    if errs:
+        print("=== PROBE: %d muc, %d muc hong ===" % (len(edits), len(errs)))
+        for x in errs:
+            print("  " + x)
+        return 2
+    print("=== PROBE: %d muc, 0 muc hong ===" % len(edits))
+    return 0
 
 
 def run_spec(spec_path, apply, allow_dirty):
@@ -367,7 +434,6 @@ def run_spec(spec_path, apply, allow_dirty):
         print("LOI: spec thieu khoa 'edits' hoac rong")
         return 1
 
-    order, groups = [], {}
     for i, e in enumerate(edits):
         cf = e.get("content_file")
         if cf:
@@ -395,18 +461,18 @@ def run_spec(spec_path, apply, allow_dirty):
                 print("LOI: edit '%s' op %s thieu khoa '%s'" % (e["name"], e["op"], k))
                 return 1
         if e["op"] == "replace_between":
+            if e.get("end_mode", "giu") not in END_MODES:
+                print("LOI: edit '%s' khoa 'end_mode' phai la 'giu' hoac 'gom'"
+                      % e["name"])
+                return 1
             for k in ("expect_bytes", "tol_bytes"):
                 if k in e and (isinstance(e[k], bool) or not isinstance(e[k], int)
                                or e[k] < 0):
                     print("LOI: edit '%s' khoa '%s' phai la so nguyen khong am"
                           % (e["name"], k))
                     return 1
-        rel = Path(e["file"]).as_posix()
-        if rel not in groups:
-            groups[rel] = []
-            order.append(rel)
-        groups[rel].append(e)
 
+    order, groups = nhom_theo_file(edits)
     allow = set(spec.get("allow_paths") or [])
     index, byname = da.build_index()
     for rel in order:
@@ -417,6 +483,7 @@ def run_spec(spec_path, apply, allow_dirty):
 
     errs, warns, plan = [], [], []
     for rel in order:
+        print("")
         print("FILE %s" % rel)
         r = apply_edits(rel, groups[rel], errs)
         if r is None:
@@ -550,7 +617,7 @@ def run_spec(spec_path, apply, allow_dirty):
 
 
 def lay_so(text, khoa):
-    """Lay so nguyen dung ngay sau mot khoa dang 'vung=' trong output cua tool."""
+    """Lay so nguyen dung ngay sau mot khoa dang 'thuc=' trong output cua tool."""
     k = text.find(khoa)
     if k < 0:
         return -1
@@ -563,17 +630,21 @@ def lay_so(text, khoa):
     return int(so) if so else -1
 
 
-def so_hai_duong(tmp, day, h1, h2):
-    """Bat --probe va apply_edits do CUNG mot vung roi so hai con so do duoc.
+def so_hai_duong(tmp, day, h1, h2, vung_giu):
+    """Bat --probe va --apply do CUNG mot vung sau khi mot edit truoc do da lam vung ay to ra.
 
-    Hai duong tung dem neo bang hai doan ma rieng va chi tinh co dong y voi nhau.
-    Ca nay khong nhin ma thoat, no doc thang so byte hai ben in ra: probe in
-    'vung=' con apply_edits in 'thuc='. Lech nhau nghia la do_vung() da bi mot
-    ben bo qua trong mot lan sua nao do.
+    Spec co hai edit tren cung mot file: edit dau chen them chu ngay sau neo dau,
+    edit sau do vung giua hai neo. Probe cu do tung edit doc lap tren ban goc nen
+    se bao dung bang vung_giu, tuc BO SOT phan vua chen; probe tuan tu phai bao
+    dung bang vung_giu cong so byte da chen. Ca nay khong nhin ma thoat, no doc
+    thang con so hai ben in ra sau chu 'thuc='.
     """
-    spec = {"edits": [{"name": "haiduong", "file": "docs/TODO.md",
-                       "op": "replace_between", "start": h1, "end": h2,
-                       "new": "x\n", "expect_bytes": 1, "tol_bytes": 0}]}
+    chen = "\ndong chen selftest " + day + "\n"
+    spec = {"edits": [
+        {"name": "chentruoc", "file": "docs/TODO.md", "op": "insert_after",
+         "anchor": h1, "new": chen},
+        {"name": "dovung", "file": "docs/TODO.md", "op": "replace_between",
+         "start": h1, "end": h2, "new": "x\n", "expect_bytes": 1, "tol_bytes": 0}]}
     sp = tmp / ("tmp_" + day + "_selftest_haiduong.json")
     sp.write_text(json.dumps(spec, ensure_ascii=False, indent=1),
                   encoding="utf-8", newline="\n")
@@ -584,9 +655,10 @@ def so_hai_duong(tmp, day, h1, h2):
                            capture_output=True, text=True,
                            encoding="utf-8", errors="replace")
         out.append(r.stdout or "")
-    a = lay_so(out[0], "vung=")
+    a = lay_so(out[0], "thuc=")
     b = lay_so(out[1], "thuc=")
-    return (a == b and a > 0), a, b
+    mong = vung_giu + len(chen.encode("utf-8"))
+    return (a == b == mong), a, b, mong
 
 
 def selftest():
@@ -602,8 +674,11 @@ def selftest():
         return 1
     h1, h2 = heads[0], heads[1]
     i, j = todo.index(h1), todo.index(h2)
-    region = len(todo[i:j + len(h2)].encode("utf-8"))
-    mid = h1 + "\n\nnoi dung thu cua selftest, khong nhac file nao.\n\n" + h2
+    vung_giu = len(todo[i:j].encode("utf-8"))
+    vung_gom = len(todo[i:j + len(h2)].encode("utf-8"))
+    than = "\n\nnoi dung thu cua selftest, khong nhac file nao.\n\n"
+    moi_giu = h1 + than
+    moi_gom = h1 + than + h2
 
     cases = []
     cases.append(("duong-dry-run", 0, "KIEM TRUOC: SACH", {"edits": [
@@ -624,13 +699,28 @@ def selftest():
          "new": "\nDoc core/shotlist.py de biet them.\n"}]}))
     cases.append(("between-duong", 0, "KIEM TRUOC: SACH", {"edits": [
         {"name": "between", "file": "docs/TODO.md", "op": "replace_between",
-         "start": h1, "end": h2, "new": mid, "expect_bytes": region}]}))
+         "start": h1, "end": h2, "new": moi_giu, "expect_bytes": vung_giu}]}))
+    cases.append(("between-gom-tuong-thich", 0, "KIEM TRUOC: SACH", {"edits": [
+        {"name": "betweengom", "file": "docs/TODO.md", "op": "replace_between",
+         "start": h1, "end": h2, "new": moi_gom, "expect_bytes": vung_gom,
+         "end_mode": "gom"}]}))
+    cases.append(("between-nuot-neo-cuoi", 0, "se mat han khoi file", {"edits": [
+        {"name": "nuotneo", "file": "docs/TODO.md", "op": "replace_between",
+         "start": h1, "end": h2, "new": moi_giu, "expect_bytes": vung_gom,
+         "end_mode": "gom"}]}))
+    cases.append(("between-lap-neo-cuoi", 0, "se bi lap hai lan", {"edits": [
+        {"name": "lapneo", "file": "docs/TODO.md", "op": "replace_between",
+         "start": h1, "end": h2, "new": moi_gom, "expect_bytes": vung_giu}]}))
     cases.append(("between-end-khop-nhieu", 2, "ca hai phai dung 1", {"edits": [
         {"name": "endnhieu", "file": "docs/TODO.md", "op": "replace_between",
-         "start": h1, "end": "\n\n", "new": mid, "expect_bytes": region}]}))
+         "start": h1, "end": "\n\n", "new": moi_giu, "expect_bytes": vung_giu}]}))
     cases.append(("between-lech-byte", 2, "vuot bien do", {"edits": [
         {"name": "lechbyte", "file": "docs/TODO.md", "op": "replace_between",
-         "start": h1, "end": h2, "new": mid, "expect_bytes": 50}]}))
+         "start": h1, "end": h2, "new": moi_giu, "expect_bytes": 50}]}))
+    cases.append(("between-end-mode-la", 1, "phai la 'giu' hoac 'gom'", {"edits": [
+        {"name": "modela", "file": "docs/TODO.md", "op": "replace_between",
+         "start": h1, "end": h2, "new": moi_giu, "expect_bytes": vung_giu,
+         "end_mode": "nuot"}]}))
 
     cf = tmp / ("tmp_%s_selftest_contentfile.txt" % day)
     cf.write_text("noi dung thu tu content_file, khong nhac file nao.\n",
@@ -650,6 +740,14 @@ def selftest():
                    encoding="utf-8", newline="\n")
     sc3 = REPO / ("_selftest_ma3_%s.txt" % day)
     sc3.write_text("ALPHA20260805\nBETA20260805\n", encoding="utf-8", newline="\n")
+    seq = REPO / ("_selftest_tuantu_%s.txt" % day)
+    seq.write_text("GIU%s\nNEOA%s\nNEOB%s\ncuoi\n" % (day, day, day),
+                   encoding="utf-8", newline="\n")
+    cases.append(("probe-tuan-tu-am", 2, "KHONG KHOP", {"edits": [
+        {"name": "xoaneo", "file": seq.name, "op": "delete",
+         "old": "NEOA%s\n" % day},
+        {"name": "dungneodaxoa", "file": seq.name, "op": "replace",
+         "old": "NEOA%s" % day, "new": "MOI%s" % day}]}))
     cases.append(("delete-block", 0, "DA GHI 1 FILE, KIEM SAU SACH", {"edits": [
         {"name": "xoakhoi", "file": blk.name, "op": "delete_block",
          "anchor": "dong dau khoi 20260805"}]}))
@@ -689,6 +787,7 @@ def selftest():
     cases.append(("probe-di-voi-apply", 1, "khong di cung --apply", {"edits": [
         {"name": "probeapply", "file": "docs/TODO.md", "op": "replace",
          "old": h1, "new": h1}]}))
+
     def bang_mt(ten, muc):
         p = tmp / ("tmp_" + day + "_selftest_wv_" + ten + ".json")
         p.write_text(json.dumps({"schema": 1, "waivers": muc},
@@ -714,12 +813,13 @@ def selftest():
             "mien-tru-het-han": {"DOCS_WAIVERS": wv_het}}
     extra = {"probe-duong": ["--probe"], "probe-am": ["--probe"],
              "probe-bom": ["--probe"], "probe-op-la": ["--probe"],
+             "probe-tuan-tu-am": ["--probe"],
              "probe-di-voi-apply": ["--probe", "--apply"],
              "delete-block": ["--apply", "--allow-dirty"],
              "ma-thoat-3": ["--apply", "--allow-dirty"],
              "replace-rong": ["--apply", "--allow-dirty"]}
 
-    rac = [blk, sc3, dup, rong, mdt, dbe, bom]
+    rac = [blk, sc3, dup, rong, mdt, dbe, bom, seq]
     rows = []
     try:
         for name, want, marker, spec in cases:
@@ -735,9 +835,9 @@ def selftest():
                                encoding="utf-8", errors="replace", env=moi)
             hit = marker in (r.stdout or "")
             rows.append((name, want, r.returncode, marker, hit))
-        ok_vung, a_probe, a_apply = so_hai_duong(tmp, day, h1, h2)
+        ok_vung, a_probe, a_apply, mong = so_hai_duong(tmp, day, h1, h2, vung_giu)
         rows.append(("do-vung-mot-duong", 0, 0 if ok_vung else 1,
-                     "probe=%d apply=%d" % (a_probe, a_apply), ok_vung))
+                     "probe=%d apply=%d mong=%d" % (a_probe, a_apply, mong), ok_vung))
     finally:
         for _p in rac:
             try:
@@ -747,21 +847,31 @@ def selftest():
 
     print("")
     print("=== SELFTEST docs_patch ===")
-    print("vung giua hai heading dau cua docs/TODO.md: %d byte" % region)
+    print("Moi ca duoi day goi lai chinh tool bang mot spec dung mot lan, roi cham hai")
+    print("thu: ma thoat co dung du doan khong, va output co chua dung chuoi nhan khong.")
+    print("Cot MONG la ma thoat mong doi, cot THAT la ma thoat that.")
+    print("vung giua hai heading dau cua docs/TODO.md: %d byte khi GIU neo cuoi, "
+          "%d byte khi GOM neo cuoi" % (vung_giu, vung_gom))
     print("ca vuot-tran: docs/STATE.md %d byte, tran %d byte, chen them %d byte"
           % (state_now, state_cap, pad))
-    print("%-26s %5s %5s %-20s %s" % ("CA", "MONG", "THAT", "NHAN MONG DOI", "CO NHAN"))
-    print("%-26s %5s %5s %-20s %s" % ("-" * 26, "-----", "-----", "-" * 20, "-------"))
+    print("%-26s %5s %5s %-28s %s" % ("CA", "MONG", "THAT", "NHAN MONG DOI", "CO NHAN"))
+    print("%-26s %5s %5s %-28s %s"
+          % ("-" * 26, "-----", "-----", "-" * 28, "-------"))
     bad = 0
     for name, want, got, marker, hit in rows:
         okc = (want == got) and hit
         if not okc:
             bad += 1
-        print("%-26s %5d %5d %-20s %s  %s"
-              % (name, want, got, marker, "co" if hit else "KHONG",
+        print("%-26s %5d %5d %-28s %s  %s"
+              % (name, want, got, marker[:28], "co" if hit else "KHONG",
                  "OK" if okc else "THAT BAI"))
     print("")
     print("KET QUA: %d/%d ca dat" % (len(rows) - bad, len(rows)))
+    if bad:
+        print("Mong doi moi ca deu dat; thuc te con %d ca hong, doc dong THAT BAI o tren."
+              % bad)
+    else:
+        print("Mong doi moi ca deu dat, thuc te dung nhu vay: tool dung duoc.")
     return 0 if bad == 0 else 2
 
 
@@ -774,8 +884,8 @@ SPEC_MAU = {
         {"name": "vi-du-replace-between", "file": "docs/TODO.md",
          "op": "replace_between", "start": "## Tieu de muc can thay",
          "end": "## Tieu de muc ke tiep",
-         "new": "ca muc moi, GOM CA hai neo",
-         "expect_bytes": 3603, "tol_bytes": 400},
+         "new": "ca muc moi, GOM neo dau, KHONG chep lai neo cuoi",
+         "end_mode": "giu", "expect_bytes": 1234, "tol_bytes": 400},
         {"name": "vi-du-delete", "file": "docs/TODO.md", "op": "delete",
          "old": "nguyen van doan can xoa"},
         {"name": "vi-du-delete-block", "file": "docs/TODO.md",
@@ -807,6 +917,11 @@ def in_mau(ngan=False):
     print("hoac 'content_file' tro toi mot file UTF-8 tren dia -- khai ca hai la loi.")
     print("Doan tu khoang muoi dong tro len thi dung replace_between voi hai neo ngan")
     print("va duy nhat, dung dan ca doan cu lam neo.")
+    print("")
+    print("replace_between: MAC DINH end_mode='giu', vung bi thay gom neo dau va dung")
+    print("ngay TRUOC neo cuoi, nen 'new' KHONG duoc chep lai neo cuoi, neu chep thi")
+    print("neo cuoi lap hai lan. Dat end_mode='gom' de nuot luon neo cuoi nhu ban cu,")
+    print("khi do 'new' PHAI chep lai neo cuoi neu con muon giu no.")
     print("Quy trinh: --probe --fill-bytes de dem neo va tu do expect_bytes, roi")
     print("--apply de ghi. Bo --apply thi khong ghi gi. Khong can chay thu o giua:")
     print("--apply da chay lai toan bo phep kiem truoc va tu choi ghi khi co loi.")
