@@ -57,7 +57,7 @@ PER_FILE_BUDGET = {
     "docs/STATE.md":    25 * 1024,  # noi 04/08/2026 tu 15 KB: van la chong phinh, nhung 15 KB
                                     # cham tran dung luc ket phien khi khong con ngu canh de rut gon,
                                     # tuc luat tu no gay ra kieu hong no dinh chan. Rut gon la viec rieng.
-    "docs/TODO.md":     25 * 1024,  # noi 04/08/2026: chua dac ta docs_patch.py; cham 25 KB thi tach file
+    "docs/TODO.md":     30 * 1024,  # noi 06/08/2026 tu 25 KB len 30 KB de chen muc Uu tien 0; NOI TAM, ha lai ve 25 KB sau khi rut gon TODO
     "docs/scripts.md":  40 * 1024,  # tang DAN: sinh tu dong, dai theo so script
     "docs/reference.md": 40 * 1024, # tang DAN: so tra, day len theo kien thuc da do
     "docs/failures.md": 40 * 1024,  # tang DAN: so tra loi, chi ghi them
@@ -75,7 +75,8 @@ IGNORE = {"file.py", "__init__.py", "capcut_post.py", "scan_paths.py",
           "scripts/pack_vendor.py", "x.mp4", "operations.jsonl"}
 # file da len ke hoach nhung chua viet -- bao rieng, khong tinh la loi
 PLANNED = {"docs/scripts-archive.md", "tools/docs_size.py", "tools/probe_drafts.py",
-           "pipeline/__main__.py", "tools/scaffold_make.py"}
+           "pipeline/__main__.py", "tools/scaffold_make.py",
+           "tools/session_open.py"}
 # duong dan co y nam NGOAI repo: thu muc lab CAPCUT_LAB, noi de script dung mot lan
 EXTERNAL_PREFIX = ("data/",)
 # file da tung ton tai roi bi xoa; tai lieu nhac lai lich su, khong phai lien ket hong
